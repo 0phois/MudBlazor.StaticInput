@@ -1,0 +1,66 @@
+﻿@namespace MudBlazor.StaticInput
+@typeparam T
+
+@inherits MudTextField<T>
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code {
+    [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
+
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+
+    protected override void OnInitialized()
+    {
+        var expression = ValueExpression?.ToString();
+
+        if (!string.IsNullOrEmpty(expression))
+        {
+            var index = expression.LastIndexOf(").", StringComparison.Ordinal);
+
+            if (index > 0)
+            {
+                UserAttributes["id"] = _elementId;
+                UserAttributes["name"] = expression[(index + 2)..];
+            }
+        }
+
+        base.OnInitialized();
+    }
+
+}
+
+<script>
+    const inputElement = document.getElementById(`@_elementId`);
+    const shrinkLabel = @ShrinkLabel.ToString().ToLower();
+    const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
+
+    if (inputElement && !shrinkLabel) {
+        inputElement.addEventListener('blur', function (event) {
+            const emptyValue = event.target.value.length === 0;
+            const parentElement = event.target.parentElement;
+
+            parentElement.classList.toggle("mud-shrink", !emptyValue);
+        });
+    }
+
+    if (inputElement && showOnFocus) {
+        const parentElement = inputElement.closest(".mud-input-control");
+        if (parentElement) {
+            const helperElement = parentElement.querySelector(".me-auto");
+            if (helperElement) {
+                helperElement.style.visibility = "hidden";
+
+                inputElement.addEventListener('focus', function () {
+                    helperElement.style.visibility = "visible";
+                });
+
+                inputElement.addEventListener('blur', function () {
+                    helperElement.style.visibility = "hidden";
+                });
+            }
+        }
+    }
+</script>

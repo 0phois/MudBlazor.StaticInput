@@ -1,0 +1,64 @@
+﻿@namespace MudBlazor.StaticInput
+
+@inherits MudCheckBox<bool>
+
+<MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
+    <InputContent>
+        <label class="@LabelClassname" id="@($"checkbox-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
+            <span tabindex="0" class="@CheckBoxClassname">
+                <input tabindex="-1" name="@_name" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" checked="@Value" value="True"
+                       aria-checked="@((BoolValue == true).ToString().ToLower())" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                       id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
+                <MudIcon Icon="@Icons.Material.Filled.CheckBox" Color="HasErrors ? Color.Error : Color.Inherit" Size="@Size"
+                         id="@($"check-icon-{_elementId}")" style="display: none;"/>
+                <MudIcon Icon="@Icons.Material.Filled.CheckBoxOutlineBlank" Color="HasErrors ? Color.Error : Color.Inherit" Size="@Size"
+                         id="@($"unchecked-icon-{_elementId}")"/>
+            </span>
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <MudText Color="HasErrors ? Color.Error : Color.Inherit">@Label</MudText>
+            }
+            @if (ChildContent is not null)
+            {
+                <MudText Color="HasErrors ? Color.Error : Color.Inherit">
+                    @ChildContent
+                </MudText>
+            }
+        </label>
+    </InputContent>
+</MudInputControl>
+
+@code {
+    [Parameter] public Expression<Func<bool>>? ValueExpression { get; set; }
+
+    private string _name = string.Empty;
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+
+    protected override void OnInitialized()
+    {
+        var expression = ValueExpression?.ToString();
+
+        if (!string.IsNullOrEmpty(expression))
+        {
+            var index = expression.LastIndexOf(").", StringComparison.Ordinal);
+
+            if (index > 0)
+                _name = expression[(index + 2)..];
+        }
+
+        base.OnInitialized();
+    }
+
+}
+
+<script>
+    const checkbox = document.getElementById(`static-checkbox-@_elementId`);
+    const checkedIcon = document.getElementById(`check-icon-@_elementId`);
+    const uncheckedIcon = document.getElementById(`unchecked-icon-@_elementId`);
+
+    checkbox.addEventListener('change', () => {
+        checkbox.ariaChecked = checkbox.checked ? "true" : "false";
+        checkedIcon.style.display = checkbox.checked ? 'block' : 'none';
+        uncheckedIcon.style.display = checkbox.checked ? 'none' : 'block';
+    });
+</script>

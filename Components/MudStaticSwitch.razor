@@ -1,0 +1,82 @@
+﻿@namespace MudBlazor.StaticInput
+
+@inherits MudSwitch<bool>
+
+<MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
+    <InputContent>
+        <label class="@LabelClassname" style="@Style" id="@_elementId">
+            <span class="@SpanClassname">
+                <span tabindex="0" class="@SwitchClassname" id="@($"switch-container-{_elementId}")">
+                    <span class="mud-switch-button">
+                        <input tabindex="-1" name="@_name" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input" checked="@Value" value="True"
+                               aria-checked="@((BoolValue == true).ToString().ToLower())" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                               id="@($"static-switch-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
+                        <span class="@ThumbClassname">
+                            @if (!string.IsNullOrEmpty(ThumbIcon))
+                            {
+                                <MudIcon id="@($"switch-icon-{_elementId}")" Color="@ThumbIconColor" Icon="@ThumbIcon" Style="padding: 2px; height:inherit; width: inherit;"/>
+                            }
+                        </span>
+                    </span>
+                </span>
+                <span id="@($"switch-track-{_elementId}")" class="@TrackClassname"></span>
+            </span>
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <MudText Class="@SwitchLabelClassname" Color="HasErrors ? Color.Error : Color.Inherit">
+                    @Label
+                </MudText>
+            }
+            @if (ChildContent != null)
+            {
+                <MudText Class="@SwitchLabelClassname" Color="HasErrors ? Color.Error : Color.Inherit">
+                    @ChildContent
+                </MudText>
+            }
+        </label>
+    </InputContent>
+</MudInputControl>
+
+@code {
+    [Parameter] public Expression<Func<bool>>? ValueExpression { get; set; }
+
+    private string _name = string.Empty;
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+
+    protected override void OnInitialized()
+    {
+        var expression = ValueExpression?.ToString();
+
+        if (!string.IsNullOrEmpty(expression))
+        {
+            var index = expression.LastIndexOf(").", StringComparison.Ordinal);
+
+            if (index > 0)
+                _name = expression[(index + 2)..];
+        }
+
+        base.OnInitialized();
+    }
+
+}
+
+<script>
+    const container = document.getElementById(`switch-container-@_elementId`);
+    const switchToggle = document.getElementById(`static-switch-@_elementId`);
+    const switchTrack = document.getElementById(`switch-track-@_elementId`);
+
+    switchToggle.addEventListener('change', () => {
+        switchToggle.ariaChecked = switchToggle.checked ? "true" : "false";
+
+        const force = switchToggle.checked;
+
+        container.classList.toggle("mud-checked", force)
+        container.classList.toggle("@CheckedTextColor", force)
+        container.classList.toggle("@CheckedHoverColor", force)
+        container.classList.toggle("@UncheckedTextColor", !force)
+        container.classList.toggle("@UncheckedHoverColor", !force)
+
+        switchTrack.classList.toggle("@CheckedColor", force);
+        switchTrack.classList.toggle("@UncheckedColor", !force)
+    });
+</script>

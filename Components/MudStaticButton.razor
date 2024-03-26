@@ -1,0 +1,38 @@
+﻿@namespace MudBlazor.StaticInput
+
+@inherits MudButton
+
+<button type="@GetButtonType().ToDescriptionString()" class="@Classname" style="@Style" @attributes="@UserAttributes">
+    <span class="mud-button-label">
+        @if (!string.IsNullOrWhiteSpace(StartIcon))
+        {
+            <span class="@StartIconClass">
+                <MudIcon Icon="@StartIcon" Size="@(IconSize ?? Size)" Color="@IconColor"/>
+            </span>
+        }
+        @ChildContent
+        @if (!string.IsNullOrWhiteSpace(EndIcon))
+        {
+            <span class="@EndIconClass">
+                <MudIcon Icon="@EndIcon" Size="@(IconSize ?? Size)" Color="@IconColor"/>
+            </span>
+        }
+    </span>
+</button>
+
+@code {
+
+    /// <summary>
+    ///     The type of action the button performs in relation to form data (submit or reset).
+    /// </summary>
+    [Parameter]
+    public FormAction FormAction { get; set; } = FormAction.Submit;
+
+    private ButtonType GetButtonType() => FormAction switch
+    {
+        FormAction.Submit => ButtonType.Submit,
+        FormAction.Reset => ButtonType.Reset,
+        _ => ButtonType.Submit
+    };
+
+}
