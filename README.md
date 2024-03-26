@@ -5,10 +5,11 @@
 
 ## :book: Introduction :book:
 **MudBlazor.StaticInput** is an extension of the [MudBlazor](https://github.com/MudBlazor/MudBlazor) library, tailored for [Static Server-Side Rendered](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#static-server-side-rendering-static-ssr) (static SSR) pages.  
-It offers seamless integration of MudBlazor's Components into your applications. Focusing particularly on components designed for forms and edit forms, in situations where [interactive](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#render-modes) components are not feasible (*example*: [Blazor Identity UI](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/server/?view=aspnetcore-8.0&tabs=visual-studio#blazor-identity-ui-individual-accounts)).
+It offers seamless integration of MudBlazor's Components into your applications. Focusing particularly on components designed for forms and edit forms, in situations where [interactive](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#render-modes) components are not feasible.  
+[*example*: [Blazor Identity UI](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/server/?view=aspnetcore-8.0&tabs=visual-studio#blazor-identity-ui-individual-accounts)].
 
 
-## Why MudBlazor.StaticInput? :thinking:
+## :thinking: Why MudBlazor.StaticInput? :thinking:
 - **Rapid SSSR Integration:** Effortlessly add MudBlazor components to your static SSR pages, saving development time.
 - **Focus on Forms:** Streamline development of forms and edit forms, for use cases such as Microsoft Identity Login forms.
 - **Preserved Look & Feel:** Maintains the consistent design and user experience of MudBlazor. Ensuring uniformity across all pages.
@@ -69,7 +70,7 @@ The set of components and features may extend over time. Currently, Static Input
   </summary>
 
 ```html
-<MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" 
+<MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Outlined" InputType="InputType.Password" 
               Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"/>
 ```
 ```cs
