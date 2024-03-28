@@ -11,6 +11,10 @@
     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
 
     private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+    private bool HasDefaultContent => ShrinkLabel || 
+                                      HasNativeHtmlPlaceholder() ||
+                                      Adornment == Adornment.Start || 
+                                      !string.IsNullOrWhiteSpace(Placeholder);
 
     protected override void OnInitialized()
     {
@@ -30,19 +34,29 @@
         base.OnInitialized();
     }
 
+    private bool HasNativeHtmlPlaceholder()
+    {
+        return InputType is InputType.Color or 
+               InputType.DateTimeLocal or
+               InputType.Date or
+               InputType.Month or 
+               InputType.Week or
+               InputType.Time;
+    }
+
 }
 
 <script>
     const inputElement = document.getElementById(`@_elementId`);
-    const shrinkLabel = @ShrinkLabel.ToString().ToLower();
+    const shrinkLabel = @HasDefaultContent.ToString().ToLower();
     const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
 
     if (inputElement && !shrinkLabel) {
         inputElement.addEventListener('blur', function (event) {
-            const emptyValue = event.target.value.length === 0;
-            const parentElement = event.target.parentElement;
-
-            parentElement.classList.toggle("mud-shrink", !emptyValue);
+                const emptyValue = event.target.value.length === 0;
+                const parentElement = event.target.parentElement;
+                            
+            parentElement.classList.toggle("mud-shrink", !emptyValue);             
         });
     }
 
