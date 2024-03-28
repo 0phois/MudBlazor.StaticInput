@@ -2,7 +2,7 @@
 
 @inherits MudButton
 
-<button type="@GetButtonType().ToDescriptionString()" class="@Classname" style="@Style" @attributes="@UserAttributes">
+<button type="@GetButtonType().ToDescriptionString()" disabled="@Disabled" class="@Classname" style="@Style" @attributes="@UserAttributes">
     <span class="mud-button-label">
         @if (!string.IsNullOrWhiteSpace(StartIcon))
         {
