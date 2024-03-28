@@ -2,7 +2,7 @@
 
 namespace MudBlazor.StaticInput;
 
-public partial class MudStaticSwitch
+public partial class MudStaticSwitch : MudSwitch<bool>
 {
     /**********************************************
      * Hide these inherited properties to prevent *
