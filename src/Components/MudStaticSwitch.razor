@@ -1,5 +1,6 @@
 ﻿@namespace MudBlazor.StaticInput
 
+@using MudBlazor.Extensions
 @inherits MudSwitch<bool>
 
 <MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
@@ -23,13 +24,13 @@
             </span>
             @if (!string.IsNullOrEmpty(Label))
             {
-                <MudText Class="@SwitchLabelClassname" Color="HasErrors ? Color.Error : Color.Inherit">
+                <MudText Class="@(Typo is null ? SwitchLabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")" Color="HasErrors ? Color.Error : Color.Inherit">
                     @Label
                 </MudText>
             }
             @if (ChildContent != null)
             {
-                <MudText Class="@SwitchLabelClassname" Color="HasErrors ? Color.Error : Color.Inherit">
+                <MudText Class="@(Typo is null ? SwitchLabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")"  Color="HasErrors ? Color.Error : Color.Inherit">
                     @ChildContent
                 </MudText>
             }
@@ -38,6 +39,7 @@
 </MudInputControl>
 
 @code {
+    [Parameter] public Typo? Typo { get; set; }
     [Parameter] public Expression<Func<bool>>? ValueExpression { get; set; }
 
     private string _name = string.Empty;
