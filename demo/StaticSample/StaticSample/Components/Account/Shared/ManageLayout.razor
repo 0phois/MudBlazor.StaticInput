@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+@layout AccountLayout
+
+<MudPaper Elevation="5" Class="pa-16">
+    <MudGrid Justify="Justify.Center">
+	    <AuthorizeView>
+            <MudItem xs="12">
+                <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap">
+                    <MudIcon Icon="@Icons.Material.Filled.PersonPin" Color="Color.Primary" />
+                    <MudText Typo="Typo.h6" Color="Color.Primary" Style="font-weight:700;">@context.User.Identity?.Name</MudText>
+                    <MudSpacer />
+                    <MudStaticButton FormAction="FormAction.Post" SubmitUrl="/Account/Logout" ReturnUrl="Account/Login"
+                                     Variant="Variant.Outlined" Color="Color.Primary" EndIcon="@Icons.Material.Filled.Logout" >
+                        Sign Out
+                    </MudStaticButton>
+                </MudStack>
+            </MudItem>
+        </AuthorizeView>
+        <MudItem xs="12">
+            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                <MudText Typo="Typo.h4">Manage your Account</MudText>
+            </MudStack>
+        </MudItem>
+        <MudItem xs="6">
+            <ManageNavMenu />
+        </MudItem>
+        <MudItem xs="6">
+            @Body
+        </MudItem>
+    </MudGrid>
+</MudPaper>

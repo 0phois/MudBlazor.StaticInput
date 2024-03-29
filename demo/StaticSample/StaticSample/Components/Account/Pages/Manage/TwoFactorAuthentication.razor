@@ -1,0 +1,20 @@
+﻿@page "/Account/Manage/TwoFactorAuthentication"
+
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Identity
+@using StaticSample.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Two-factor authentication (2FA)</PageTitle>
+
+<StatusMessage />
+
+<MudText Class="pb-2" Typo="Typo.h6">Two-factor authentication (2FA)</MudText>
+
+<MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceAround">
+    <MudIcon Icon="@Icons.Material.Outlined.QrCode2" Size="Size.Large" Style="font-size: 10em;"/>
+</MudStack>

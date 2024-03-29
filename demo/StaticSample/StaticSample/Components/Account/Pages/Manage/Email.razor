@@ -1,0 +1,113 @@
+﻿@page "/Account/Manage/Email"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using StaticSample.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject IdentityUserAccessor UserAccessor
+@inject NavigationManager NavigationManager
+
+<PageTitle>Manage email</PageTitle>
+
+<MudText Class="pb-2" Typo="Typo.h6">Manage Email</MudText>
+
+<StatusMessage Message="@message"/>
+
+<form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
+    <AntiforgeryToken />
+</form>
+<EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
+    <DataAnnotationsValidator />
+
+    @if (isEmailConfirmed)
+    {
+        <MudStaticTextField @bind-Value="email" Placeholder="Please enter your email." Label="Email" Margin="Margin.Dense" Variant="Variant.Outlined"
+                            Disabled="true" Adornment="Adornment.Start" AdornmentColor="Color.Success" AdornmentIcon="@Icons.Material.Outlined.CheckCircle" />
+    }
+    else
+    {
+        <MudStaticTextField @bind-Value="email" Placeholder="Please enter your email." Label="Email" Margin="Margin.Dense" Variant="Variant.Outlined"
+                            Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Email" />
+
+        <MudStaticButton form="send-verfication-form" FullWidth="true" Variant="Variant.Filled" Color="Color.Primary">Send verification email</MudStaticButton>
+    }
+
+    <MudStaticTextField @bind-Value="Input.NewEmail" Placeholder="Please enter new email." Label="Email" Margin="Margin.Dense" Variant="Variant.Outlined"
+                        class="py-4" For="() => Input.NewEmail" autocomplete="email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Email" />
+
+    <MudStaticButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" >Change Email</MudStaticButton>
+</EditForm>
+
+@code {
+    private string? message;
+    private ApplicationUser user = default!;
+    private string? email;
+    private bool isEmailConfirmed;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm(FormName = "change-email")]
+    private InputModel Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        email = await UserManager.GetEmailAsync(user);
+        isEmailConfirmed = await UserManager.IsEmailConfirmedAsync(user);
+
+        Input.NewEmail ??= email;
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        if (Input.NewEmail is null || Input.NewEmail == email)
+        {
+            message = "Your email is unchanged.";
+            return;
+        }
+
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri("Account/ConfirmEmailChange").AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = userId, ["email"] = Input.NewEmail, ["code"] = code });
+
+        await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
+
+        message = "Confirmation link to change email sent. Please check your email.";
+    }
+
+    private async Task OnSendEmailVerificationAsync()
+    {
+        if (email is null)
+        {
+            return;
+        }
+
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
+
+        await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
+
+        message = "Verification email sent. Please check your email.";
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "New email")]
+        public string? NewEmail { get; set; }
+    }
+}

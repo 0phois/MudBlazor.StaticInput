@@ -1,0 +1,31 @@
+﻿@page "/Account/Manage/PersonalData"
+
+@inject IdentityUserAccessor UserAccessor
+
+<PageTitle>Personal Data</PageTitle>
+
+<StatusMessage />
+
+<MudText Class="pb-2" Typo="Typo.h6">Personal Data</MudText>
+
+<MudText Typo="Typo.body2">Your account contains personal data that you have given us. This page allows you to download or delete that data.</MudText>
+
+<MudAlert Class="my-4" Severity="Severity.Warning">
+    <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+</MudAlert>
+
+<MudStaticButton FormAction="FormAction.Post" SubmitUrl="Account/Manage/DownloadPersonalData" Color="Color.Primary" Variant="Variant.Filled" FullWidth="true">
+    Download
+</MudStaticButton>
+
+<MudButton Class="mt-2" Href="Account/Manage/DeletePersonalData" Color="Color.Error" Variant="Variant.Outlined" FullWidth="true">Delete</MudButton>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _ = await UserAccessor.GetRequiredUserAsync(HttpContext);
+    }
+}

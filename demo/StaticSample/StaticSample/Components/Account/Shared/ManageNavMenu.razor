@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using StaticSample.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+
+<MudNavMenu>
+    <MudNavLink Href="Account/Manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.PersonOutline">Profile</MudNavLink>
+    <MudNavLink Href="Account/Manage/Email" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Email">Email</MudNavLink>
+    <MudNavLink Href="Account/Manage/ChangePassword" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Password">Password</MudNavLink>
+    <MudNavLink Href="Account/Manage/TwoFactorAuthentication" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PhonelinkLock">Two-factor authentication</MudNavLink>
+    <MudNavLink Href="Account/Manage/PersonalData" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.LockPerson">Personal data</MudNavLink>
+</MudNavMenu>
+
+@code {
+    private bool hasExternalLogins;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    }
+}

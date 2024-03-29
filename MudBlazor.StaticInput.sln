@@ -5,6 +5,10 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.StaticInput", "src\MudBlazor.StaticInput.csproj", "{2B69CBAC-D1AA-4207-B21F-E9CA81F1ABCC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticSample.Client", "demo\StaticSample\StaticSample.Client\StaticSample.Client.csproj", "{82535416-5695-4CA4-A768-AB19DB59916D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticSample", "demo\StaticSample\StaticSample\StaticSample.csproj", "{4513699B-BD7E-42DC-A01A-17AF4D313BC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{2B69CBAC-D1AA-4207-B21F-E9CA81F1ABCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B69CBAC-D1AA-4207-B21F-E9CA81F1ABCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B69CBAC-D1AA-4207-B21F-E9CA81F1ABCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82535416-5695-4CA4-A768-AB19DB59916D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82535416-5695-4CA4-A768-AB19DB59916D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82535416-5695-4CA4-A768-AB19DB59916D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82535416-5695-4CA4-A768-AB19DB59916D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

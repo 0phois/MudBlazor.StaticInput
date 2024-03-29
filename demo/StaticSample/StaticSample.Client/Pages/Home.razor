@@ -1,0 +1,57 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
+<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor and the .NET 8 Template!</MudText>
+
+<MudText Typo="Typo.h5" GutterBottom="true">Interactivity in this Demo</MudText>
+<MudText Typo="Typo.body2">
+    This sample project was created using the Global InteractiveAuto 
+    <MudLink Href="https://github.com/MudBlazor/Templates" Target="_blank" Color="Color.Secondary">Template</MudLink>. <br />
+    When using "Global" Interactivity, the render modes are defined in App.razor and applied to all child components. <br />
+    <br />
+    If a render mode is not specified for a page, it defaults to Static Server-Side Rendering (SSSR). <br />
+    With MudBlazor, SSSR rendering is possible, but interactive elements like buttons and dropdown menus won't work.<br />
+    <br />
+    <MudAlert Severity="Severity.Info">
+        All Account pages in this demo are Static Server-Side rendered as, required when using
+        <MudLink Href="https://learn.microsoft.com/en-us/aspnet/core/blazor/security/server/?view=aspnetcore-8.0&tabs=visual-studio#blazor-identity-ui-individual-accounts" Target="_blank" Typo="Typo.body2" Color="Color.Secondary">
+            <b>Blazor Identity UI (Individual Accounts)</b>
+        </MudLink>
+    </MudAlert>
+</MudText>
+
+<br />
+<MudText Typo="Typo.h5" GutterBottom="true" Align="Align.Center">What's New in Blazor with the Release of .NET 8</MudText>
+<br />
+<MudStack Row="true" Wrap="Wrap.Wrap" Justify="Justify.SpaceEvenly">
+    <MudCard Elevation="3" Style="max-width:400px;">
+        <MudCardHeader><MudText Typo="Typo.h6">Pre-rendering</MudText></MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body2" GutterBottom="true">
+                In .NET 8 Blazor, every page is prerendered on the server, regardless of the render mode chosen. <br />
+                This means you'll have to inject all required services on the server,
+                even if you're using the wasm (WebAssembly) render mode. <br />
+                This prerendering feature is important for ensuring that WebAssembly mode feels fast and responsive,
+                particularly during the initial page loading. 
+                <MudLink Href="https://github.com/dotnet/aspnetcore/issues/51468#issuecomment-1783568121" Target="_blank" Typo="Typo.body2" Color="Color.Secondary">
+                    More details
+                </MudLink>
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+    <MudCard Elevation="3" Style="max-width:400px;">
+        <MudCardHeader><MudText Typo="Typo.h6">InteractiveAuto</MudText></MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body2">
+                To demonstrate the behavior of InteractiveAuto rendering, this demo includes render mode details in the App Bar. <br />
+                The information updates to reflect how the current page is presently being rendered. <br />
+                <br />
+                <strong>SSR</strong> Rendered: Interactive Server-Side Rendering <br />
+                <strong>CSR</strong> Rendered: Interactive Client-Side Rendering <br />
+                <strong>Pre</strong> Rendered: Static Server-Side Rendering <br />
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+</MudStack>
