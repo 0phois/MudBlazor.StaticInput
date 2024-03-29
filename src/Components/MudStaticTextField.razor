@@ -10,14 +10,25 @@
 @code {
     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
 
-    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+    private string _name;
+    private string _elementId;
     private bool HasDefaultContent => ShrinkLabel || 
                                       HasNativeHtmlPlaceholder() ||
                                       Adornment == Adornment.Start || 
                                       !string.IsNullOrWhiteSpace(Placeholder);
 
+    protected override void OnParametersSet()
+    {
+        UserAttributes["id"] = _elementId;
+        UserAttributes["name"] = _name;
+
+        base.OnParametersSet();
+    }
+
     protected override void OnInitialized()
     {
+        _elementId = Guid.NewGuid().ToString()[..8];
+
         var expression = ValueExpression?.ToString();
 
         if (!string.IsNullOrEmpty(expression))
@@ -26,8 +37,7 @@
 
             if (index > 0)
             {
-                UserAttributes["id"] = _elementId;
-                UserAttributes["name"] = expression[(index + 2)..];
+                _name = expression[(index + 2)..];       
             }
         }
 
@@ -53,8 +63,8 @@
 
     if (inputElement && !shrinkLabel) {
         inputElement.addEventListener('blur', function (event) {
-                const emptyValue = event.target.value.length === 0;
-                const parentElement = event.target.parentElement;
+            const emptyValue = event.target.value.length === 0;
+            const parentElement = event.target.parentElement;
                             
             parentElement.classList.toggle("mud-shrink", !emptyValue);             
         });
