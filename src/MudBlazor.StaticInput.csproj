@@ -4,6 +4,18 @@
         <TargetFrameworks>net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Company>Ophois</Company>
+        <Authors>0phois</Authors>
+        <Description>MudBlazor extension components for Static Server-Side Rendered pages. Focuses on input components for forms.</Description>
+        <Copyright>Copyright 2024 Ophois</Copyright>
+        <PackageProjectUrl>https://github.com/0phois/MudBlazor.StaticInput</PackageProjectUrl>
+        <PackageIcon>nuget.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/0phois/MudBlazor.StaticInput</RepositoryUrl>
+        <PackageTags>material-design; server-side-rendering; component; blazor; microsoft-identity-UI; mudblazor; SSR; blazor-component-library</PackageTags>
+        <IncludeSymbols>True</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +29,17 @@
 
     <ItemGroup>
         <Folder Include="wwwroot\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\content\nuget.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>
