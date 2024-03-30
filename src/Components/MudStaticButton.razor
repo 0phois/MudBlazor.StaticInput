@@ -5,10 +5,8 @@
 @if (FormAction == FormAction.Post)
 {
     <form action="@SubmitUrl" method="post">
-        @if (AntiForgeryToken)
-        {
-            <AntiforgeryToken />
-        }
+        <AntiforgeryToken />
+
         @RenderButton()
         @RenderHiddenReturnUrl()
     </form>
@@ -35,11 +33,6 @@ else
     ///     Where to send the data when the button is clicked.
     /// </summary>
     [Parameter] public string SubmitUrl { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Render an antiforgery token as a hidden field.
-    /// </summary>
-    [Parameter] public bool AntiForgeryToken { get; set; } = true;
 
     private string GetButtonType() => FormAction switch
     {
@@ -77,5 +70,4 @@ else
         }
         return null;
     }
-    
 }
