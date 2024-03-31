@@ -8,6 +8,9 @@
 Tailored specifically for [Static Server-Side Rendered](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#static-server-side-rendering-static-ssr) (static SSR) pages. It offers seamless integration of MudBlazor's Component design into your applications. Focusing particularly on components designed for forms and edit forms, in situations where [interactive](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#render-modes) components are not feasible.  
 [*example*: [Blazor Identity UI](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/server/?view=aspnetcore-8.0&tabs=visual-studio#blazor-identity-ui-individual-accounts)].
 
+<a href="https://github.com/0phois/MudBlazor.StaticInput/tree/master/demo/StaticSample">
+  <img alt="Static Input Demo" src="content/StaticInput.png" />
+</a>
 
 ## :thinking: Why MudBlazor.StaticInput? :thinking:
 - **Rapid SSSR Integration:** Effortlessly add MudBlazor components to your static SSR pages, saving development time.
