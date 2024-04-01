@@ -1,0 +1,25 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="email">
+    <DataAnnotationsValidator />
+
+    @* <MudStaticSwitch @bind-Value="Input.Confirm" Class="my-4" Color="Color.Primary" Label="Confirm" /> *@
+
+    <MudStaticCheckBox @bind-Value="Input.Confirm" Class="my-4" Color="Color.Primary" Label="Confirm" />
+    <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private void OnValidSubmit() => NavigationManager.NavigateTo("home");
+
+    private sealed class InputModel
+    {
+        [Required]
+        public bool Confirm { get; set; }
+    }
+}

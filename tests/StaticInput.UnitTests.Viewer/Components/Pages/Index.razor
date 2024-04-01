@@ -1,0 +1,36 @@
+﻿@page "/"
+@page "/home"
+
+@inject NavigationManager Navigation
+
+<PageTitle>@(TestComponent ?? "Home")</PageTitle>
+
+@RenderFragment
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "Test")]
+    public string? TestComponent { get; set; } = null;
+
+    [CascadingParameter]
+    public Type[] AvailableComponentTypes { get; set; } = [];
+
+    private RenderFragment? RenderFragment { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(TestComponent)) return;
+
+        var selectedType = AvailableComponentTypes.FirstOrDefault(type => type.Name.Contains(TestComponent, StringComparison.OrdinalIgnoreCase));
+
+        if (selectedType is null) return;
+
+        RenderFragment = builder =>
+        {
+            builder.OpenComponent(0, selectedType);
+            builder.CloseComponent();
+        };
+
+        base.OnParametersSet();
+    }
+}
