@@ -10,9 +10,9 @@
                 <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" value="True"
                        aria-checked="@((BoolValue == true).ToString().ToLower())" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                        id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
-                <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : Color.Inherit" Size="@Size"
+                <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size"
                          id="@($"check-icon-{_elementId}")" style="display: none;"/>
-                <MudIcon Icon="@UncheckedIcon" Color="HasErrors ? Color.Error : Color.Inherit" Size="@Size"
+                <MudIcon Icon="@UncheckedIcon" Color="HasErrors ? Color.Error : this.UnCheckedColor ?? Color.Inherit" Size="@Size"
                          id="@($"unchecked-icon-{_elementId}")"/>
             </span>
             @if (!string.IsNullOrEmpty(Label))
