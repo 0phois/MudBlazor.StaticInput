@@ -4,9 +4,11 @@
 
 <EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="confirm">
     <DataAnnotationsValidator />
-    <MudStaticCheckBox @bind-Value="Input.Confirm" Class="my-4 ml-n4" Color="Color.Primary" Label="Confirm" For="() => Input.Confirm"
-                       UncheckedIcon="@Icons.Material.Filled.IndeterminateCheckBox" CheckedIcon="@Icons.Material.Filled.LibraryAddCheck" />
-    <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudStaticSwitch @bind-Value="Input.Confirm" Class="my-4 ml-n4" Label="Confirm" For="() => Input.Confirm"
+                         Color="Color.Primary" UnCheckedColor="Color.Error" Size="Size.Large" LabelPosition="LabelPosition.Start" />
+        <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
+    </MudStack>
 </EditForm>
 
 @code {

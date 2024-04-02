@@ -4,8 +4,8 @@
 
 <EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="confirm">
     <DataAnnotationsValidator />
-    <MudStaticCheckBox @bind-Value="Input.Confirm" Class="my-4 ml-n4" Color="Color.Primary" Label="Confirm" For="() => Input.Confirm"
-                       UncheckedIcon="@Icons.Material.Filled.IndeterminateCheckBox" CheckedIcon="@Icons.Material.Filled.LibraryAddCheck" />
+    <MudStaticSwitch @bind-Value="Input.Confirm" Class="my-4 ml-n4" Label="Confirm" For="() => Input.Confirm"
+                     ThumbIcon="@Icons.Custom.Brands.MudBlazor" ThumbIconColor="Color.Primary" />
     <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
 </EditForm>
 
