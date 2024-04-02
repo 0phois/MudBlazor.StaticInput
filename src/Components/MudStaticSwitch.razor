@@ -66,32 +66,34 @@
 }
 
 <script>
-    const container = document.getElementById(`switch-container-@_elementId`);
-    const switchToggle = document.getElementById(`static-switch-@_elementId`);
-    const emptySwitch = document.getElementById('empty-switch-@_elementId');
-    const switchTrack = document.getElementById(`switch-track-@_elementId`);
+    (function () {
+        const container = document.getElementById('switch-container-@_elementId');
+        const switchToggle = document.getElementById('static-switch-@_elementId');
+        const emptySwitch = document.getElementById('empty-switch-@_elementId');
+        const switchTrack = document.getElementById('switch-track-@_elementId');
 
-    switchToggle.addEventListener('change', () => {
-        switchToggle.ariaChecked = switchToggle.checked ? "true" : "false";
+        switchToggle.addEventListener('change', () => {
+            switchToggle.ariaChecked = switchToggle.checked ? "true" : "false";
 
-        const force = switchToggle.checked;
+            const force = switchToggle.checked;
 
-        container.classList.toggle("mud-checked", force)
-        container.classList.toggle("@CheckedTextColor", force)
-        container.classList.toggle("@CheckedHoverColor", force)
-        container.classList.toggle("@UncheckedTextColor", !force)
-        container.classList.toggle("@UncheckedHoverColor", !force)
+            container.classList.toggle("mud-checked", force)
+            container.classList.toggle("@CheckedTextColor", force)
+            container.classList.toggle("@CheckedHoverColor", force)
+            container.classList.toggle("@UncheckedTextColor", !force)
+            container.classList.toggle("@UncheckedHoverColor", !force)
 
-        switchTrack.classList.toggle("@CheckedColor", force);
-        switchTrack.classList.toggle("@UncheckedColor", !force)
+            switchTrack.classList.toggle("@CheckedColor", force);
+            switchTrack.classList.toggle("@UncheckedColor", !force)
 
-        if (switchToggle.checked) {
-            emptySwitch.removeAttribute("name");
-            switchToggle.setAttribute("name", "@_name");
-        }
-        else {
-            switchToggle.removeAttribute("name");
-            emptySwitch.setAttribute("name", "@_name");
-        }
-    });
+            if (switchToggle.checked) {
+                emptySwitch.removeAttribute("name");
+                switchToggle.setAttribute("name", "@_name");
+            }
+            else {
+                switchToggle.removeAttribute("name");
+                emptySwitch.setAttribute("name", "@_name");
+            }
+        });
+    })();
 </script>

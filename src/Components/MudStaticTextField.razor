@@ -57,34 +57,35 @@
 }
 
 <script>
-    const inputElement = document.getElementById(`@_elementId`);
-    const shrinkLabel = @HasDefaultContent.ToString().ToLower();
-    const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
+    (function () {
+        const inputElement = document.getElementById('@_elementId');
+        const shrinkLabel = @HasDefaultContent.ToString().ToLower();
+        const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
 
-    if (inputElement && !shrinkLabel) {
-        inputElement.addEventListener('blur', function (event) {
-            const emptyValue = event.target.value.length === 0;
-            const parentElement = event.target.parentElement;
-                            
-            parentElement.classList.toggle("mud-shrink", !emptyValue);             
-        });
-    }
+        if (inputElement && (!shrinkLabel || showOnFocus)) {
+            const parentElement = inputElement.closest(".mud-input-control");
+            const helperElement = parentElement ? parentElement.querySelector(".me-auto") : null;
 
-    if (inputElement && showOnFocus) {
-        const parentElement = inputElement.closest(".mud-input-control");
-        if (parentElement) {
-            const helperElement = parentElement.querySelector(".me-auto");
-            if (helperElement) {
+            if (showOnFocus && helperElement) {
                 helperElement.style.visibility = "hidden";
 
                 inputElement.addEventListener('focus', function () {
                     helperElement.style.visibility = "visible";
                 });
-
-                inputElement.addEventListener('blur', function () {
-                    helperElement.style.visibility = "hidden";
-                });
             }
+
+            inputElement.addEventListener('blur', function (event) {
+                if (!shrinkLabel) {
+                    const emptyValue = event.target.value.length === 0;
+                    const targetParent = event.target.parentElement;
+
+                    targetParent.classList.toggle("mud-shrink", !emptyValue);
+                }
+
+                if (helperElement) {
+                    helperElement.style.visibility = "hidden";
+                }
+            });
         }
-    }
+    })();
 </script>

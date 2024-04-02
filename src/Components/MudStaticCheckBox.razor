@@ -55,23 +55,25 @@
 }
 
 <script>
-    const checkbox = document.getElementById('static-checkbox-@_elementId');
-    const emptyCheckbox = document.getElementById('empty-checkbox-@_elementId');
-    const checkedIcon = document.getElementById('check-icon-@_elementId');
-    const uncheckedIcon = document.getElementById('unchecked-icon-@_elementId');
+    (function () {
+        const checkbox = document.getElementById('static-checkbox-@_elementId');
+        const emptyCheckbox = document.getElementById('empty-checkbox-@_elementId');
+        const checkedIcon = document.getElementById('check-icon-@_elementId');
+        const uncheckedIcon = document.getElementById('unchecked-icon-@_elementId');
 
-    checkbox.addEventListener('change', () => {
-        checkbox.ariaChecked = checkbox.checked ? "true" : "false";
-        checkedIcon.style.display = checkbox.checked ? 'block' : 'none';
-        uncheckedIcon.style.display = checkbox.checked ? 'none' : 'block';
+        checkbox.addEventListener('change', () => {
+            checkbox.ariaChecked = checkbox.checked ? "true" : "false";
+            checkedIcon.style.display = checkbox.checked ? 'block' : 'none';
+            uncheckedIcon.style.display = checkbox.checked ? 'none' : 'block';
 
-        if (checkbox.checked) {
-            emptyCheckbox.removeAttribute("name");
-            checkbox.setAttribute("name", "@_name");
-        }
-        else {
-            checkbox.removeAttribute("name");
-            emptyCheckbox.setAttribute("name", "@_name");
-        }
-    });
+            if (checkbox.checked) {
+                emptyCheckbox.removeAttribute("name");
+                checkbox.setAttribute("name", "@_name");
+            }
+            else {
+                checkbox.removeAttribute("name");
+                emptyCheckbox.setAttribute("name", "@_name");
+            }
+        });
+    })();
 </script>
