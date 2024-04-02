@@ -6,7 +6,8 @@
     <InputContent>
         <label class="@LabelClassname" id="@($"checkbox-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
             <span tabindex="0" class="@CheckBoxClassname">
-                <input tabindex="-1" name="@_name" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" checked="@Value" value="True"
+                <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@_name" value="False" />
+                <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" value="True"
                        aria-checked="@((BoolValue == true).ToString().ToLower())" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                        id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@Icons.Material.Filled.CheckBox" Color="HasErrors ? Color.Error : Color.Inherit" Size="@Size"
@@ -43,7 +44,9 @@
             var index = expression.LastIndexOf(").", StringComparison.Ordinal);
 
             if (index > 0)
+            {
                 _name = expression[(index + 2)..];
+            }
         }
 
         base.OnInitialized();
@@ -52,13 +55,23 @@
 }
 
 <script>
-    const checkbox = document.getElementById(`static-checkbox-@_elementId`);
-    const checkedIcon = document.getElementById(`check-icon-@_elementId`);
-    const uncheckedIcon = document.getElementById(`unchecked-icon-@_elementId`);
+    const checkbox = document.getElementById('static-checkbox-@_elementId');
+    const emptyCheckbox = document.getElementById('empty-checkbox-@_elementId');
+    const checkedIcon = document.getElementById('check-icon-@_elementId');
+    const uncheckedIcon = document.getElementById('unchecked-icon-@_elementId');
 
     checkbox.addEventListener('change', () => {
         checkbox.ariaChecked = checkbox.checked ? "true" : "false";
         checkedIcon.style.display = checkbox.checked ? 'block' : 'none';
         uncheckedIcon.style.display = checkbox.checked ? 'none' : 'block';
+
+        if (checkbox.checked) {
+            emptyCheckbox.removeAttribute("name");
+            checkbox.setAttribute("name", "@_name");
+        }
+        else {
+            checkbox.removeAttribute("name");
+            emptyCheckbox.setAttribute("name", "@_name");
+        }
     });
 </script>

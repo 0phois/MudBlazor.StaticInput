@@ -87,6 +87,6 @@ The set of components and features may extend over time. Currently, Static Input
 ## :rocket: Getting Started :rocket:
 To start using MudBlazor.StaticInput in your projects, simply install the package via NuGet Package Manager:
 ```bash
-dotnet add package MudBlazor.StaticInput
+dotnet add package Extensions.MudBlazor.StaticInput
 ```
 > Note: MudBlazor should already be setup for your application
