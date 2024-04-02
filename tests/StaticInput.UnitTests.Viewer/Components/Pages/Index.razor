@@ -1,9 +1,12 @@
 ﻿@page "/"
 @page "/home"
+@using BlazorPageScript
 
 @inject NavigationManager Navigation
 
 <PageTitle>@(TestComponent ?? "Home")</PageTitle>
+
+<PageScript Src="./Components/Pages/Index.razor.js" />
 
 @RenderFragment
 

@@ -2,12 +2,9 @@
 
 @inject NavigationManager NavigationManager
 
-<EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="email">
+<EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="confirm">
     <DataAnnotationsValidator />
-
-    @* <MudStaticSwitch @bind-Value="Input.Confirm" Class="my-4" Color="Color.Primary" Label="Confirm" /> *@
-
-    <MudStaticCheckBox @bind-Value="Input.Confirm" Class="my-4" Color="Color.Primary" Label="Confirm" />
+    <MudStaticCheckBox @bind-Value="Input.Confirm" Class="my-4 ml-n4" Color="Color.Primary" Label="Confirm" For="() => Input.Confirm" />
     <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
 </EditForm>
 
@@ -15,11 +12,11 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
-    private void OnValidSubmit() => NavigationManager.NavigateTo("home");
+    private void OnValidSubmit() => NavigationManager.NavigateTo("");
 
     private sealed class InputModel
     {
-        [Required]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must confirm.")]
         public bool Confirm { get; set; }
     }
 }

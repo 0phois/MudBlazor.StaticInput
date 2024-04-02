@@ -14,4 +14,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BlazorPageScript" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
