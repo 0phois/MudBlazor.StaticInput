@@ -12,6 +12,8 @@ namespace StaticInput.UnitTests.Fixtures
         {
             _playwright = await Playwright.CreateAsync();
 
+            _playwright.Selectors.SetTestIdAttribute("id");
+            
             Browser = await _playwright.Chromium.LaunchAsync(new() { Headless = true });
         }
 
