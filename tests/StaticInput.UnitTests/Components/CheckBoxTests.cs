@@ -1,11 +1,10 @@
-﻿using AngleSharp.Html.Dom;
-using Bunit;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MudBlazor.StaticInput;
+using StaticInput.UnitTests.Fixtures;
 
 namespace StaticInput.UnitTests.Components
 {
-    public class CheckBoxTests : BunitTest
+    public class CheckBoxTests(ContextFixture contextFixture) : BaseComponentTest(contextFixture)
     {
         [Fact]
         public void MudStaticCheckBox_Should_Render_CheckBox()

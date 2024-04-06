@@ -3,11 +3,13 @@ using Bunit.TestDoubles;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.StaticInput;
+using StaticInput.UnitTests.Fixtures;
 using StaticInput.UnitTests.Viewer.Components.Tests.Button;
+using static Microsoft.Playwright.Assertions;
 
 namespace StaticInput.UnitTests.Components
 {
-    public class ButtonTests : BunitTest
+    public class ButtonTests(ContextFixture contextFixture) : BaseComponentTest(contextFixture)
     {
         [Fact]
         public void MudStaticButton_Should_Render_Submit_Button()
@@ -73,6 +75,9 @@ namespace StaticInput.UnitTests.Components
 
             comp.Find("button").Click();
 
+            comp.Markup.Should().Contain("mud-input-error")
+                .And.Contain("The Email field is required.");
+
             var navigation = Context.Services.GetRequiredService<FakeNavigationManager>();
 
             navigation.History.Should().HaveCount(0);
@@ -90,6 +95,46 @@ namespace StaticInput.UnitTests.Components
 
             navigation.History.Should().HaveCount(1);
             navigation.Uri.Should().Be("http://localhost/");
+        }
+
+        [Fact]
+        public async Task ResetButton_Should_Clear_Form()
+        {
+            var email = "reset@mail.com";
+            var url = typeof(ButtonResetTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var input = Page.GetByLabel("Email");
+
+            await input.FillAsync(email);
+            await Expect(input).ToHaveValueAsync(email);
+
+            await Page.Locator("button").ClickAsync();
+
+            await Expect(input).ToBeEmptyAsync();
+        }
+
+        [Fact]
+        public async Task PostButton_Should_Execute_Action()
+        {
+            var url = typeof(ButtonPostTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+            await Page.GetByText("Execute").ClickAsync();
+
+            await Expect(Page).ToHaveURLAsync("TestEndpoint");
+        }
+
+        [Fact]
+        public async Task PostButton_Should_Redirect_To_ReturnUrl()
+        {
+            var url = typeof(ButtonPostTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+            await Page.GetByText("Redirect").ClickAsync();
+
+            await Expect(Page).ToHaveURLAsync("home");
         }
     }
 }
