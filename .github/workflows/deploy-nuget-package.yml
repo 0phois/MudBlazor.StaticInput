@@ -12,21 +12,7 @@ on:
     tags: 
       - "v[0-9]+.[0-9]+.[0-9]+*"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      
+jobs:     
   get-version:
     name: Get version to deploy
     runs-on: ubuntu-latest
@@ -70,4 +56,7 @@ jobs:
       working-directory: ./src
     - name: Publish nuget package
       run: dotnet nuget push nupkgs/*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+      working-directory: ./src
+    - name: Push nuget generated package symbols
+      run: dotnet nuget push nupkgs/*.snupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: ./src
