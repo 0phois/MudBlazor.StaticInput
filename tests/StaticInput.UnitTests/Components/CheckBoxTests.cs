@@ -14,7 +14,6 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticCheckBox_Should_Render_CheckBox()
         {
-
             var comp = Context.RenderComponent<MudStaticCheckBox>();
 
             comp.Markup.Replace(" ", string.Empty).Should()
@@ -58,7 +57,6 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public async Task CheckBox_Icon_Changes_When_Checked()
         {
-            
             var url = typeof(CheckBoxToggleIconTest).ToQueryString();
 
             await Page.GotoAsync(url);
