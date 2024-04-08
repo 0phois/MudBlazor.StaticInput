@@ -1,0 +1,27 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager NavigationManager
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <EditForm Model="Model" method="post" OnValidSubmit="OnValidSubmit" FormName="Validate">
+            <DataAnnotationsValidator />
+            <MudStaticTextField For="@(() => Model.Value)" Label="Short string" Variant="Variant.Outlined" @bind-Value="Model.Value" />
+            <MudStaticButton Class="my-4" Color="Color.Primary" Variant="Variant.Filled">Validate</MudStaticButton>
+        </EditForm>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [SupplyParameterFromForm]
+    private TestModel Model { get; set; } = new TestModel();
+
+    private void OnValidSubmit() => NavigationManager.NavigateTo("");
+
+    private sealed class TestModel
+    {
+        [Required]
+        [StringLength(3, ErrorMessage = "Should not be longer than 3")]
+        public string Value { get; set; } = string.Empty;
+    }
+}

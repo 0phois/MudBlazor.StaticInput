@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticSample.Client", "demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticSample", "demo\StaticSample\StaticSample\StaticSample.csproj", "{4513699B-BD7E-42DC-A01A-17AF4D313BC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticInput.UnitTests.Viewer", "tests\StaticInput.UnitTests.Viewer\StaticInput.UnitTests.Viewer.csproj", "{EF0B112F-3C9E-4947-80CF-1F3CA0FBD7FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticInput.UnitTests", "tests\StaticInput.UnitTests\StaticInput.UnitTests.csproj", "{1CD5FE26-3322-4DD8-BD98-BD8ACBBAECC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4513699B-BD7E-42DC-A01A-17AF4D313BC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF0B112F-3C9E-4947-80CF-1F3CA0FBD7FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF0B112F-3C9E-4947-80CF-1F3CA0FBD7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF0B112F-3C9E-4947-80CF-1F3CA0FBD7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF0B112F-3C9E-4947-80CF-1F3CA0FBD7FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CD5FE26-3322-4DD8-BD98-BD8ACBBAECC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CD5FE26-3322-4DD8-BD98-BD8ACBBAECC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CD5FE26-3322-4DD8-BD98-BD8ACBBAECC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CD5FE26-3322-4DD8-BD98-BD8ACBBAECC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

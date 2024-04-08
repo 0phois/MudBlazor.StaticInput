@@ -1,0 +1,24 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="confirm">
+    <DataAnnotationsValidator />
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudStaticCheckBox @bind-Value="Input.Confirm" Class="my-4 ml-n4" Label="Confirm" For="() => Input.Confirm"
+                           Color="Color.Primary" UnCheckedColor="Color.Error" Size="Size.Large" LabelPosition="LabelPosition.Start" />
+        <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
+    </MudStack>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private void OnValidSubmit() => NavigationManager.NavigateTo("");
+
+    private sealed class InputModel
+    {
+        public bool Confirm { get; set; }
+    }
+}

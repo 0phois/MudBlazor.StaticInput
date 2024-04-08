@@ -1,0 +1,63 @@
+﻿@inherits LayoutComponentBase
+
+@inject NavigationManager Navigation
+
+<MudThemeProvider Theme="@customTheme" />
+
+<MudLayout>
+    <MudDrawer Open="true" Elevation="1" Breakpoint="Breakpoint.None" Fixed="true" Variant="DrawerVariant.Persistent">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">Static Input Tests</MudText>
+        </MudDrawerHeader>
+        <MudNavMenu>
+            @foreach (var type in _availableComponentTypes)
+            {
+                <MudNavLink @key="type.Name" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List"
+                            Href="@Navigation.GetUriWithQueryParameter("Test", type.Name)">
+                    @type.Name
+                </MudNavLink>
+            }
+        </MudNavMenu>
+    </MudDrawer>
+    
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            <CascadingValue TValue="Type[]" IsFixed="true" Value="@_availableComponentTypes">
+                @Body
+            </CascadingValue>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    MudTheme customTheme = new MudTheme()
+    {
+        Palette = new PaletteLight() 
+        { 
+            Primary = Colors.Teal.Default
+        }
+    };
+
+    private Type[] _availableComponentTypes = new Type[0];
+
+    protected override void OnInitialized()
+    {
+        _availableComponentTypes = GetTestComponentTypes().ToArray();
+
+        base.OnInitialized();
+    }
+
+    private IEnumerable<Type> GetTestComponentTypes()
+    {
+        foreach (var type in typeof(Program).Assembly.GetTypes().OrderBy(x => x.Name))
+        {
+            if (!type.Name.Contains("Test"))
+                continue;
+            if (type.Name.StartsWith("<"))
+                continue;
+            if (!type.GetInterfaces().Contains(typeof(IComponent)))
+                continue;
+            yield return type;
+        }
+    }
+}

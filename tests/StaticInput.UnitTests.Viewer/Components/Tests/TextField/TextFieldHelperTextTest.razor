@@ -1,0 +1,26 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Model" method="post" OnValidSubmit="OnValidSubmit" FormName="Validate">
+    <DataAnnotationsValidator />
+
+    <MudStaticTextField For="@(() => Model.Value)" Label="Show Always" Variant="Variant.Outlined" @bind-Value="Model.Value"
+                        Class="mb-4" HelperText="Always visible" />
+
+    <MudStaticTextField For="@(() => Model.Value)" Label="Show on Focus" Variant="Variant.Outlined" @bind-Value="Model.Value"
+                        Class="mb-4" HelperText="Show on focus" HelperTextOnFocus="true" />
+
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private TestModel Model { get; set; } = new TestModel();
+
+    private void OnValidSubmit() => NavigationManager.NavigateTo("");
+
+    private sealed class TestModel
+    {
+        public string Value { get; set; } = string.Empty;
+    }
+}
