@@ -23,6 +23,8 @@ namespace StaticInput.UnitTests
                 FileName = "dotnet",
                 Arguments = $"run --project {GetProjectPath()}"
             });
+
+            messageSink.OnMessage(new DiagnosticMessage($"Started {_testViewerProcess?.ProcessName} with ID: {_testViewerProcess?.Id}"));
         }
 
         private static string GetProjectPath()
