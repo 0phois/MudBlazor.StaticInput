@@ -1,0 +1,32 @@
+name: build-test
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name'
+        required: true
+        default: 'master'
+  pull_request:
+
+jobs:
+  test:
+    if: "!startsWith(github.event.pull_request.title, '[build]') && !startsWith(github.event.pull_request.title, '[chore]')"
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Build
+      run: dotnet build ./tests/StaticInput.UnitTests/StaticInput.UnitTests.csproj 
+    - name: Install playwright browsers
+      run: pwsh ./tests/StaticInput.UnitTests/bin/Debug/net8.0/playwright.ps1 install --with-deps
+    - name: Run tests
+      run: >
+        dotnet test ./tests/StaticInput.UnitTests 
+        --configuration Release 
+        --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true"
