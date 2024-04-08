@@ -14,6 +14,8 @@ namespace StaticInput.UnitTests.Fixtures
 
             _playwright.Selectors.SetTestIdAttribute("id");
 
+            await Task.Delay(TimeSpan.FromSeconds(5));
+
             Browser = await _playwright.Chromium.LaunchAsync(new() { Headless = true });
         }
 
