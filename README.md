@@ -3,6 +3,13 @@
   <h1 align="center">MudBlazor.StaticInput</h1>
 </p>
 
+![GitHub License](https://img.shields.io/github/license/0phois/Mudblazor.StaticInput?style=for-the-badge&logo=github&link=https%3A%2F%2Fgithub.com%2F0phois%2FMudBlazor.StaticInput%2Fblob%2Fmaster%2FLICENSE.txt)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/0phois/MudBlazor.StaticInput/build-test.yml?style=for-the-badge&logo=githubactions&label=Unit-Tests&link=https%3A%2F%2Fgithub.com%2F0phois%2FMudBlazor.StaticInput%2Factions%2Fworkflows%2Fbuild-test.yml)
+![NuGet Version](https://img.shields.io/nuget/v/Extensions.MudBlazor.StaticInput?style=for-the-badge&logo=nuget&color=%23009688&link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FExtensions.MudBlazor.StaticInput)
+![NuGet Downloads](https://img.shields.io/nuget/dt/Extensions.MudBlazor.StaticInput?style=for-the-badge&logo=nuget&&color=%2300796b&link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FExtensions.MudBlazor.StaticInput)
+
+
+
 ## :book: Introduction :book:
 **MudBlazor.StaticInput** is an extension package for the [MudBlazor](https://github.com/MudBlazor/MudBlazor) library.  
 Tailored specifically for [Static Server-Side Rendered](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#static-server-side-rendering-static-ssr) (static SSR) pages. It offers seamless integration of MudBlazor's Component design into your applications. Focusing particularly on components designed for forms and edit forms, in situations where [interactive](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#render-modes) components are not feasible.  
