@@ -6,6 +6,12 @@
 
 <PageTitle>@(TestComponent ?? "Home")</PageTitle>
 
+@if (string.IsNullOrEmpty(TestComponent))
+{
+    <MudContainer Class="d-flex align-content-center justify-center pt-8" MaxWidth="MaxWidth.Medium">
+        <MudImage Src="./logo.png" Fluid="true" ObjectFit="ObjectFit.ScaleDown" ObjectPosition="ObjectPosition.Center" Width="500" />
+    </MudContainer>
+}
 <PageScript Src="./Components/Pages/Index.razor.js" />
 
 @RenderFragment
