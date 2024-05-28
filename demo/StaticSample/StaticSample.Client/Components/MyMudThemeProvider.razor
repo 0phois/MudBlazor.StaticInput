@@ -1,11 +1,9 @@
-﻿<CascadingValue Value=false Name="UsePopoverProvider">
-    <MudThemeProvider Theme="MyTheme"></MudThemeProvider>
-</CascadingValue>
+﻿<MudThemeProvider Theme="MyTheme"></MudThemeProvider>
 
 @code {
     public static MudTheme MyTheme => new()
         {
-            Palette = new PaletteLight()
+            PaletteLight = new PaletteLight()
             {
                 Primary = Colors.Teal.Default,
                 AppbarBackground = Colors.Teal.Default

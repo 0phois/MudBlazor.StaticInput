@@ -10,8 +10,8 @@
 @code {
     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
 
-    private string _name;
-    private string _elementId;
+    private string _name = string.Empty;
+    private string _elementId = string.Empty;
     private bool HasDefaultContent => ShrinkLabel || 
                                       HasNativeHtmlPlaceholder() ||
                                       Adornment == Adornment.Start || 
@@ -19,7 +19,7 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["id"] = _elementId;
+        UserAttributes["data-static-id"] = _elementId;
         UserAttributes["name"] = _name;
 
         base.OnParametersSet();
@@ -58,7 +58,7 @@
 
 <script>
     (function () {
-        const inputElement = document.getElementById('@_elementId');
+        const inputElement = document.querySelector('[data-static-id="@_elementId"]');
         const shrinkLabel = @HasDefaultContent.ToString().ToLower();
         const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
 

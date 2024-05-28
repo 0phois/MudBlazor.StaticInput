@@ -25,8 +25,6 @@ public partial class MudStaticTextField<T> : MudTextField<T>
     protected new EventCallback<FocusEventArgs> OnBlur { get; set; }
     protected new EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
     protected new bool KeyDownPreventDefault { get; set; }
-    protected new EventCallback<KeyboardEventArgs> OnKeyPress { get; set; }
-    protected new bool KeyPressPreventDefault { get; set; }
     protected new EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
     protected new bool KeyUpPreventDefault { get; set; }
     protected new EventCallback<T> ValueChanged { get; set; }
