@@ -12,7 +12,7 @@
                        id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size"
                          id="@($"check-icon-{_elementId}")" style="display: none;"/>
-                <MudIcon Icon="@UncheckedIcon" Color="HasErrors ? Color.Error : this.UnCheckedColor ?? Color.Inherit" Size="@Size"
+                <MudIcon Icon="@UncheckedIcon" Color="HasErrors ? Color.Error : this.UncheckedColor ?? Color.Inherit" Size="@Size"
                          id="@($"unchecked-icon-{_elementId}")"/>
             </span>
             @if (!string.IsNullOrEmpty(Label))

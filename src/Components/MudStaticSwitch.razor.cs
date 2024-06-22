@@ -8,21 +8,20 @@ public partial class MudStaticSwitch : MudSwitch<bool>
      * Hide these inherited properties to prevent *
      * consumers from modifying them directly.    *
      **********************************************/
-    protected new bool Checked { get; set; }
+    protected new bool Value { get; set; }
     protected new EventCallback<bool> ValueChanged { get; set; }
-    protected new EventCallback<bool> CheckedChanged { get; set; }
 
     /*
      * Options for SwitchClassname
      */
     private string CheckedTextColor => $"mud-{Color.ToDescriptionString()}-text";
     private string CheckedHoverColor => $"hover:mud-{Color.ToDescriptionString()}-hover";
-    private string UncheckedTextColor => $"mud-{UnCheckedColor.ToDescriptionString()}-text";
-    private string UncheckedHoverColor => $"hover:mud-{UnCheckedColor.ToDescriptionString()}-hover";
+    private string UncheckedTextColor => $"mud-{UncheckedColor.ToDescriptionString()}-text";
+    private string UncheckedHoverColor => $"hover:mud-{UncheckedColor.ToDescriptionString()}-hover";
 
     /*
      * Options for TrackClassname
      */
     private string CheckedColor => $"mud-{Color.ToDescriptionString()}";
-    private string UncheckedColor => $"mud-{UnCheckedColor.ToDescriptionString()}";
+    private string UnCheckedColor => $"mud-{UncheckedColor.ToDescriptionString()}";
 }

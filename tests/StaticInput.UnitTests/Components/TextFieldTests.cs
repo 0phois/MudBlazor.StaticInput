@@ -24,7 +24,7 @@ namespace StaticInput.UnitTests.Components
             var comp = Context.RenderComponent<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
-                            .First(x => x.Instance.Label.Equals("Basic Label", StringComparison.OrdinalIgnoreCase));
+                            .First(x => x.Instance.Label!.Equals("Basic Label", StringComparison.OrdinalIgnoreCase));
 
             var index = field.Markup.IndexOf("<script>");
 
@@ -41,7 +41,7 @@ namespace StaticInput.UnitTests.Components
             var comp = Context.RenderComponent<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
-                            .First(x => x.Instance.Label.Equals("Adornment Start", StringComparison.OrdinalIgnoreCase));
+                            .First(x => x.Instance.Label!.Equals("Adornment Start", StringComparison.OrdinalIgnoreCase));
 
             var index = field.Markup.IndexOf("<script>");
 
@@ -58,7 +58,7 @@ namespace StaticInput.UnitTests.Components
             var comp = Context.RenderComponent<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
-                            .First(x => x.Instance.Label.Equals("Adornment End", StringComparison.OrdinalIgnoreCase));
+                            .First(x => x.Instance.Label!.Equals("Adornment End", StringComparison.OrdinalIgnoreCase));
 
             var index = field.Markup.IndexOf("<script>");
 
@@ -75,7 +75,7 @@ namespace StaticInput.UnitTests.Components
             var comp = Context.RenderComponent<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
-                            .First(x => x.Instance.Label.Equals("Shrink Label", StringComparison.OrdinalIgnoreCase));
+                            .First(x => x.Instance.Label!.Equals("Shrink Label", StringComparison.OrdinalIgnoreCase));
 
             var index = field.Markup.IndexOf("<script>");
 
@@ -92,7 +92,7 @@ namespace StaticInput.UnitTests.Components
             var comp = Context.RenderComponent<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
-                            .First(x => x.Instance.Label.Equals("Placeholder", StringComparison.OrdinalIgnoreCase));
+                            .First(x => x.Instance.Label!.Equals("Placeholder", StringComparison.OrdinalIgnoreCase));
 
             var index = field.Markup.IndexOf("<script>");
 

@@ -10,9 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="Blazr.RenderState.WASM" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
-	<PackageReference Include="MudBlazor" Version="6.19.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
+	<PackageReference Include="MudBlazor" Version="7.0.0-rc.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.6" />
   </ItemGroup>
 
 </Project>
