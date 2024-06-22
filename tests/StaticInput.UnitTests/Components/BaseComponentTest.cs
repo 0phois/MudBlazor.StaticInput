@@ -18,6 +18,7 @@ namespace StaticInput.UnitTests.Components
             ContextFixture = contextFixture;
             Context.JSInterop.Mode = JSRuntimeMode.Loose;
             Context.Services.AddMudBlazorKeyInterceptor();
+            Context.Services.AddMudLocalization();
         }
 
         public async Task InitializeAsync()
