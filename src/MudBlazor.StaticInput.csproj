@@ -21,7 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MudBlazor" Version="7.0.0-rc.2" />
+        <PackageReference Include="MudBlazor" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
