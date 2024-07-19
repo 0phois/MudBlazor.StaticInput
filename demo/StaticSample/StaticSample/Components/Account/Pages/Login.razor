@@ -41,11 +41,12 @@
                     <MudDivider Class="d-flex flex-grow-1" DividerType="DividerType.Middle" Style=@($"border-color:{Colors.Teal.Darken4}") />
                 </MudStack>
 
-                <MudStaticTextField @bind-Value="@Input.Email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Email" autocomplete="username"
+                <MudStaticTextField @bind-Value="@Input.Email" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Email" autocomplete="username"
                                     Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="static@mail.com" For="() => Input.Email" />
 
-                <MudStaticTextField @bind-Value="@Input.Password" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Lock" autocomplete="current-password"
-                                    Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="Password" InputType="InputType.Password" For="() => Input.Password" />
+                <MudStaticTextField @bind-Value="@Input.Password" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.VisibilityOff" AdornmentClickFunction="showPassword"
+                                    autocomplete="current-password" Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="Password" 
+                                    InputType="InputType.Password" For="() => Input.Password" />
 
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                     <MudStaticSwitch @bind-Value="Input.RememberMe" Color="Color.Primary" Label="Remember Me" Typo="Typo.body2" />
@@ -135,3 +136,20 @@
         public bool RememberMe { get; set; }
     }
 }
+
+<script>
+    let timeoutId;
+
+    function showPassword(inputElement, button) {
+        if (inputElement.type === 'password') {
+            inputElement.type = 'text';
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(function () {
+                inputElement.type = 'password';
+            }, 5000);
+        } else {
+            inputElement.type = 'password';
+            clearTimeout(timeoutId);
+        }
+    }
+</script>

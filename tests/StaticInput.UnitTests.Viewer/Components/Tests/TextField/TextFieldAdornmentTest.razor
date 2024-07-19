@@ -1,0 +1,34 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Model" method="post" OnValidSubmit="OnValidSubmit" FormName="Validate">
+    <DataAnnotationsValidator />
+
+    <MudStaticTextField @bind-Value="@Model.Email" For="() => Model.Email" Label="Email" Placeholder="static@mail.com"
+                        Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Email"
+                        Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" />
+    <MudStaticTextField @bind-Value="@Model.Password" For="() => Model.Password" Label="Password" Placeholder="Password"
+                        Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.VisibilityOff"
+                        AdornmentClickFunction="handleAdornmentClick" InputType="InputType.Password"
+                        Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" />
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private TestModel Model { get; set; } = new TestModel();
+
+    private void OnValidSubmit() => NavigationManager.NavigateTo("");
+
+    private sealed class TestModel
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}
+
+<script>
+    function handleAdornmentClick(inputElement, buttonElement) {
+        alert('Adornment clicked!');
+    }
+</script>

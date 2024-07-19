@@ -182,5 +182,48 @@ namespace StaticInput.UnitTests.Components
 
             await Expect(Page).ToHaveTitleAsync("Home");
         }
+
+        [Fact]
+        public void TextField_Adornment_Should_Render_Without_Button()
+        {
+            var comp = Context.RenderComponent<TextFieldAdornmentTest>();
+
+            var field = comp.FindComponents<MudStaticTextField<string>>()
+                            .First(x => x.Instance.Label!.Equals("Email", StringComparison.OrdinalIgnoreCase));
+
+            field.Markup.Should().Contain("mud-input-adornment-icon").And.Contain("svg").And.NotContain("<button");
+        }
+
+        [Fact]
+        public void TextField_With_AdornmentClickFunction_Should_Render_AdornmentButton()
+        {
+            var comp = Context.RenderComponent<TextFieldAdornmentTest>();
+
+            var field = comp.FindComponents<MudStaticTextField<string>>()
+                            .First(x => x.Instance.Label!.Equals("Password", StringComparison.OrdinalIgnoreCase));
+
+            field.Markup.Should().Contain("mud-input-adornment-icon").And.Contain("svg").And.Contain("<button");
+        }
+
+        [Fact]
+        public async Task TextField_AdornmentButton_IsClickable()
+        {
+            var url = typeof(TextFieldAdornmentTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var button = Page.Locator("button");
+            var message = string.Empty;
+
+            Page.Dialog += async (_, dialog) =>
+            {
+                message = dialog.Message;
+                await dialog.AcceptAsync();
+            };
+
+            await button.ClickAsync();
+
+            message.Should().Be("Adornment clicked!");
+        }
     }
 }
