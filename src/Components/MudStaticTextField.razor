@@ -8,6 +8,50 @@
 }
 
 @code {
+    /// <summary>
+    ///     The name of the JavaScript function that will be invoked when the adornment (button) inside this <see cref="MudStaticTextField{T}"/> is clicked
+    /// </summary>
+    /// <remarks>
+    /// <term>Parameters</term>
+    /// <description>(required)</description>
+    /// <list type="bullet">
+    ///     <item>
+    ///         <term>inputElement</term>
+    ///         <description>The input element associated with the <see cref="MudStaticTextField{T}"/>.</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>eventTrigger</term>
+    ///         <description>The button element (adornment button) that triggered the event.</description>
+    ///     </item>
+    /// </list>
+    /// <example>
+    ///     Example: Setting the AdornmentClickFunction to "showPassword" executes the 'showPassword' function when clicked.    
+    /// <code>
+    /// -------------------------------------------------
+    /// MudStaticTextField @bind-Value="@Input.Password" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Lock"
+    ///                    AdornmentClickFunction="showPassword" InputType="InputType.Password" For="() => Input.Password"
+    /// -------------------------------------------------
+    /// </code>
+    /// <code>
+    ///    let timeoutId;
+    ///
+    ///    function showPassword(inputElement, button) {
+    ///        if (inputElement.type === 'password') {
+    ///            inputElement.type = 'text';
+    ///            clearTimeout(timeoutId);
+    ///            timeoutId = setTimeout(function () {
+    ///                inputElement.type = 'password';
+    ///            }, 5000);
+    ///        } else {
+    ///            inputElement.type = 'password';
+    ///            clearTimeout(timeoutId);
+    ///        }
+    ///    }
+    /// </code>
+    /// ------------------------------------------------------------------------
+    /// </example>
+    /// </remarks>
+    [Parameter] public string? AdornmentClickFunction { get; set; }
     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
 
     private string _name = string.Empty;
@@ -22,6 +66,11 @@
         UserAttributes["data-static-id"] = _elementId;
         UserAttributes["name"] = _name;
 
+        if (AdornmentClickFunction is not null)
+        {
+            base.OnAdornmentClick = EventCallback.Factory.Create<MouseEventArgs>(this, () => null!);
+        }
+        
         base.OnParametersSet();
     }
 
@@ -53,7 +102,6 @@
                InputType.Week or
                InputType.Time;
     }
-
 }
 
 <script>
@@ -61,6 +109,7 @@
         const inputElement = document.querySelector('[data-static-id="@_elementId"]');
         const shrinkLabel = @HasDefaultContent.ToString().ToLower();
         const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
+        const onAdornmentClick = '@AdornmentClickFunction';
 
         if (inputElement && (!shrinkLabel || showOnFocus)) {
             const parentElement = inputElement.closest(".mud-input-control");
@@ -86,6 +135,20 @@
                     helperElement.style.visibility = "hidden";
                 }
             });
+        }
+
+        if (onAdornmentClick && onAdornmentClick.trim().length > 0) 
+        {
+            const inputControl = inputElement.closest(".mud-input-control");
+            const buttonElement = inputControl.querySelector('button');
+
+            if (buttonElement) {
+                buttonElement.addEventListener('click', function (event) {
+                    if (typeof window[onAdornmentClick] === 'function') {
+                        window[onAdornmentClick](inputElement, event.target);
+                    }
+                });
+            }
         }
     })();
 </script>
