@@ -31,8 +31,8 @@
                 <MudDivider Class="my-4" DividerType="DividerType.Middle" Style=@($"border-color:{Colors.Teal.Darken4}") />
                 
                 <MudStack Row="true" Justify="Justify.SpaceEvenly" Spacing="1">
-                    <MudStaticButton  StartIcon="@Icons.Custom.Brands.Google" IconColor="Color.Error" Variant="Variant.Filled" DisableElevation="true" Disabled="true"> Google </MudStaticButton>
-                    <MudStaticButton StartIcon="@Icons.Custom.Brands.Facebook" IconColor="Color.Info" Variant="Variant.Filled" DisableElevation="true" Disabled="true">Facebook</MudStaticButton>
+                    <MudStaticButton  StartIcon="@Icons.Custom.Brands.Google" IconColor="Color.Error" Variant="Variant.Filled" DropShadow="false" Disabled="true"> Google </MudStaticButton>
+                    <MudStaticButton StartIcon="@Icons.Custom.Brands.Facebook" IconColor="Color.Info" Variant="Variant.Filled" DropShadow="false" Disabled="true">Facebook</MudStaticButton>
                 </MudStack>
 
                 <MudStack Row="true" Class="ma-4" Justify="Justify.SpaceAround" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap">
@@ -42,14 +42,14 @@
                 </MudStack>
 
                 <MudStaticTextField @bind-Value="@Input.Email" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Email" autocomplete="username"
-                                    Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="static@mail.com" For="() => Input.Email" />
+                                    Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Label="Email" For="() => Input.Email" />
 
                 <MudStaticTextField @bind-Value="@Input.Password" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.VisibilityOff" AdornmentClickFunction="showPassword"
-                                    autocomplete="current-password" Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="Password" 
+                                    autocomplete="current-password" Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Label="Password"
                                     InputType="InputType.Password" For="() => Input.Password" />
 
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                    <MudStaticSwitch @bind-Value="Input.RememberMe" Color="Color.Primary" Label="Remember Me" Typo="Typo.body2" />
+                    <MudStaticSwitch @bind-Value="Input.RememberMe" Color="Color.Primary" Label="Remember Me" Typo="Typo.body2"/>
                     <MudLink Href="Account/ForgotPassword" Typo="Typo.body2" Color="Color.Primary"><b>Forgot password?</b></MudLink>
                 </MudStack>
 
