@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\src\MudBlazor.StaticInput.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BlazorPageScript" Version="1.0.0" />
-  </ItemGroup>
-
 </Project>

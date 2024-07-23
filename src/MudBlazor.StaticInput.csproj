@@ -30,10 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Include="..\content\nuget.png">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
@@ -42,6 +38,13 @@
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="wwwroot\NavigationObserver.js">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<IncludeInPackage>true</IncludeInPackage>
+      </Content>
     </ItemGroup>
 
 </Project>
