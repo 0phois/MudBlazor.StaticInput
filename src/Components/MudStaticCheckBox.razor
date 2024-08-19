@@ -35,6 +35,13 @@
     private string _name = string.Empty;
     private readonly string _elementId = Guid.NewGuid().ToString()[..8];
 
+    protected override void OnParametersSet()
+    {
+        UserAttributes["data-static-component"] = true;
+
+        base.OnParametersSet();
+    }
+
     protected override void OnInitialized()
     {
         var expression = ValueExpression?.ToString();
@@ -51,7 +58,6 @@
 
         base.OnInitialized();
     }
-
 }
 
 <script>

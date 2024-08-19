@@ -11,7 +11,12 @@ let hasInitialized = false;
 
                 if (currentUrl !== lastUrl) {
                     lastUrl = currentUrl;
-                    window.location.reload();
+
+                    const hasStaticComponent = document.body.querySelector('[data-static-component]') !== null;
+
+                    if (hasStaticComponent) {
+                        window.location.reload();
+                    }
                 }
                 hasInitialized = true;
             }

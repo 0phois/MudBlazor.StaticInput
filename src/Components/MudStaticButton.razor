@@ -34,6 +34,13 @@ else
     /// </summary>
     [Parameter] public string SubmitUrl { get; set; } = string.Empty;
 
+    protected override void OnParametersSet()
+    {
+        UserAttributes["data-static-component"] = true;
+
+        base.OnParametersSet();
+    }
+
     private string GetButtonType() => FormAction switch
     {
         FormAction.Submit => ButtonType.Submit.ToDescriptionString(),
