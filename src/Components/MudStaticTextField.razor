@@ -63,6 +63,7 @@
 
     protected override void OnParametersSet()
     {
+        UserAttributes["data-static-component"] = true;
         UserAttributes["data-static-id"] = _elementId;
         UserAttributes["name"] = _name;
 
