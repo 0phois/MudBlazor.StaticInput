@@ -50,7 +50,7 @@ else
 
     private RenderFragment RenderButton() 
     {
-        return@<button type="@GetButtonType()" disabled="@GetDisabledState()" class="@Classname" style="@Style" @attributes="@UserAttributes">
+        return @<button type="@GetButtonType()" disabled="@GetDisabledState()" class="@Classname" style="@Style" @attributes="@UserAttributes">
                     <span class="mud-button-label">
                         @if (!string.IsNullOrWhiteSpace(StartIcon))
                         {

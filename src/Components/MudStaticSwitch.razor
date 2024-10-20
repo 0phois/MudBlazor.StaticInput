@@ -9,9 +9,9 @@
             <span class="@SpanClassname">
                 <span tabindex="0" class="@SwitchClassname" id="@($"switch-container-{_elementId}")">
                     <span class="mud-switch-button">
-                        <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@_name" value="False" />
-                        <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input" value="True"
-                               aria-checked="@((BoolValue == true).ToString().ToLower())" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                        <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@_name" value="@_switchValue.ToString().ToLower()" />
+                        <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input"
+                               aria-checked="@_switchValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                                id="@($"static-switch-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                         <span class="@ThumbClassname">
                             @if (!string.IsNullOrEmpty(ThumbIcon))
@@ -44,6 +44,7 @@
     [Parameter] public Expression<Func<bool>>? ValueExpression { get; set; }
 
     private string _name = string.Empty;
+    private bool _switchValue = false;
     private readonly string _elementId = Guid.NewGuid().ToString()[..8];
 
     protected override void OnParametersSet()
@@ -64,6 +65,15 @@
             if (index > 0) 
             {
                 _name = expression[(index + 2)..];
+
+                var compiledExpression = ValueExpression!.Compile();
+
+                _switchValue = compiledExpression();
+
+                if (_switchValue)
+                {
+                    UserAttributes["checked"] = "";
+                }
             }
         }
 
