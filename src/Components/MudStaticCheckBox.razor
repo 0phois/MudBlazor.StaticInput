@@ -7,8 +7,8 @@
         <label class="@LabelClassname" id="@($"checkbox-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
             <span tabindex="0" class="@CheckBoxClassname">
                 <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@(_checkboxValue ? "" : _name)" value="False" />
-                <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" value="True"
-                       aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" 
+                       value="True" aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                        id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size" 
                          id="@($"check-icon-{_elementId}")" style="@($"display: {_checkedStyle}")"/>
