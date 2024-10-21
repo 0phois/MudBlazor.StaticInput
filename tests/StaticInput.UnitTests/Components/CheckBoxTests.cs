@@ -32,7 +32,7 @@ namespace StaticInput.UnitTests.Components
             var unselected = boxes.First(x => x.Id!.Contains("unchecked-icon-"));
 
             selected.GetStyle().CssText.Should().Be("display: none");
-            unselected.GetStyle().CssText.Should().BeNullOrEmpty();
+            unselected.GetStyle().CssText.Should().Be("display: block");
 
             selected.ClassList.Should().Contain("mud-primary-text");
             unselected.ClassList.Should().Contain("mud-error-text");
@@ -124,6 +124,29 @@ namespace StaticInput.UnitTests.Components
             await button.ClickAsync();
 
             await Expect(Page).ToHaveTitleAsync("Home");
+        }
+
+        [Fact]
+        public async Task Checkbox_Should_Initialize_True()
+        {
+            var url = typeof(CheckBoxInitTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var selected = Page.GetByTestId(CheckedIcon());
+            var unselected = Page.GetByTestId(UncheckedIcon());
+            var checkbox = Page.Locator("input[type='checkbox']");
+
+            await Expect(selected).ToBeVisibleAsync();
+            await Expect(unselected).ToBeVisibleAsync(new() { Visible = false });
+
+            await Expect(checkbox).ToBeCheckedAsync();
+
+            await checkbox.UncheckAsync();
+
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(selected).ToBeVisibleAsync(new() { Visible = false });
+            await Expect(unselected).ToBeVisibleAsync();
         }
 
         [GeneratedRegex("check-icon-*")]
