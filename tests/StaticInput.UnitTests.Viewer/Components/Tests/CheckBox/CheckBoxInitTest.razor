@@ -1,0 +1,28 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Input" method="post" OnValidSubmit="OnValidSubmit" FormName="confirm">
+    <DataAnnotationsValidator />
+    <MudStaticCheckBox @bind-Value="Input.RememberMe" Class="my-4 ml-n4" Color="Color.Primary" Label="Remember Me" For="() => Input.RememberMe" />
+    <MudStaticButton FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled">Submit</MudStaticButton>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private void OnValidSubmit() => NavigationManager.NavigateTo("");
+
+    protected override void OnInitialized()
+    {
+        Input.RememberMe = true;
+
+        base.OnInitialized();
+    }
+
+    private sealed class InputModel
+    {
+        public bool RememberMe { get; set; }
+    }
+}

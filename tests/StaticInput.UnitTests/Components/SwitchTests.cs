@@ -117,6 +117,22 @@ namespace StaticInput.UnitTests.Components
             await Expect(Page).ToHaveTitleAsync("Home");
         }
 
+        [Fact]
+        public async Task Switch_Should_Initialize_True()
+        {
+            var url = typeof(SwitchInitTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var checkbox = Page.Locator("input[type='checkbox']");
+
+            await Expect(checkbox).ToBeCheckedAsync();
+
+            await checkbox.UncheckAsync();
+
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
+        }
+
         [GeneratedRegex("switch-container-*")]
         private static partial Regex MyRegex();
     }

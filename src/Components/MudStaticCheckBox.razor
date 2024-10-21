@@ -6,14 +6,14 @@
     <InputContent>
         <label class="@LabelClassname" id="@($"checkbox-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
             <span tabindex="0" class="@CheckBoxClassname">
-                <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@_name" value="False" />
+                <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@_name" value="@_checkboxValue.ToString().ToLower()" />
                 <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" value="True"
-                       aria-checked="@((BoolValue == true).ToString().ToLower())" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                       aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                        id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
-                <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size"
-                         id="@($"check-icon-{_elementId}")" style="display: none;"/>
+                <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size" 
+                         id="@($"check-icon-{_elementId}")" style="@($"display: {_checkedStyle}")"/>
                 <MudIcon Icon="@UncheckedIcon" Color="HasErrors ? Color.Error : this.UncheckedColor ?? Color.Inherit" Size="@Size"
-                         id="@($"unchecked-icon-{_elementId}")"/>
+                         id="@($"unchecked-icon-{_elementId}")" style="@($"display: {_uncheckedStyle}")"/>
             </span>
             @if (!string.IsNullOrEmpty(Label))
             {
@@ -33,6 +33,9 @@
     [Parameter] public Expression<Func<bool>>? ValueExpression { get; set; }
 
     private string _name = string.Empty;
+    private bool _checkboxValue = false;
+    private string _checkedStyle = string.Empty;
+    private string _uncheckedStyle = string.Empty;
     private readonly string _elementId = Guid.NewGuid().ToString()[..8];
 
     protected override void OnParametersSet()
@@ -53,6 +56,17 @@
             if (index > 0)
             {
                 _name = expression[(index + 2)..];
+
+                var compiledExpression = ValueExpression!.Compile();
+
+                _checkboxValue = compiledExpression();
+                _checkedStyle = _checkboxValue ? "block" : "none";
+                _uncheckedStyle = _checkboxValue ? "none" : "block";
+
+                if (_checkboxValue)
+                {
+                    UserAttributes["checked"] = "";
+                }
             }
         }
 
