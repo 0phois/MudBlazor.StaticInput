@@ -27,7 +27,7 @@ Tailored specifically for [Static Server-Side Rendered](https://learn.microsoft.
 
 
 ## :gift: What's Included :gift:
-The set of components and features may extend over time. Currently, Static Input Components includes:  
+The set of components and features may extend over time. Currently, StaticInput components include:  
 ### MudStaticButton
 <details>
   <summary>
