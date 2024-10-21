@@ -6,8 +6,8 @@
     <InputContent>
         <label class="@LabelClassname" id="@($"checkbox-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
             <span tabindex="0" class="@CheckBoxClassname">
-                <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@_name" value="@_checkboxValue.ToString().ToLower()" />
-                <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" value="True"
+                <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@(_checkboxValue ? "" : _name)" value="False" />
+                <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" value="True"
                        aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                        id="@($"static-checkbox-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size" 
@@ -65,7 +65,7 @@
 
                 if (_checkboxValue)
                 {
-                    UserAttributes["checked"] = "";
+                    UserAttributes["checked"] = true;
                 }
             }
         }
@@ -89,9 +89,11 @@
             if (checkbox.checked) {
                 emptyCheckbox.removeAttribute("name");
                 checkbox.setAttribute("name", "@_name");
+                checkbox.setAttribute("checked", true);
             }
             else {
                 checkbox.removeAttribute("name");
+                checkbox.removeAttribute("checked");
                 emptyCheckbox.setAttribute("name", "@_name");
             }
         });

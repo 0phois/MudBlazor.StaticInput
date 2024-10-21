@@ -9,8 +9,8 @@
             <span class="@SpanClassname">
                 <span tabindex="0" class="@SwitchClassname" id="@($"switch-container-{_elementId}")">
                     <span class="mud-switch-button">
-                        <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@_name" value="@_switchValue.ToString().ToLower()" />
-                        <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input" value="True"
+                        <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@(_switchValue ? "" : _name)" value="False" />
+                        <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input" name="@(_switchValue ? _name : "")" value="True"
                                aria-checked="@_switchValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                                id="@($"static-switch-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                         <span class="@ThumbClassname">
@@ -72,7 +72,7 @@
 
                 if (_switchValue)
                 {
-                    UserAttributes["checked"] = "";
+                    UserAttributes["checked"] = true;
                 }
             }
         }
@@ -106,9 +106,11 @@
             if (switchToggle.checked) {
                 emptySwitch.removeAttribute("name");
                 switchToggle.setAttribute("name", "@_name");
+                switchToggle.setAttribute("checked", true);
             }
             else {
                 switchToggle.removeAttribute("name");
+                switchToggle.removeAttribute("checked");
                 emptySwitch.setAttribute("name", "@_name");
             }
         });
