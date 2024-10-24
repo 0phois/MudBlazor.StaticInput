@@ -5,7 +5,7 @@
 <MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
     <InputContent>
         <label class="@LabelClassname" id="@($"checkbox-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
-            <span tabindex="0" class="@CheckBoxClassname">
+            <span tabindex="0" class="@IconClassname">
                 <input type="hidden" id="@($"empty-checkbox-{_elementId}")" name="@(_checkboxValue ? "" : _name)" value="False" />
                 <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" 
                        value="True" aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
