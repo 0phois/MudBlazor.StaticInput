@@ -9,10 +9,11 @@
             <span class="@SpanClassname">
                 <span tabindex="0" class="@SwitchClassname" id="@($"switch-container-{_elementId}")">
                     <span class="mud-switch-button">
-                        <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@(_switchValue ? "" : _name)" value="False" />
+                        <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@(_switchValue ? "" : _name)" value="False" aria-required="@Required.ToString().ToLowerInvariant()" />
                         <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input" name="@(_switchValue ? _name : "")" 
                                value="True" aria-checked="@_switchValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
-                               id="@($"static-switch-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
+                               id="@($"static-switch-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"
+                               aria-required="@Required.ToString().ToLowerInvariant()" />
                         <span class="@ThumbClassname">
                             @if (!string.IsNullOrEmpty(ThumbIcon))
                             {
@@ -25,13 +26,13 @@
             </span>
             @if (!string.IsNullOrEmpty(Label))
             {
-                <MudText Class="@(Typo is null ? SwitchLabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")" Color="HasErrors ? Color.Error : Color.Inherit">
+                <MudText Class="@(Typo is null ? LabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")" Color="HasErrors ? Color.Error : Color.Inherit">
                     @Label
                 </MudText>
             }
             @if (ChildContent != null)
             {
-                <MudText Class="@(Typo is null ? SwitchLabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")"  Color="HasErrors ? Color.Error : Color.Inherit">
+                <MudText Class="@(Typo is null ? LabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")"  Color="HasErrors ? Color.Error : Color.Inherit">
                     @ChildContent
                 </MudText>
             }
