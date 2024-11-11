@@ -80,13 +80,34 @@ The set of components and features may extend over time. Currently, StaticInput 
   </summary>
 
 ```html
-<MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Outlined" InputType="InputType.Password" 
-              Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"/>
+<MudStaticTextField @bind-Value="@Password" 
+                    InputType="InputType.Password" 
+                    Adornment="Adornment.End" 
+                    AdornmentIcon="@Icons.Material.Outlined.VisibilityOff" 
+                    AdornmentClickFunction="showPassword" />
 ```
 ```cs
 @code {
     public string Password { get; set; }
 }
+```
+```js
+<script>
+   let timeoutId;
+
+   function showPassword(inputElement, button) {
+       if (inputElement.type === 'password') {
+           inputElement.type = 'text';
+           clearTimeout(timeoutId);
+           timeoutId = setTimeout(function () {
+               inputElement.type = 'password';
+           }, 5000);
+       } else {
+           inputElement.type = 'password';
+           clearTimeout(timeoutId);
+       }
+   }
+</script>
 ```
 </details>  
 
