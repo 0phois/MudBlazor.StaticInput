@@ -28,7 +28,7 @@ jobs:
       run: dotnet build ./tests/StaticInput.UnitTests/StaticInput.UnitTests.csproj 
     
     - name: Install playwright browsers
-      run: pwsh ./tests/StaticInput.UnitTests/bin/Debug/net9.0/playwright.ps1 install --with-deps
+      run: pwsh ./tests/StaticInput.UnitTests/bin/Debug/net8.0/playwright.ps1 install --with-deps
     
     - name: Run tests
       run: >
