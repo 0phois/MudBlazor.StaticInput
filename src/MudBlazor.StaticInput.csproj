@@ -21,7 +21,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MudBlazor" Version="8.0.0-preview.4" />
+        <PackageReference Include="MudBlazor" Version="8.0.0-preview.5" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
