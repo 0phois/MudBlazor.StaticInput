@@ -1,0 +1,41 @@
+﻿@using Microsoft.JSInterop
+
+@namespace MudBlazor.StaticInput
+
+@inherits MudIconButton
+@inject IJSRuntime JsRuntime
+
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code {
+    /// <summary>
+    /// The id of the <see cref="MudDrawer"/> to toggle
+    /// </summary>
+    /// <remarks>
+    /// If not provided, the first mud-drawer element located within the DOM is used.
+    /// </remarks>
+    [Parameter]
+    public string? DrawerId { get; set; } = "_no_id_provided_";
+
+    private string _elementId = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        UserAttributes["data-mud-drawer-toggle"] = DrawerId;
+        UserAttributes["data-static-component"] = true;
+        UserAttributes["data-static-id"] = _elementId;
+
+        base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () => await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
+
+        base.OnParametersSet();
+    }
+
+    protected override void OnInitialized()
+    {
+        _elementId = Guid.NewGuid().ToString()[..8];
+
+        base.OnInitialized();
+    }
+}
