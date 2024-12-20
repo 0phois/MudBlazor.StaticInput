@@ -1,6 +1,7 @@
 ﻿using AngleSharp.Css.Dom;
 using Bunit;
 using FluentAssertions;
+using Microsoft.Playwright;
 using MudBlazor.StaticInput;
 using StaticInput.UnitTests.Fixtures;
 using StaticInput.UnitTests.Viewer.Components.Tests.CheckBox;
@@ -107,7 +108,7 @@ namespace StaticInput.UnitTests.Components
             await Page.GotoAsync(url);
 
             var checkbox = Page.Locator("input[type='checkbox']");
-            var button = Page.Locator("button");
+            var button = Page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
 
             await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
 

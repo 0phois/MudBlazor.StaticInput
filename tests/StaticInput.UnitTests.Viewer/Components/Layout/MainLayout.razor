@@ -6,7 +6,7 @@
 
 <MudLayout Style="height:100vh">
     <MudDrawerContainer>
-        <MudDrawer Open Fixed Elevation="1" Class="px-4" Style="width:auto"
+        <MudDrawer Open Fixed Elevation="1" Class="@_class" Style="width:auto"
                    Breakpoint="Breakpoint.None" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Docked">
             <MudDrawerHeader>
                 <MudText Typo="Typo.h6">Static Input Tests</MudText>
@@ -15,10 +15,10 @@
                 @foreach (var component in _testComponents.Keys)
                 {
                     <MudStaticNavGroup Title="@component">
-                       @foreach (var test in _testComponents[component])
+                        @foreach (var test in _testComponents[component])
                         {
                             <MudNavLink @key="test.Name" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List"
-                                        Href="@Navigation.GetUriWithQueryParameter("Test", test.Name)">
+                            Href="@Navigation.GetUriWithQueryParameter("Test", test.Name)">
                                 @test.Name
                             </MudNavLink>
                         }
@@ -48,7 +48,8 @@
     };
 
     private Dictionary<string, List<Type>> _testComponents = new();
-    
+    private string _class = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")?.Equals("true") is true ? "d-none" : "px-4";
+
     protected override void OnInitialized()
     {
         var availableComponentTypes = GetTestComponentTypes().ToArray();

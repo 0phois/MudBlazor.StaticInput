@@ -13,8 +13,11 @@ namespace StaticInput.UnitTests.Components
 
             await Page.GotoAsync(url);
 
-            var button = Page.Locator("nav button");
-            var menuGroup = Page.Locator(".mud-collapse-container");
+            var button = Page.GetByLabel("Toggle Settings");
+            var menuGroup = Page.GetByLabel("Settings", new() { Exact = true })
+                                .Locator("div")
+                                .Filter(new() { HasText = "Users Security" })
+                                .First;
 
             var menuClasses = await menuGroup.GetAttributeAsync("class");
             var ariaValue = await menuGroup.GetAttributeAsync("aria-hidden");
