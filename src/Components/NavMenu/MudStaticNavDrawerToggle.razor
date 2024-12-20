@@ -24,7 +24,6 @@
     protected override void OnParametersSet()
     {
         UserAttributes["data-mud-drawer-toggle"] = DrawerId;
-        UserAttributes["data-static-component"] = true;
         UserAttributes["data-static-id"] = _elementId;
 
         base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () => await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
