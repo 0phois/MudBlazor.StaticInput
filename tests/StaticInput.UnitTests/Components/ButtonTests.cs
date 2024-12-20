@@ -2,6 +2,7 @@
 using Bunit.TestDoubles;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Playwright;
 using MudBlazor.StaticInput;
 using StaticInput.UnitTests.Fixtures;
 using StaticInput.UnitTests.Viewer.Components.Tests.Button;
@@ -110,7 +111,7 @@ namespace StaticInput.UnitTests.Components
             await input.FillAsync(email);
             await Expect(input).ToHaveValueAsync(email);
 
-            await Page.Locator("button").ClickAsync();
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Reset" }).ClickAsync();
 
             await Expect(input).ToBeEmptyAsync();
         }

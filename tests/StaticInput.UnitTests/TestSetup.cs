@@ -18,11 +18,16 @@ namespace StaticInput.UnitTests
                 process.Kill();
             }
 
-            _testViewerProcess = Process.Start(new ProcessStartInfo()
+            var startInfo = new ProcessStartInfo()
             {
                 FileName = "dotnet",
                 Arguments = $"run --project {GetProjectPath()}"
-            });
+            };
+
+            startInfo.EnvironmentVariables.Add("TEST_ENVIRONMENT", "true");
+
+
+            _testViewerProcess = Process.Start(startInfo);
 
             messageSink.OnMessage(new DiagnosticMessage($"Started {_testViewerProcess?.ProcessName} with ID: {_testViewerProcess?.Id}"));
         }

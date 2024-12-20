@@ -1,5 +1,6 @@
 ﻿using Bunit;
 using FluentAssertions;
+using Microsoft.Playwright;
 using MudBlazor.StaticInput;
 using StaticInput.UnitTests.Fixtures;
 using StaticInput.UnitTests.Viewer.Components.Tests.TextField;
@@ -164,7 +165,7 @@ namespace StaticInput.UnitTests.Components
             await Page.GotoAsync(url);
 
             var field = Page.GetByLabel("Short string");
-            var button = Page.Locator("button");
+            var button = Page.GetByRole(AriaRole.Button, new() { Name = "Validate" });
 
             await button.ClickAsync();
 
@@ -212,7 +213,7 @@ namespace StaticInput.UnitTests.Components
 
             await Page.GotoAsync(url);
 
-            var button = Page.Locator("button");
+            var button = Page.GetByRole(AriaRole.Button);
             var message = string.Empty;
 
             Page.Dialog += async (_, dialog) =>

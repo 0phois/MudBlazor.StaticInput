@@ -1,0 +1,29 @@
+﻿<MudLayout>
+    <MudAppBar Elevation="1" Fixed="false">
+        <MudStaticNavDrawerToggle id="static-left-toggle" DrawerId="static-mini" Icon="@Icons.Material.Filled.KeyboardDoubleArrowRight" Color="Color.Inherit" Edge="Edge.Start" />
+        <MudSpacer />
+        <MudStaticNavDrawerToggle id="static-right-toggle" DrawerId="static-persistent" Icon="@Icons.Material.Filled.KeyboardDoubleArrowLeft" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudPaper Class="d-flex justify-center" Style="height:200px; overflow:hidden; position:relative;">
+        <MudDrawer id="static-mini" Fixed="false" Elevation="1" Anchor="Anchor.Start" Variant="@DrawerVariant.Mini" ClipMode="DrawerClipMode.Always">
+            <MudNavMenu>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Store</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Library</MudNavLink>
+                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Community</MudNavLink>
+            </MudNavMenu>
+        </MudDrawer>
+        <MudAlert Class="absolute align-self-center" Severity="Severity.Success">Text inside MudContainer</MudAlert>
+        <MudDrawerContainer Class="mud-height-full" Style="overflow:hidden">
+            <MudDrawer id="static-persistent" Elevation="1" Anchor="Anchor.End" Variant="@DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
+                <MudDrawerHeader>
+                    <MudText Typo="Typo.h6">Persistent</MudText>
+                </MudDrawerHeader>
+                <MudNavMenu>
+                    <MudNavLink Match="NavLinkMatch.All">Store</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All">Library</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All">Community</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+        </MudDrawerContainer>
+    </MudPaper>
+</MudLayout>
