@@ -111,6 +111,46 @@ The set of components and features may extend over time. Currently, StaticInput 
 ```
 </details>  
 
+### MudStaticNavDrawerToggle 
+<details>
+  <summary>
+    Open/Close a MudDrawer using a MudIconButton. When added, Responsive drawers also open/close based on page size changes.
+  </summary>
+
+```html
+<MudStaticNavDrawerToggle id="static-left-toggle" DrawerId="static-mini" Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+
+<MudDrawer id="static-mini" Fixed="false" Elevation="1" Anchor="Anchor.Start" Variant="@DrawerVariant.Mini" ClipMode="DrawerClipMode.Always">
+    <MudNavMenu>
+        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Store</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Library</MudNavLink>
+        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Community</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+```
+</details>
+
+### MudStaticNavGroup 
+<details>
+  <summary>
+    Collapse/Expand a MudStaticNavGroup by clicking on it's title. Can you nested in a standard MudNavMenu
+  </summary>
+
+```html
+<MudNavMenu>
+    <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
+    <MudNavLink Href="/servers">Servers</MudNavLink>
+    <MudNavLink Href="/billing" Disabled="true">Billing</MudNavLink>
+
+    <MudStaticNavGroup Title="Settings" Expanded="true">
+        <MudNavLink Href="/users">Users</MudNavLink>
+        <MudNavLink Href="/security">Security</MudNavLink>
+    </MudStaticNavGroup>
+
+    <MudNavLink Href="/about">About</MudNavLink>
+</MudNavMenu>
+```
+</details>
   
 ## :rocket: Getting Started :rocket:
 To start using MudBlazor.StaticInput in your projects, simply install the package via NuGet Package Manager:
