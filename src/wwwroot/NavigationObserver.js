@@ -38,6 +38,10 @@ let hasInitialized = false;
         initialize: function () {
             const drawerToggleElements = document.querySelectorAll('[data-mud-drawer-toggle]');
 
+            if (drawerToggleElements.length === 0) {
+                return;
+            }
+
             drawerToggleElements.forEach(element => {
                 element.removeEventListener('click', this.handleToggleDrawer);
                 element.addEventListener('click', this.handleToggleDrawer);

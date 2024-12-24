@@ -51,6 +51,12 @@
 
     private async Task OnValidSubmitAsync()
     {
+        if (user is { Email: ApplicationUser.DefaultEmail })
+        {
+            RedirectManager.RedirectToCurrentPageWithStatus("Data cannot be deleted for the default account!", HttpContext);
+            return;
+        }
+
         if (requirePassword && !await UserManager.CheckPasswordAsync(user, Input.Password))
         {
             message = "Error: Incorrect password.";
