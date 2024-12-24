@@ -12,12 +12,17 @@
 
 ## :book: Introduction :book:
 **MudBlazor.StaticInput** is an extension package for the [MudBlazor](https://github.com/MudBlazor/MudBlazor) library.  
-Tailored specifically for [Static Server-Side Rendered](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#static-server-side-rendering-static-ssr) (static SSR) pages. It offers seamless integration of MudBlazor's Component design into your applications. Focusing particularly on components designed for forms and edit forms, in situations where [interactive](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#render-modes) components are not feasible.  
-[*example*: [Blazor Identity UI](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/server/?view=aspnetcore-8.0&tabs=visual-studio#blazor-identity-ui-individual-accounts)].
 
+Tailored specifically for [Static Server-Side Rendered](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#static-server-side-rendering-static-ssr) (static SSR) pages. It offers seamless integration for *some* of MudBlazor's Component design into your static application pages. Focusing particularly on components designed for forms and edit forms, in situations where [interactive](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/render-modes?view=aspnetcore-8.0#render-modes) components are not feasible. For example, when scaffolding [Blazor Identity UI](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/server/?view=aspnetcore-8.0&tabs=visual-studio#blazor-identity-ui-individual-accounts) in your application.  
+
+### [Live Demo Application](http://mudblazor-staticinput.tryasp.net/)
 <a href="https://github.com/0phois/MudBlazor.StaticInput/tree/master/demo/StaticSample">
   <img alt="Static Input Demo" src="content/StaticInput.png" />
 </a>
+
+> [!TIP]
+> Default email: `demo@static.com`  
+> Default pword: `MudStatic123!`
 
 ## :thinking: Why MudBlazor.StaticInput? :thinking:
 - **Rapid SSSR Integration:** Effortlessly add MudBlazor components to your static SSR pages, saving development time.
@@ -151,7 +156,7 @@ The set of components and features may extend over time. Currently, StaticInput 
 </MudNavMenu>
 ```
 </details>
-  
+
 ## :rocket: Getting Started :rocket:
 To start using MudBlazor.StaticInput in your projects, simply install the package via NuGet Package Manager:
 ```bash
@@ -161,5 +166,5 @@ Then add the following to the `body` of your `App.razor` file
 ```
  <script src="_content/Extensions.MudBlazor.StaticInput/NavigationObserver.js"></script>
  ```  
-
+> [!NOTE]  
 > Note: MudBlazor should already be setup for your application
