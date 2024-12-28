@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="MudBlazor" Version="8.0.0-preview.5" />
+        <PackageReference Include="MudBlazor" Version="8.0.0-preview.7" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
