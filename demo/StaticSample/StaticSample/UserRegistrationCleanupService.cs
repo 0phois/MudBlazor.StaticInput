@@ -6,8 +6,8 @@ namespace StaticSample;
 
 public class UserRegistrationCleanupService(IServiceProvider ServiceProvider, ILogger<UserRegistrationCleanupService> Logger) : IHostedService
 {
-    private const int CleanupIntervalMinutes = 2;
-    private const int DeleteAfterMinutes = 5;
+    private const int CleanupIntervalMinutes = 5;
+    private const int DeleteAfterMinutes = 30;
 
     private Task? _executingTask;
     private readonly CancellationTokenSource _cts = new();
