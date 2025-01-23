@@ -90,7 +90,7 @@ let hasInitialized = false;
         autoCollapse(responsiveDrawer, breakpoint, position) {
             responsiveDrawer.classList.add('mud-drawer--closed');
             responsiveDrawer.classList.remove('mud-drawer--open');
-            responsiveDrawer.parentElement.classList.add(`mud-drawer-closed-responsive-${breakpoint}-${position}`)
+            responsiveDrawer.parentElement.classList.add(`mud-drawer-close-responsive-${breakpoint}-${position}`)
             responsiveDrawer.parentElement.classList.remove(`mud-drawer-open-responsive-${breakpoint}-${position}`)
         },
 
@@ -98,7 +98,7 @@ let hasInitialized = false;
             responsiveDrawer.classList.add('mud-drawer--open');
             responsiveDrawer.classList.remove('mud-drawer--closed');
             responsiveDrawer.parentElement.classList.add(`mud-drawer-open-responsive-${breakpoint}-${position}`)
-            responsiveDrawer.parentElement.classList.remove(`mud-drawer-closed-responsive-${breakpoint}-${position}`)
+            responsiveDrawer.parentElement.classList.remove(`mud-drawer-close-responsive-${breakpoint}-${position}`)
         },
 
         handleToggleDrawer: function (event) {
@@ -138,9 +138,9 @@ let hasInitialized = false;
 
             if (layout) {
                 if (layout.className.includes('mud-drawer-open') === true) {
-                    layout.className = layout.className.replace(/\bmud-drawer-open\b/g, 'mud-drawer-closed');
+                    layout.className = layout.className.replace(/\bmud-drawer-open\b/g, 'mud-drawer-close');
                 } else {
-                    layout.className = layout.className.replace(/\bmud-drawer-closed\b/g, 'mud-drawer-open');
+                    layout.className = layout.className.replace(/\bmud-drawer-close\b/g, 'mud-drawer-open');
 
                     if (mudDrawer.className.includes('mud-static-responsive')) {
                         mudDrawer.classList.add('mud-drawer-clipped-always');
