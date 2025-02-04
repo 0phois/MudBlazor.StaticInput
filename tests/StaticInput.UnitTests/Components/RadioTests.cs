@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components;
 using MudBlazor.StaticInput;
 using StaticInput.UnitTests.Fixtures;
 using Bunit;
@@ -61,11 +59,11 @@ namespace StaticInput.UnitTests.Components
             IElement? iconA = radioA.ParentElement.QuerySelector(".mud-icon-root");
             IElement? iconB = radioB.ParentElement.QuerySelector(".mud-icon-root");
 
-            iconA.Should().NotBeNull("L'icône de la radio A doit être rendue.");
-            iconB.Should().NotBeNull("L'icône de la radio B doit être rendue.");
+            iconA.Should().NotBeNull("The A radio input should be rendered.");
+            iconB.Should().NotBeNull("The B radio input should be rendered.");
 
-            iconA.InnerHtml.Should().Contain("M12 7c-2.76", "car la radio A est cochée");
-            iconB.InnerHtml.Should().Contain("M12 2C6.48", "car la radio B est décochée");
+            iconA.InnerHtml.Should().Contain("M12 7c-2.76", "The A radio input is checked");
+            iconB.InnerHtml.Should().Contain("M12 2C6.48", "The B radio input is checked");
         }
     }
 }
