@@ -1,0 +1,104 @@
+﻿@namespace MudBlazor.StaticInput
+
+@typeparam T
+@inherits MudRadio<T>
+
+<div class="mud-input-control mud-input-control-boolean-input mud-input-with-content">
+    <div class="mud-input-control-input-container">
+        <label class="mud-radio mud-input-content-placement-end" __internal_stoppropagation_onclick="">
+            <span class="mud-button-root mud-icon-button mud-ripple mud-ripple-radio mud-default-text hover:mud-default-hover"
+                  tabindex="0"
+                  @onclick:stopPropagation="true">
+                <input type="radio"
+                       class="mud-radio-input"
+                       tabindex="-1"
+                       role="radio"
+                       name="@ParentGroup?.GroupName"
+                       value="@Value"
+                       id="@($"static-radio-{_elementId}")"
+                       checked="@IsChecked" />
+
+                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium"
+                     focusable="false"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true"
+                     role="img"
+                     id="@($"radio-svg-{_elementId}")">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="@(IsChecked ? Checked : UnChecked)"></path>
+                </svg>
+            </span>
+
+            <p class="mud-typography mud-typography-body1">
+                @ChildContent
+            </p>
+        </label>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const radio = document.getElementById('static-radio-@_elementId');
+        const svg = document.getElementById('radio-svg-@_elementId');
+
+        if (radio && svg) {
+            const handleChange = () => {
+                const path = svg.querySelector('path:last-child');
+
+                if (path) {
+                    path.setAttribute('d', radio.checked ? '@Checked' : '@UnChecked');
+                }
+            };
+
+            radio.addEventListener('change', handleChange);
+
+            document.addEventListener('change', (e) => {
+                if (e.target.type === 'radio' && e.target.name === radio.name && e.target !== radio) {
+                    handleChange();
+                }
+            });
+        }
+    })();
+</script>
+
+@code {
+    [CascadingParameter]
+    private MudStaticRadioGroup<T>? ParentGroup { get; set; }
+
+    private bool IsChecked => ParentGroup is not null && EqualityComparer<T>.Default.Equals(ParentGroup.Value, Value);
+
+    private const string UnChecked = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z";
+    private const string Checked = "M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z";
+
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+
+    protected override void OnInitialized()
+    {
+        if (ParentGroup is null)
+        {
+            throw new InvalidOperationException($"{nameof(MudStaticRadio<T>)} must be used inside a {nameof(MudStaticRadioGroup<T>)}");
+        }
+
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (UserAttributes is null)
+        {
+            UserAttributes = new Dictionary<string, object?>();
+        }
+
+        UserAttributes["data-static-component"] = true;
+
+        base.OnParametersSet();
+    }
+
+    private async Task SelectValue()
+    {
+        if (ParentGroup is not null)
+        {
+            await ParentGroup.SetValue(Value);
+        }
+    }
+}

@@ -1,0 +1,61 @@
+﻿@namespace MudBlazor.StaticInput
+
+@typeparam T
+@inherits MudRadioGroup<T>
+
+<MudInputControl Class="@Classname"
+                 Style="@Style"
+                 Error="@HasErrors"
+                 ErrorText="@GetErrorText()"
+                 Required="@Required">
+    <InputContent>
+        <CascadingValue Value="this">
+            <div class="mud-input-control mud-input-control-boolean-input">
+                <div class="mud-input-control-input-container">
+                    <div class="mud-radio-group" role="radiogroup">
+                        @ChildContent
+                    </div>
+                </div>
+            </div>
+        </CascadingValue>
+    </InputContent>
+</MudInputControl>
+
+@code {
+    [Parameter]
+    public Expression<Func<T?>>? ValueExpression { get; set; }
+
+    public string GroupName { get; private set; } = Guid.NewGuid().ToString();
+
+    protected override void OnInitialized()
+    {
+        if (For != null)
+        {
+            string expression = For.ToString();
+            int index = expression.LastIndexOf(").", StringComparison.Ordinal);
+
+            if (index > 0)
+            {
+                GroupName = expression[(index + 2)..];
+            }
+        }
+        else
+        {
+            GroupName = Guid.NewGuid().ToString();
+        }
+
+        base.OnInitialized();
+    }
+
+    internal async Task SetValue(T? newValue)
+    {
+        if (Value?.Equals(newValue) != true)
+        {
+            Value = newValue;
+
+            await ValueChanged.InvokeAsync(newValue);
+
+            StateHasChanged();
+        }
+    }
+}
