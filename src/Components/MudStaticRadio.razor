@@ -18,14 +18,10 @@
                        id="@($"static-radio-{_elementId}")"
                        checked="@IsChecked" />
 
-                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium"
-                     focusable="false"
-                     viewBox="0 0 24 24"
-                     aria-hidden="true"
-                     role="img"
-                     id="@($"radio-svg-{_elementId}")">
-                    @(new MarkupString(IsChecked ? Icons.Material.Filled.RadioButtonChecked : Icons.Material.Filled.RadioButtonUnchecked))
-                </svg>
+                <MudIcon Size="Size"
+                         Color="HasErrors ? Color.Error : Color"
+                         Icon="@(IsChecked ? CheckedIcon : UncheckedIcon)"
+                         id="@($"radio-svg-{_elementId}")" />
             </span>
 
             <p class="mud-typography mud-typography-body1">
@@ -40,8 +36,8 @@
         const radio = document.getElementById('static-radio-@_elementId');
         const svg = document.getElementById('radio-svg-@_elementId');
 
-        const checkedIcon = '@(Icons.Material.Filled.RadioButtonChecked)';
-        const uncheckedIcon = '@(Icons.Material.Filled.RadioButtonUnchecked)';
+        const checkedIcon = '@(CheckedIcon)';
+        const uncheckedIcon = '@(UncheckedIcon)';
 
         if (radio && svg) {
             const handleChange = () => {
@@ -65,9 +61,6 @@
 
     private bool IsChecked => ParentGroup is not null && EqualityComparer<T>.Default.Equals(ParentGroup.Value, Value);
 
-    private const string UnChecked = "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z";
-    private const string Checked = "M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z";
-
     private readonly string _elementId = Guid.NewGuid().ToString()[..8];
 
     protected override void OnInitialized()
@@ -76,8 +69,6 @@
         {
             throw new InvalidOperationException($"{nameof(MudStaticRadio<T>)} must be used inside a {nameof(MudStaticRadioGroup<T>)}");
         }
-
-        var test = Icons.Material.Filled.RadioButtonChecked;
 
         base.OnInitialized();
     }
