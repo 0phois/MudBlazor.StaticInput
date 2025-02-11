@@ -33,6 +33,30 @@
     [Parameter] 
     public Expression<Func<T?>>? ValueExpression { get; set; }
 
+    /// <summary>
+    /// The color to use when in an checked state
+    /// </summary>
+    [Parameter]
+    public Color? Color { get; set; }
+
+    /// <summary>
+    /// The color to use when in an unchecked state
+    /// </summary>
+    [Parameter]
+    public Color? UncheckedColor { get; set; }
+
+    // /// <summary>
+    // ///     The icon displayed when in a checked state.
+    // /// </summary>
+    [Parameter]
+    public string? CheckedIcon { get; set; }
+
+    // /// <summary>
+    // ///     The icon displayed when in an unchecked state.
+    // /// </summary>
+    [Parameter]
+    public string? UncheckedIcon { get; set; }
+
     public string GroupName { get; set; } = string.Empty;
     public T? SelectedValue { get; set; }
 

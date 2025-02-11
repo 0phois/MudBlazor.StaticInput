@@ -10,10 +10,10 @@
                 <input id="@($"static-radio-{_elementId}")" tabindex="-1" @attributes="UserAttributes" type="radio" role="radio"
                        class="mud-radio-input static-radio-input" checked="@_isChecked" disabled="@GetDisabledState()" name="@(_isChecked ? ParentGroup?.GroupName : "")" value="@Value"
                        aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()" />
-                <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size" Disabled="@Disabled"
+                <MudIcon Icon="@(ParentGroup.CheckedIcon ?? CheckedIcon)" Color="HasErrors ? Color.Error : ParentGroup?.Color ?? this.Color" Size="@Size" Disabled="@Disabled"
                          id="@($"radio-checked-icon-{_elementId}")" style="@($"display: {_checkedStyle}")" />
-                <MudIcon Icon="@UncheckedIcon" Color="HasErrors ? Color.Error : this.UncheckedColor ?? Color.Inherit" Size="@Size" Disabled="@Disabled"
-                         id="@($"radio-unchecked-icon-{_elementId}")" style="@($"display: {_uncheckedStyle}")" />
+                <MudIcon Icon="@(ParentGroup.UncheckedIcon ?? UncheckedIcon)" Color="HasErrors ? Color.Error : ParentGroup?.UncheckedColor ?? this.UncheckedColor ?? Color.Inherit" 
+                         Size="@Size" Disabled="@Disabled" id="@($"radio-unchecked-icon-{_elementId}")" style="@($"display: {_uncheckedStyle}")" />
             </span>
             @if (!string.IsNullOrEmpty(Label))
             {
