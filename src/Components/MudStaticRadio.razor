@@ -3,57 +3,28 @@
 @typeparam T
 @inherits MudRadio<T>
 
-<div class="mud-input-control mud-input-control-boolean-input mud-input-with-content">
-    <div class="mud-input-control-input-container">
-        <label class="mud-radio mud-input-content-placement-end" __internal_stoppropagation_onclick="">
-            <span class="mud-button-root mud-icon-button mud-ripple mud-ripple-radio mud-default-text hover:mud-default-hover"
-                  tabindex="0"
-                  @onclick:stopPropagation="true">
-                <input type="radio"
-                       class="mud-radio-input"
-                       tabindex="-1"
-                       role="radio"
-                       name="@ParentGroup?.GroupName"
-                       value="@Value"
-                       id="@($"static-radio-{_elementId}")"
-                       checked="@IsChecked" />
-
-                <MudIcon Size="Size"
-                         Color="HasErrors ? Color.Error : Color"
-                         Icon="@(IsChecked ? CheckedIcon : UncheckedIcon)"
-                         id="@($"radio-svg-{_elementId}")" />
+<MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
+    <InputContent>
+        <label class="@LabelClassname" style="@Style" id="@_elementId" @onclick:stopPropagation="@StopClickPropagation">
+            <span tabindex="0" class="@IconClassname">
+                <input id="@($"static-radio-{_elementId}")" tabindex="-1" @attributes="UserAttributes" type="radio" role="radio"
+                       class="mud-radio-input" checked="@IsChecked" name="@ParentGroup?.Name" disabled="@GetDisabledState()" value="@Value"
+                       aria-checked="@(IsChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()" />
+                <MudIcon id="@($"radio-svg-{_elementId}")" Disabled="@Disabled" Icon="@(IsChecked ? CheckedIcon : UncheckedIcon)" Color="HasErrors ? Color.Error : Color.Inherit" Size="@Size" />
             </span>
-
-            <p class="mud-typography mud-typography-body1">
-                @ChildContent
-            </p>
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <MudText Color="HasErrors ? Color.Error : Color.Inherit">@Label</MudText>
+            }
+            @if (ChildContent is not null)
+            {
+                <MudText Color="HasErrors ? Color.Error : Color.Inherit">
+                    @ChildContent
+                </MudText>
+            }
         </label>
-    </div>
-</div>
-
-<script>
-    (function() {
-        const radio = document.getElementById('static-radio-@_elementId');
-        const svg = document.getElementById('radio-svg-@_elementId');
-
-        const checkedIcon = '@(CheckedIcon)';
-        const uncheckedIcon = '@(UncheckedIcon)';
-
-        if (radio && svg) {
-            const handleChange = () => {
-                svg.innerHTML = radio.checked ? checkedIcon : uncheckedIcon;
-            };
-
-            radio.addEventListener('change', handleChange);
-
-            document.addEventListener('change', (e) => {
-                if (e.target.type === 'radio' && e.target.name === radio.name && e.target !== radio) {
-                    handleChange();
-                }
-            });
-        }
-    })();
-</script>
+    </InputContent>
+</MudInputControl>
 
 @code {
     [CascadingParameter]
@@ -84,12 +55,28 @@
 
         base.OnParametersSet();
     }
-
-    private async Task SelectValue()
-    {
-        if (ParentGroup is not null)
-        {
-            await ParentGroup.SetValue(Value);
-        }
-    }
 }
+
+<script>
+    (function() {
+        const radio = document.getElementById('static-radio-@_elementId');
+        const svg = document.getElementById('radio-svg-@_elementId');
+
+        const checkedIcon = '@(CheckedIcon)';
+        const uncheckedIcon = '@(UncheckedIcon)';
+
+        if (radio && svg) {
+            const handleChange = () => {
+                svg.innerHTML = radio.checked ? checkedIcon : uncheckedIcon;
+            };
+
+            radio.addEventListener('change', handleChange);
+
+            document.addEventListener('change', (e) => {
+                if (e.target.type === 'radio' && e.target.name === radio.name && e.target !== radio) {
+                    handleChange();
+                }
+            });
+        }
+    })();
+</script>
