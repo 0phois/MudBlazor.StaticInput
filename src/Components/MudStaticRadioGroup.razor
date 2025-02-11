@@ -10,8 +10,10 @@
             <CascadingValue TValue="IForm" Value="null">
                 <CascadingValue TValue="bool" Name="ParentDisabled" Value="@GetDisabledState()">
                     <CascadingValue TValue="bool" Name="ParentReadOnly" Value="@GetReadOnlyState()">
-                        <div role="radiogroup" @attributes="UserAttributes" class="@GetInputClass()" style="@InputStyle" required="@Required" 
-                             aria-required="@Required.ToString().ToLowerInvariant()">
+                        <div id="@($"static-radio-group-{_elementId}")" role="radiogroup" @attributes="UserAttributes" class="@GetInputClass()" 
+                             style="@InputStyle" required="@Required" aria-required="@Required.ToString().ToLowerInvariant()">
+                            <input type="hidden" id="@($"empty-radio-{_elementId}")" name="@(_valueSelected ? "" : GroupName)" value="@SelectedValue" />
+
                             @ChildContent
                         </div>
                     </CascadingValue>
@@ -28,26 +30,31 @@
     [CascadingParameter(Name = "ParentReadOnly")]
     private bool ParentIsReadOnly { get; set; }
 
-    [Parameter]
+    [Parameter] 
     public Expression<Func<T?>>? ValueExpression { get; set; }
 
-    public string GroupName { get; private set; } = Guid.NewGuid().ToString();
+    public string GroupName { get; set; } = string.Empty;
+    public T? SelectedValue { get; set; }
+
+    private bool _valueSelected;
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
 
     protected override void OnInitialized()
     {
-        if (For is not null)
+        if (ValueExpression is not null)
         {
-            string expression = For.ToString();
-            int index = expression.LastIndexOf(").", StringComparison.Ordinal);
+            var expression = ValueExpression.ToString();
+            var index = expression.LastIndexOf(").", StringComparison.Ordinal);
 
             if (index > 0)
             {
                 GroupName = expression[(index + 2)..];
             }
-        }
-        else
-        {
-            GroupName = Guid.NewGuid().ToString();
+
+            var compiledExpression = ValueExpression!.Compile();
+
+            SelectedValue = compiledExpression();
+            _valueSelected = SelectedValue is not null;
         }
 
         base.OnInitialized();
