@@ -43,8 +43,8 @@ namespace StaticInput.UnitTests.Components
             radioA.Should().NotBeNull();
             radioB.Should().NotBeNull();
 
-            radioA.HasAttribute("checked").Should().BeTrue();
-            radioB.HasAttribute("checked").Should().BeFalse();
+            radioA!.HasAttribute("checked").Should().BeTrue();
+            radioB!.HasAttribute("checked").Should().BeFalse();
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace StaticInput.UnitTests.Components
             IElement radioA = radioInputs.First(r => r.GetAttribute("value") == "A");
             IElement radioB = radioInputs.First(r => r.GetAttribute("value") == "B");
 
-            IElement? iconA = radioA.ParentElement.QuerySelector(".mud-icon-root");
-            IElement? iconB = radioB.ParentElement.QuerySelector(".mud-icon-root");
+            IElement? iconA = radioA.ParentElement!.QuerySelector(".mud-icon-root");
+            IElement? iconB = radioB.ParentElement!.QuerySelector(".mud-icon-root");
 
             iconA.Should().NotBeNull("The A radio input should be rendered.");
             iconB.Should().NotBeNull("The B radio input should be rendered.");
