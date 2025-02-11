@@ -1,0 +1,95 @@
+﻿@namespace MudBlazor.StaticInput
+
+@typeparam T
+@inherits MudRadio<T>
+
+<div class="mud-input-control mud-input-control-boolean-input mud-input-with-content">
+    <div class="mud-input-control-input-container">
+        <label class="mud-radio mud-input-content-placement-end" __internal_stoppropagation_onclick="">
+            <span class="mud-button-root mud-icon-button mud-ripple mud-ripple-radio mud-default-text hover:mud-default-hover"
+                  tabindex="0"
+                  @onclick:stopPropagation="true">
+                <input type="radio"
+                       class="mud-radio-input"
+                       tabindex="-1"
+                       role="radio"
+                       name="@ParentGroup?.GroupName"
+                       value="@Value"
+                       id="@($"static-radio-{_elementId}")"
+                       checked="@IsChecked" />
+
+                <MudIcon Size="Size"
+                         Color="HasErrors ? Color.Error : Color"
+                         Icon="@(IsChecked ? CheckedIcon : UncheckedIcon)"
+                         id="@($"radio-svg-{_elementId}")" />
+            </span>
+
+            <p class="mud-typography mud-typography-body1">
+                @ChildContent
+            </p>
+        </label>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const radio = document.getElementById('static-radio-@_elementId');
+        const svg = document.getElementById('radio-svg-@_elementId');
+
+        const checkedIcon = '@(CheckedIcon)';
+        const uncheckedIcon = '@(UncheckedIcon)';
+
+        if (radio && svg) {
+            const handleChange = () => {
+                svg.innerHTML = radio.checked ? checkedIcon : uncheckedIcon;
+            };
+
+            radio.addEventListener('change', handleChange);
+
+            document.addEventListener('change', (e) => {
+                if (e.target.type === 'radio' && e.target.name === radio.name && e.target !== radio) {
+                    handleChange();
+                }
+            });
+        }
+    })();
+</script>
+
+@code {
+    [CascadingParameter]
+    private MudStaticRadioGroup<T>? ParentGroup { get; set; }
+
+    private bool IsChecked => ParentGroup is not null && EqualityComparer<T>.Default.Equals(ParentGroup.Value, Value);
+
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+
+    protected override void OnInitialized()
+    {
+        if (ParentGroup is null)
+        {
+            throw new InvalidOperationException($"{nameof(MudStaticRadio<T>)} must be used inside a {nameof(MudStaticRadioGroup<T>)}");
+        }
+
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (UserAttributes is null)
+        {
+            UserAttributes = new Dictionary<string, object?>();
+        }
+
+        UserAttributes["data-static-component"] = true;
+
+        base.OnParametersSet();
+    }
+
+    private async Task SelectValue()
+    {
+        if (ParentGroup is not null)
+        {
+            await ParentGroup.SetValue(Value);
+        }
+    }
+}
