@@ -1,0 +1,96 @@
+﻿@namespace MudBlazor.StaticInput
+
+@typeparam T
+@inherits MudRadio<T>
+
+<MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
+    <InputContent>
+        <label class="@LabelClassname" style="@Style" id="@($"static-radio-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
+            <span tabindex="0" class="@IconClassname">
+                <input id="@($"static-radio-{_elementId}")" tabindex="-1" @attributes="UserAttributes" type="radio" role="radio"
+                       class="mud-radio-input static-radio-input" checked="@_isChecked" disabled="@GetDisabledState()" name="@(_isChecked ? ParentGroup?.GroupName : "")" value="@Value"
+                       aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()" />
+                <MudIcon Icon="@(ParentGroup.CheckedIcon ?? CheckedIcon)" Color="HasErrors ? Color.Error : ParentGroup?.Color ?? this.Color" Size="@Size" Disabled="@Disabled"
+                         id="@($"radio-checked-icon-{_elementId}")" style="@($"display: {_checkedStyle}")" />
+                <MudIcon Icon="@(ParentGroup.UncheckedIcon ?? UncheckedIcon)" Color="HasErrors ? Color.Error : ParentGroup?.UncheckedColor ?? this.UncheckedColor ?? Color.Inherit" 
+                         Size="@Size" Disabled="@Disabled" id="@($"radio-unchecked-icon-{_elementId}")" style="@($"display: {_uncheckedStyle}")" />
+            </span>
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <MudText Color="HasErrors ? Color.Error : Color.Inherit">@Label</MudText>
+            }
+            @if (ChildContent is not null)
+            {
+                <MudText Color="HasErrors ? Color.Error : Color.Inherit">
+                    @ChildContent
+                </MudText>
+            }
+        </label>
+    </InputContent>
+</MudInputControl>
+
+@code {
+    [CascadingParameter]
+    private MudStaticRadioGroup<T>? ParentGroup { get; set; }
+
+    [Parameter]
+    public Expression<Func<T?>>? ValueExpression { get; set; }
+
+    private bool _isChecked;
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+    private string _checkedStyle => _isChecked ? "block" : "none";
+    private string _uncheckedStyle => _isChecked ? "none" : "block";
+
+    protected override void OnInitialized()
+    {
+        if (ParentGroup is null)
+            throw new InvalidOperationException($"{nameof(MudStaticRadio<T>)} must be used inside a {nameof(MudStaticRadioGroup<T>)}");
+
+        if (ParentGroup!.SelectedValue is not null)
+            _isChecked = ParentGroup!.SelectedValue!.Equals(Value);
+
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        UserAttributes["data-static-component"] = true;
+
+        base.OnParametersSet();
+    }
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.static-radio-input').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                const parentContainer = radio.closest("[role='radiogroup']");
+                if (!parentContainer) return;
+
+                parentContainer.querySelectorAll('.static-radio-input').forEach(function (r) {
+                    if (r !== radio) {
+                        r.checked = false;
+                        r.removeAttribute("name");
+                        r.setAttribute("checked", false);
+                        r.setAttribute("aria-checked", false);
+                    }
+
+                    const radioId = r.id.split('-')[2];
+                    const checkedIcon = document.getElementById(`radio-checked-icon-${radioId}`);
+                    const uncheckedIcon = document.getElementById(`radio-unchecked-icon-${radioId}`);
+
+                    if (r.checked) {
+                        checkedIcon.style.display = 'block';
+                        uncheckedIcon.style.display = 'none';
+                        r.setAttribute("checked", true);
+                        r.setAttribute("aria-checked", true);
+                        r.setAttribute("name", "@ParentGroup?.GroupName");
+                    } else {
+                        checkedIcon.style.display = 'none';
+                        uncheckedIcon.style.display = 'block';
+                    }
+                });
+            });
+        });
+    });
+</script>

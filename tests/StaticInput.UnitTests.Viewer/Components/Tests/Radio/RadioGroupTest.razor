@@ -1,0 +1,13 @@
+﻿<MudStaticRadioGroup @bind-Value="SelectedValue">
+    <MudStaticRadio Value="@("A")">
+        Option A
+    </MudStaticRadio>
+
+    <MudStaticRadio Value="@("B")">
+        Option B
+    </MudStaticRadio>
+</MudStaticRadioGroup>
+
+@code {
+    private string SelectedValue { get; set; } = "A";
+}
