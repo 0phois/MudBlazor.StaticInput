@@ -1,9 +1,11 @@
-﻿using FluentAssertions;
+﻿using AngleSharp.Dom;
+using Bunit;
+using FluentAssertions;
+using Microsoft.Playwright;
 using MudBlazor.StaticInput;
 using StaticInput.UnitTests.Fixtures;
-using Bunit;
-using AngleSharp.Dom;
 using StaticInput.UnitTests.Viewer.Components.Tests.Radio;
+using static Microsoft.Playwright.Assertions;
 
 namespace StaticInput.UnitTests.Components
 {
@@ -56,14 +58,133 @@ namespace StaticInput.UnitTests.Components
             IElement radioA = radioInputs.First(r => r.GetAttribute("value") == "A");
             IElement radioB = radioInputs.First(r => r.GetAttribute("value") == "B");
 
-            IElement? iconA = radioA.ParentElement!.QuerySelector(".mud-icon-root");
-            IElement? iconB = radioB.ParentElement!.QuerySelector(".mud-icon-root");
+            var iconA = radioA.ParentElement!.QuerySelectorAll(".mud-icon-root");
+            var iconB = radioB.ParentElement!.QuerySelectorAll(".mud-icon-root");
 
-            iconA.Should().NotBeNull("The A radio input should be rendered.");
-            iconB.Should().NotBeNull("The B radio input should be rendered.");
+            iconA.Should().NotBeNullOrEmpty("The A radio input should be rendered.");
+            iconB.Should().NotBeNullOrEmpty("The B radio input should be rendered.");
 
-            iconA.InnerHtml.Should().Contain("M12 7c-2.76", "The A radio input is checked");
-            iconB.InnerHtml.Should().Contain("M12 2C6.48", "The B radio input is checked");
+            iconA.First(x => x.Id!.StartsWith("radio-checked-icon-")).GetAttribute("style")!.Should().Contain("display: block", "The A radio input is checked");
+            iconA.First(x => x.Id!.StartsWith("radio-unchecked-icon-")).GetAttribute("style")!.Should().Contain("display: none", "The A radio input is checked");
+
+            iconB.First(x => x.Id!.StartsWith("radio-checked-icon-")).GetAttribute("style")!.Should().Contain("display: none", "The B radio input is checked");
+            iconB.First(x => x.Id!.StartsWith("radio-unchecked-icon-")).GetAttribute("style")!.Should().Contain("display: block", "The B radio input is checked");
         }
+
+        [Fact]
+        public void MudStaticRadio_Checked_Unchecked_Colors_Should_Differ()
+        {
+            var comp = Context.RenderComponent<RadioColorsTest>();
+
+            IRefreshableElementCollection<IElement> radioInputs = comp.FindAll("input[type='radio']");
+            IElement radioA = radioInputs.First(r => r.GetAttribute("value") == "A");
+            IElement radioB = radioInputs.First(r => r.GetAttribute("value") == "B");
+
+            var iconA = radioA.ParentElement!.QuerySelectorAll(".mud-icon-root");
+            var iconB = radioB.ParentElement!.QuerySelectorAll(".mud-icon-root");
+
+
+            iconA.First(x => x.Id!.StartsWith("radio-checked-icon-")).ClassList.Should().Contain("mud-primary-text", "Checked should be primary color");
+            iconA.First(x => x.Id!.StartsWith("radio-unchecked-icon-")).ClassList.Should().Contain("mud-error-text", "Unchecked should be error color");
+
+            iconB.First(x => x.Id!.StartsWith("radio-checked-icon-")).ClassList.Should().Contain("mud-primary-text", "Checked should be primary color");
+            iconB.First(x => x.Id!.StartsWith("radio-unchecked-icon-")).ClassList.Should().Contain("mud-info-text", "Unchecked should be info color");
+        }
+
+        [Fact]
+        public async Task CheckBox_State_Changes_When_Clicked()
+        {
+            var url = typeof(RadioIconTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+
+            await radioB.CheckAsync();
+
+            await Expect(radioA).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioB).ToBeCheckedAsync();
+
+        }
+
+        [Fact]
+        public async Task Radio_Disabled_Cannot_Be_Selected()
+        {
+            var url = typeof(RadioDisabledTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+
+            await Expect(radioA).ToBeEnabledAsync();
+            await Expect(radioB).ToBeDisabledAsync();
+
+            await radioA.CheckAsync();
+            
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+
+            try
+            {
+                await radioB.CheckAsync(new() { Timeout = 2500 });
+            }
+            catch (TimeoutException) { }
+
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioA).ToBeCheckedAsync();
+        }
+
+        [Fact]
+        public async Task Radio_Should_Checked_To_Submit()
+        {
+            var url = typeof(RadioRequiredTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var button = Page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
+
+            await button.ClickAsync();
+
+            var content = await Page.ContentAsync();
+
+            content.Should().Contain("Selection required!");
+
+            var radioC = Page.Locator("input.static-radio-input[value='C']");
+
+            await radioC.CheckAsync();
+            await Expect(radioC).ToBeCheckedAsync();
+
+            await button.ClickAsync();
+
+            await Expect(Page).ToHaveTitleAsync("Home");
+        }
+
+        [Fact]
+        public async Task Radio_Should_Initialize_True()
+        {
+            var url = typeof(RadioInitTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+            var radioC = Page.Locator("input.static-radio-input[value='C']");
+
+            await Expect(radioA).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioC).ToBeCheckedAsync();
+
+            await radioA.CheckAsync();
+
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioC).ToBeCheckedAsync(new() { Checked = false });
+        }
+
     }
 }
