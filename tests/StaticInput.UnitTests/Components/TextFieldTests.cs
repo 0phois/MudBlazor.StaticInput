@@ -234,17 +234,15 @@ namespace StaticInput.UnitTests.Components
 
             await Page.GotoAsync(url);
 
-            var field = Page.GetByLabel("Password");
-            var button = field.GetByRole(AriaRole.Button);
-            var innerHtml = await button.InnerHTMLAsync();
+            var button = await Page.QuerySelectorAsync("input[type=\"password\"] ~ .mud-input-adornment .mud-icon-button");
+            var innerHtml = await button!.InnerHTMLAsync();
 
             innerHtml.Should().Contain("<path d=\"M0 0h24v24H0V0z\" fill=\"none\"></path>");
 
             await button.ClickAsync();
 
-            field = Page.GetByLabel("Password");
-            button = field.GetByRole(AriaRole.Button);
-            innerHtml = await button.InnerHTMLAsync();
+            button = await Page.QuerySelectorAsync("input[type=\"password\"] ~ .mud-input-adornment .mud-icon-button");
+            innerHtml = await button!.InnerHTMLAsync();
 
             innerHtml.Should().Contain("<path d=\"M0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0z\" fill=\"none\"></path>");
         }
