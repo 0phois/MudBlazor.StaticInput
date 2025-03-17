@@ -52,6 +52,9 @@ let hasInitialized = false;
             if (responsiveDrawer) {
                 MudDrawerInterop.monitorResize(responsiveDrawer);
             }
+
+            document.removeEventListener('click', this.handleOutsideClick);
+            document.addEventListener('click', this.handleOutsideClick);
         },
 
         monitorResize(responsiveDrawer) {
@@ -106,6 +109,19 @@ let hasInitialized = false;
             const targetDrawerId = element.getAttribute('data-mud-drawer-toggle');
 
             MudDrawerInterop.toggleDrawer(targetDrawerId);
+        },
+
+        handleOutsideClick: function (event) {
+            const mudDrawer = document.querySelector('.mud-drawer.mud-drawer--open');
+
+            if (!mudDrawer) return;
+
+            if (mudDrawer.contains(event.target) || event.target.closest('[data-mud-drawer-toggle]')) {
+                return;
+            }
+            
+            const drawerId = mudDrawer.id ? mudDrawer.id : '_no_id_provided_';
+            MudDrawerInterop.toggleDrawer(drawerId);
         },
 
         toggleDrawer: function (drawerId) {
