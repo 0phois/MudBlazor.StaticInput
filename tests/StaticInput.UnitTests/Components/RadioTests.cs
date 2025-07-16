@@ -186,5 +186,25 @@ namespace StaticInput.UnitTests.Components
             await Expect(radioC).ToBeCheckedAsync(new() { Checked = false });
         }
 
+        [Fact]
+        public async Task Radio_Should_Update_Hidden_Input_On_Change()
+        {
+            var url = typeof(RadioGroupTest).ToQueryString();
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+            var hiddenInput = Page.Locator("input[type='hidden']");
+
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioB).Not.ToBeCheckedAsync();
+            await Expect(hiddenInput).ToHaveAttributeAsync("value", "A");
+
+            await radioB.CheckAsync();
+
+            await Expect(radioA).Not.ToBeCheckedAsync();
+            await Expect(radioB).ToBeCheckedAsync();
+            await Expect(hiddenInput).ToHaveAttributeAsync("value", "B");
+        }
     }
 }
