@@ -226,5 +226,25 @@ namespace StaticInput.UnitTests.Components
 
             message.Should().Be("Adornment clicked!");
         }
+
+        [Fact]
+        public async Task TextField_AdornmentButton_CanToggle()
+        {
+            var url = typeof(TextFieldAdornmentTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var button = await Page.QuerySelectorAsync("input[type=\"password\"] ~ .mud-input-adornment .mud-icon-button");
+            var innerHtml = await button!.InnerHTMLAsync();
+
+            innerHtml.Should().Contain("<path d=\"M0 0h24v24H0V0z\" fill=\"none\"></path>");
+
+            await button.ClickAsync();
+
+            button = await Page.QuerySelectorAsync("input[type=\"password\"] ~ .mud-input-adornment .mud-icon-button");
+            innerHtml = await button!.InnerHTMLAsync();
+
+            innerHtml.Should().Contain("<path d=\"M0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0zm0 0h24v24H0V0z\" fill=\"none\"></path>");
+        }
     }
 }

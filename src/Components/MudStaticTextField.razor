@@ -52,6 +52,7 @@
     /// </example>
     /// </remarks>
     [Parameter] public string? AdornmentClickFunction { get; set; }
+    [Parameter] public string? AdornmentToggledIcon { get; set; }
     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
 
     private string _name = string.Empty;
@@ -142,9 +143,21 @@
         {
             const inputControl = inputElement.closest(".mud-input-control");
             const buttonElement = inputControl.querySelector('button');
+            const svgElement = buttonElement.querySelector("svg");
+            const icon = '@AdornmentIcon';
+            const toggleIcon = '@AdornmentToggledIcon';
+
+            let isToggled = false;
 
             if (buttonElement) {
                 buttonElement.addEventListener('click', function (event) {
+                    
+                    if (svgElement && toggleIcon) 
+                    {
+                        isToggled = !isToggled;
+                        svgElement.innerHTML = isToggled ? toggleIcon : icon;
+                    }
+
                     if (typeof window[onAdornmentClick] === 'function') {
                         window[onAdornmentClick](inputElement, event.target);
                     }
