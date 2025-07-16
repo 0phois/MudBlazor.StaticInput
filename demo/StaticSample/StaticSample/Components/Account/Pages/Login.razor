@@ -44,9 +44,9 @@
                 <MudStaticTextField @bind-Value="@Input.Email" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Email" autocomplete="username"
                                     Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Label="Email" For="() => Input.Email" />
 
-                <MudStaticTextField @bind-Value="@Input.Password" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.VisibilityOff" AdornmentClickFunction="showPassword"
-                                    autocomplete="current-password" Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Label="Password"
-                                    InputType="InputType.Password" For="() => Input.Password" />
+                <MudStaticTextField @bind-Value="@Input.Password" autocomplete="current-password" Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Label="Password"
+                                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Visibility" AdornmentToggledIcon="@Icons.Material.Outlined.VisibilityOff"
+                                    AdornmentClickFunction="showPassword" InputType="InputType.Password" For="() => Input.Password" />
 
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                     <MudStaticSwitch @bind-Value="Input.RememberMe" Color="Color.Primary" Label="Remember Me" Typo="Typo.body2"/>
