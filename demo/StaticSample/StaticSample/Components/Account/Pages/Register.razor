@@ -55,6 +55,13 @@
                 <MudStaticTextField @bind-Value="@Input.ConfirmPassword" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Lock" autocomplete="new-password"
                                     Class="pb-2" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="Confirm Password" InputType="InputType.Password" For="() => Input.ConfirmPassword" />
 
+                <MudStack Row="true" Justify="Justify.Center">
+                    <MudStaticRadioGroup @bind-Value="Input.UserType" For="() => Input.UserType" Color="Color.Primary">
+                        <MudStaticRadio Value="UserType.Individual" Label="Individual" Class="mb-2" />
+                        <MudStaticRadio Value="UserType.Corporation" Label="Corporation" Class="mb-2" />
+                    </MudStaticRadioGroup>
+                </MudStack>
+
                 <MudStaticButton Class="mt-1 mb-4" FormAction="FormAction.Submit" Color="Color.Primary" Variant="Variant.Filled" FullWidth="true">Register</MudStaticButton>
 
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="2">
@@ -161,5 +168,13 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+
+        public UserType UserType { get; set; } = UserType.Individual;
+    }
+
+    private enum UserType
+    {
+        Individual,
+        Corporation
     }
 }
