@@ -9,10 +9,11 @@
             <span tabindex="0" class="@IconClassname">
                 <input id="@($"static-radio-{_elementId}")" tabindex="-1" @attributes="UserAttributes" type="radio" role="radio"
                        class="mud-radio-input static-radio-input" checked="@_isChecked" disabled="@GetDisabledState()" name="@(_isChecked ? ParentGroup?.GroupName : "")" value="@Value"
-                       aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()" />
-                <MudIcon Icon="@(ParentGroup.CheckedIcon ?? CheckedIcon)" Color="HasErrors ? Color.Error : ParentGroup?.Color ?? this.Color" Size="@Size" Disabled="@Disabled"
+                       aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()"
+                       data-value="@Value" data-group-name="@ParentGroup?.GroupName" />
+                <MudIcon Icon="@(ParentGroup?.CheckedIcon ?? CheckedIcon)" Color="HasErrors? Color.Error: ParentGroup?.Color ?? this.Color" Size="@Size" Disabled="@Disabled"
                          id="@($"radio-checked-icon-{_elementId}")" style="@($"display: {_checkedStyle}")" />
-                <MudIcon Icon="@(ParentGroup.UncheckedIcon ?? UncheckedIcon)" Color="HasErrors ? Color.Error : ParentGroup?.UncheckedColor ?? this.UncheckedColor ?? Color.Inherit" 
+                <MudIcon Icon="@(ParentGroup?.UncheckedIcon ?? UncheckedIcon)" Color="HasErrors ? Color.Error: ParentGroup?.UncheckedColor ?? this.UncheckedColor ?? Color.Inherit"
                          Size="@Size" Disabled="@Disabled" id="@($"radio-unchecked-icon-{_elementId}")" style="@($"display: {_uncheckedStyle}")" />
             </span>
             @if (!string.IsNullOrEmpty(Label))
@@ -67,6 +68,10 @@
                 const parentContainer = radio.closest("[role='radiogroup']");
                 if (!parentContainer) return;
 
+                const hiddenInput = parentContainer.querySelector("input[type='hidden']");
+                const selectedValue = radio.getAttribute('data-value');
+                const groupName = radio.getAttribute('data-group-name');
+
                 parentContainer.querySelectorAll('.static-radio-input').forEach(function (r) {
                     if (r !== radio) {
                         r.checked = false;
@@ -84,7 +89,12 @@
                         uncheckedIcon.style.display = 'none';
                         r.setAttribute("checked", true);
                         r.setAttribute("aria-checked", true);
-                        r.setAttribute("name", "@ParentGroup?.GroupName");
+                        r.setAttribute("name", groupName);
+                        // Update the hidden input value
+                        if (hiddenInput) {
+                            hiddenInput.value = selectedValue;
+                            hiddenInput.setAttribute("value", selectedValue);
+                        }
                     } else {
                         checkedIcon.style.display = 'none';
                         uncheckedIcon.style.display = 'block';
