@@ -167,12 +167,18 @@ let hasInitialized = false;
         ensureInitialized();
     }
 
-    if (window.Blazor) {
-        window.Blazor.addEventListener('afterStarted', ensureInitialized);
-    } else {
+    const tryAddBlazorListener = () => {
+        if (window.Blazor && typeof window.Blazor.addEventListener === "function") {
+            window.Blazor.addEventListener('afterStarted', ensureInitialized);
+            return true;
+        }
+        return false;
+    };
+
+    if (!tryAddBlazorListener()) {
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.Blazor) {
-                window.Blazor.addEventListener('afterStarted', ensureInitialized);
+            if (!tryAddBlazorListener()) {
+                ensureInitialized();
             }
         });
     }
