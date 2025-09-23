@@ -12,7 +12,6 @@ public partial class MudStaticTextField<T> : MudTextField<T>
 
     protected new int? Counter { get; set; }
     protected new int MaxLines { get; set; }
-    protected new int Lines { get; set; } = 1;
     protected new bool AutoFocus { get; set; }
     protected new bool AutoGrow { get; set; }
     protected new bool Clearable { get; set; }
