@@ -167,12 +167,14 @@ let hasInitialized = false;
         ensureInitialized();
     }
 
-    if (window.Blazor) {
+    if (window.Blazor && typeof window.Blazor.addEventListener === "function") {
         window.Blazor.addEventListener('afterStarted', ensureInitialized);
     } else {
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.Blazor) {
+            if (window.Blazor && typeof window.Blazor.addEventListener === "function") {
                 window.Blazor.addEventListener('afterStarted', ensureInitialized);
+            } else {
+                ensureInitialized();
             }
         });
     }
