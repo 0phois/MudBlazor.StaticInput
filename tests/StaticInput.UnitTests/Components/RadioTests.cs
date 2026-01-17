@@ -14,7 +14,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticRadioGroup_Should_Render_RadioGroup()
         {
-            IRenderedComponent<MudStaticRadioGroup<string>> comp = Context.RenderComponent<MudStaticRadioGroup<string>>();
+            IRenderedComponent<MudStaticRadioGroup<string>> comp = Context.Render<MudStaticRadioGroup<string>>();
 
             comp.Markup.Replace(" ", string.Empty).Should()
                 .Contain("mud-radio-group")
@@ -24,7 +24,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticRadio_Should_Render_Radio()
         {
-            IRenderedComponent<RadioSingleTest> comp = Context.RenderComponent<RadioSingleTest>();
+            IRenderedComponent<RadioSingleTest> comp = Context.Render<RadioSingleTest>();
 
             comp.Markup.Replace(" ", string.Empty).Should()
                 .Contain("mud-radio")
@@ -36,9 +36,9 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticRadio_Should_Have_Correct_Checked_State()
         {
-            IRenderedComponent<RadioGroupTest> comp = Context.RenderComponent<RadioGroupTest>();
+            IRenderedComponent<RadioGroupTest> comp = Context.Render<RadioGroupTest>();
 
-            IRefreshableElementCollection<IElement> radios = comp.FindAll("input[type='radio']");
+            var radios = comp.FindAll("input[type='radio']");
             IElement? radioA = radios.FirstOrDefault(r => r.GetAttribute("value") == "A");
             IElement? radioB = radios.FirstOrDefault(r => r.GetAttribute("value") == "B");
 
@@ -52,9 +52,9 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticRadio_Icon_Should_Reflect_Checked_State()
         {
-            IRenderedComponent<RadioGroupTest> comp = Context.RenderComponent<RadioGroupTest>();
+            IRenderedComponent<RadioGroupTest> comp = Context.Render<RadioGroupTest>();
 
-            IRefreshableElementCollection<IElement> radioInputs = comp.FindAll("input[type='radio']");
+            var radioInputs = comp.FindAll("input[type='radio']");
             IElement radioA = radioInputs.First(r => r.GetAttribute("value") == "A");
             IElement radioB = radioInputs.First(r => r.GetAttribute("value") == "B");
 
@@ -74,9 +74,9 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticRadio_Checked_Unchecked_Colors_Should_Differ()
         {
-            var comp = Context.RenderComponent<RadioColorsTest>();
+            var comp = Context.Render<RadioColorsTest>();
 
-            IRefreshableElementCollection<IElement> radioInputs = comp.FindAll("input[type='radio']");
+            var radioInputs = comp.FindAll("input[type='radio']");
             IElement radioA = radioInputs.First(r => r.GetAttribute("value") == "A");
             IElement radioB = radioInputs.First(r => r.GetAttribute("value") == "B");
 

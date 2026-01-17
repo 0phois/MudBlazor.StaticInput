@@ -13,7 +13,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticSwitch_Should_Render_Switch()
         {
-            var comp = Context.RenderComponent<MudStaticSwitch>();
+            var comp = Context.Render<MudStaticSwitch>();
 
             comp.Markup.Replace(" ", string.Empty).Should()
                 .Contain("mud-switch")
@@ -61,7 +61,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void Switch_Should_Render_ThumbIcon()
         {
-            var comp = Context.RenderComponent<SwitchToggleIconTest>();
+            var comp = Context.Render<SwitchToggleIconTest>();
 
             comp.Markup.Replace(" ", string.Empty).Should()
                 .Contain("mud-switch")

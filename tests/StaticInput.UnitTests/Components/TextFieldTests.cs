@@ -13,7 +13,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticTextField_Should_Render_TextField()
         {
-            var comp = Context.RenderComponent<MudStaticTextField<string>>();
+            var comp = Context.Render<MudStaticTextField<string>>();
 
             comp.Markup.Replace(" ", string.Empty).Should().Contain("mud-input-control")
                 .And.Contain("mud-input-root");
@@ -22,7 +22,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_Input_Should_Shink_Label()
         {
-            var comp = Context.RenderComponent<TextFieldLabelTest>();
+            var comp = Context.Render<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Basic Label", StringComparison.OrdinalIgnoreCase));
@@ -39,7 +39,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_AdonrmentStart_Should_Shink_Label()
         {
-            var comp = Context.RenderComponent<TextFieldLabelTest>();
+            var comp = Context.Render<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Adornment Start", StringComparison.OrdinalIgnoreCase));
@@ -56,7 +56,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_AdornmentEnd_Should_Not_Shink_Label()
         {
-            var comp = Context.RenderComponent<TextFieldLabelTest>();
+            var comp = Context.Render<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Adornment End", StringComparison.OrdinalIgnoreCase));
@@ -73,7 +73,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_Shrink_Label_Should_Shink_Label()
         {
-            var comp = Context.RenderComponent<TextFieldLabelTest>();
+            var comp = Context.Render<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Shrink Label", StringComparison.OrdinalIgnoreCase));
@@ -90,7 +90,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_Placeholder_Should_Shink_Label()
         {
-            var comp = Context.RenderComponent<TextFieldLabelTest>();
+            var comp = Context.Render<TextFieldLabelTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Placeholder", StringComparison.OrdinalIgnoreCase));
@@ -187,7 +187,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_Adornment_Should_Render_Without_Button()
         {
-            var comp = Context.RenderComponent<TextFieldAdornmentTest>();
+            var comp = Context.Render<TextFieldAdornmentTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Email", StringComparison.OrdinalIgnoreCase));
@@ -198,7 +198,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void TextField_With_AdornmentClickFunction_Should_Render_AdornmentButton()
         {
-            var comp = Context.RenderComponent<TextFieldAdornmentTest>();
+            var comp = Context.Render<TextFieldAdornmentTest>();
 
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Password", StringComparison.OrdinalIgnoreCase));

@@ -15,7 +15,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticButton_Should_Render_Submit_Button()
         {
-            var comp = Context.RenderComponent<MudStaticButton>();
+            var comp = Context.Render<MudStaticButton>();
 
             comp.Instance.HtmlTag.Should().Be("button");
 
@@ -28,8 +28,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void FormAction_Submit_Should_Render_Submit_Button()
         {
-            var param = ComponentParameter.CreateParameter(nameof(MudStaticButton.FormAction), FormAction.Submit);
-            var comp = Context.RenderComponent<MudStaticButton>(param);
+            var comp = Context.Render<MudStaticButton>(parameters => parameters.Add(x => x.FormAction, FormAction.Submit));
 
             comp.Instance.HtmlTag.Should().Be("button");
 
@@ -42,8 +41,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void FormAction_Reset_Should_Render_Reset_Button()
         {
-            var param = ComponentParameter.CreateParameter(nameof(MudStaticButton.FormAction), FormAction.Reset);
-            var comp = Context.RenderComponent<MudStaticButton>(param);
+            var comp = Context.Render<MudStaticButton>(parameters => parameters.Add(x => x.FormAction, FormAction.Reset));
 
             comp.Instance.HtmlTag.Should().Be("button");
 
@@ -56,8 +54,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void FormAction_Post_Should_Render_Submit_Button_Within_Form()
         {
-            var param = ComponentParameter.CreateParameter(nameof(MudStaticButton.FormAction), FormAction.Post);
-            var comp = Context.RenderComponent<MudStaticButton>(param);
+            var comp = Context.Render<MudStaticButton>(parameters => parameters.Add(x => x.FormAction, FormAction.Post));
 
             comp.Instance.HtmlTag.Should().Be("button");
 
@@ -72,14 +69,14 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void SubmitButton_Should_Not_Submit_Invalid_Form()
         {
-            var comp = Context.RenderComponent<ButtonSubmitTest>();
+            var comp = Context.Render<ButtonSubmitTest>();
 
             comp.Find("button").Click();
 
             comp.Markup.Should().Contain("mud-input-error")
                 .And.Contain("The Email field is required.");
 
-            var navigation = Context.Services.GetRequiredService<FakeNavigationManager>();
+            var navigation = Context.Services.GetRequiredService<BunitNavigationManager>();
 
             navigation.History.Should().HaveCount(0);
         }
@@ -87,12 +84,12 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void SubmitButton_Should_Submit_Valid_Form()
         {
-            var comp = Context.RenderComponent<ButtonSubmitTest>();
+            var comp = Context.Render<ButtonSubmitTest>();
 
             comp.Find("input").Change("test@mail.com");
             comp.Find("button").Click();
 
-            var navigation = Context.Services.GetRequiredService<FakeNavigationManager>();
+            var navigation = Context.Services.GetRequiredService<BunitNavigationManager>();
 
             navigation.History.Should().HaveCount(1);
             navigation.Uri.Should().Be("http://localhost/");
