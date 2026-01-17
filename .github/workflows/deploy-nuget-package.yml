@@ -63,7 +63,7 @@ jobs:
     - name: Setup dotnet version
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     - name: Pack nuget package
       run: dotnet pack -c Release --output nupkgs /p:PackageVersion=${{ needs.get-version.outputs.VERSION }} /p:AssemblyVersion=${{ needs.get-version.outputs.ASSEMBLY_VERSION }} /p:Version=${{ needs.get-version.outputs.VERSION }}
       working-directory: ./src
