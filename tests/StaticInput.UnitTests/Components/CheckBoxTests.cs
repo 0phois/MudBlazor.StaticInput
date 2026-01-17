@@ -15,7 +15,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void MudStaticCheckBox_Should_Render_CheckBox()
         {
-            var comp = Context.RenderComponent<MudStaticCheckBox>();
+            var comp = Context.Render<MudStaticCheckBox>();
 
             comp.Markup.Replace(" ", string.Empty).Should()
                 .Contain("mud-checkbox")
@@ -26,7 +26,7 @@ namespace StaticInput.UnitTests.Components
         [Fact]
         public void CheckBox_Checked_Unchecked_Colors_Should_Differ()
         {
-            var comp = Context.RenderComponent<CheckBoxColorsTest>();
+            var comp = Context.Render<CheckBoxColorsTest>();
 
             var boxes = comp.FindAll("svg");
             var selected = boxes.First(x => x.Id!.Contains("check-icon-"));

@@ -9,7 +9,7 @@ namespace StaticInput.UnitTests.Components
     public abstract class BaseComponentTest : IClassFixture<ContextFixture>, IAsyncLifetime
     {
         public IPage Page { get; private set; } = null!;
-        protected TestContext Context { get; private set; }
+        protected BunitContext Context { get; private set; }
         private ContextFixture ContextFixture { get; set; }
 
         protected BaseComponentTest(ContextFixture contextFixture)
@@ -26,11 +26,17 @@ namespace StaticInput.UnitTests.Components
             Page = await ContextFixture.NewPageAsync().ConfigureAwait(false);
         }
 
-        public Task DisposeAsync()
+        public async Task DisposeAsync()
         {
-            Context.Dispose();
-
-            return Task.CompletedTask;
+            try
+            {
+                if (Page != null)
+                    await Page.CloseAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                await Context.DisposeAsync();
+            }
         }
     }
 }
