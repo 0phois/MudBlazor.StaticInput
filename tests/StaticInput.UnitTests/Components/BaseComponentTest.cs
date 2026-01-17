@@ -28,6 +28,9 @@ namespace StaticInput.UnitTests.Components
 
         public async Task DisposeAsync()
         {
+            if (Page != null)
+                await Page.CloseAsync().ConfigureAwait(false);
+
             await Context.DisposeAsync();
         }
     }
