@@ -79,5 +79,39 @@ namespace StaticInput.UnitTests.Components
             miniClasses = await miniDawer.GetAttributeAsync("class");
             miniClasses.Should().Contain("mud-drawer--closed");
         }
+        
+        [Fact]
+        public async Task MudDrawerTemporary_ClickOutside_Closed()
+        {
+            var url = typeof(NavMenuDrawerToggleNeverTest).ToQueryString();
+            await Page.GotoAsync(url);
+
+            var leftToggle = Page.Locator("#static-left-toggle");
+            var temporaryDrawer = Page.Locator("#static-temporary");
+            
+            var drawerBox = await temporaryDrawer.BoundingBoxAsync();
+            drawerBox.Should().NotBeNull();
+
+            var temporaryClasses = await temporaryDrawer.GetAttributeAsync("class");
+            temporaryClasses.Should().NotBeNullOrEmpty();
+            temporaryClasses.Should().Contain("mud-drawer--closed");
+
+            await leftToggle.ClickAsync();
+            temporaryClasses = await temporaryDrawer.GetAttributeAsync("class");
+            temporaryClasses.Should().Contain("mud-drawer--open");
+
+            await temporaryDrawer.ClickAsync();
+            temporaryClasses = await temporaryDrawer.GetAttributeAsync("class");
+            temporaryClasses.Should().Contain("mud-drawer--open");
+
+            await Page.Mouse.ClickAsync(drawerBox!.Width+100, 10);
+
+            temporaryClasses = await temporaryDrawer.GetAttributeAsync("class");
+            temporaryClasses.Should().Contain("mud-drawer--closed");
+
+            await leftToggle.ClickAsync();
+            temporaryClasses = await temporaryDrawer.GetAttributeAsync("class");
+            temporaryClasses.Should().Contain("mud-drawer--open");
+        }
     }
 }
