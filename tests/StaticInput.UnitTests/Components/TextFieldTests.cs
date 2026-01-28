@@ -27,13 +27,11 @@ namespace StaticInput.UnitTests.Components
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Basic Label", StringComparison.OrdinalIgnoreCase));
 
-            var index = field.Markup.IndexOf("<script>");
-
-            field.Markup[..index].Should().NotContain("mud-shrink"); //label should not shunk on first render
+            field.Markup.Should().NotContain("mud-shrink"); //label should not shunk on first render
 
             field.Find("input").Change("random text");
 
-            field.Markup[..index].Should().Contain("mud-shrink"); //label is shrunk after input
+            field.Markup.Should().Contain("mud-shrink"); //label is shrunk after input
         }
 
         [Fact]
@@ -44,13 +42,11 @@ namespace StaticInput.UnitTests.Components
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Adornment Start", StringComparison.OrdinalIgnoreCase));
 
-            var index = field.Markup.IndexOf("<script>");
-
-            field.Markup[..index].Should().Contain("mud-shrink"); //label should be shrunk on first render
+            field.Markup.Should().Contain("mud-shrink"); //label should be shrunk on first render
 
             field.Find("input").Change("random text");
 
-            field.Markup[..index].Should().Contain("mud-shrink"); //label remains shrunk after input 
+            field.Markup.Should().Contain("mud-shrink"); //label remains shrunk after input
         }
 
         [Fact]
@@ -61,13 +57,11 @@ namespace StaticInput.UnitTests.Components
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Adornment End", StringComparison.OrdinalIgnoreCase));
 
-            var index = field.Markup.IndexOf("<script>");
-
-            field.Markup[..index].Should().NotContain("mud-shrink"); //label should not shunk on first render
+            field.Markup.Should().NotContain("mud-shrink"); //label should not shunk on first render
 
             field.Find("input").Change("random text");
 
-            field.Markup[..index].Should().Contain("mud-shrink"); //label is shrunk after input
+            field.Markup.Should().Contain("mud-shrink"); //label is shrunk after input
         }
 
         [Fact]
@@ -78,13 +72,11 @@ namespace StaticInput.UnitTests.Components
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Shrink Label", StringComparison.OrdinalIgnoreCase));
 
-            var index = field.Markup.IndexOf("<script>");
-
-            field.Markup[..index].Should().Contain("mud-shrink"); //label should be shrunk on first render
+            field.Markup.Should().Contain("mud-shrink"); //label should be shrunk on first render
 
             field.Find("input").Change("random text");
 
-            field.Markup[..index].Should().Contain("mud-shrink"); //label remains shrunk after input 
+            field.Markup.Should().Contain("mud-shrink"); //label remains shrunk after input
         }
 
         [Fact]
@@ -95,13 +87,11 @@ namespace StaticInput.UnitTests.Components
             var field = comp.FindComponents<MudStaticTextField<string>>()
                             .First(x => x.Instance.Label!.Equals("Placeholder", StringComparison.OrdinalIgnoreCase));
 
-            var index = field.Markup.IndexOf("<script>");
-
-            field.Markup[..index].Should().Contain("mud-shrink"); //label should be shrunk on first render
+            field.Markup.Should().Contain("mud-shrink"); //label should be shrunk on first render
 
             field.Find("input").Change("random text");
 
-            field.Markup[..index].Should().Contain("mud-shrink"); //label remains shrunk after input 
+            field.Markup.Should().Contain("mud-shrink"); //label remains shrunk after input
         }
 
         [Fact]

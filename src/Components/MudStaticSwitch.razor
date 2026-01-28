@@ -1,11 +1,11 @@
-﻿@namespace MudBlazor.StaticInput
+@namespace MudBlazor.StaticInput
 
 @using MudBlazor.Extensions
 @inherits MudSwitch<bool>
 
 <MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
     <InputContent>
-        <label class="@LabelClassname" style="@Style" id="@_elementId">
+        <label class="@LabelClassname" style="@Style">
             <span class="@SpanClassname">
                 <span tabindex="0" class="@SwitchClassname" id="@($"switch-container-{_elementId}")">
                     <span class="mud-switch-button">
@@ -50,7 +50,14 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-static-component"] = true;
+        UserAttributes["data-mud-static-type"] = "switch";
+        UserAttributes["data-mud-static-name"] = _name;
+        UserAttributes["data-mud-static-checked-text-color"] = CheckedTextColor;
+        UserAttributes["data-mud-static-checked-hover-color"] = CheckedHoverColor;
+        UserAttributes["data-mud-static-unchecked-text-color"] = UncheckedTextColor;
+        UserAttributes["data-mud-static-unchecked-hover-color"] = UncheckedHoverColor;
+        UserAttributes["data-mud-static-checked-color"] = CheckedColor;
+        UserAttributes["data-mud-static-unchecked-color"] = UnCheckedColor;
 
         base.OnParametersSet();
     }
@@ -82,38 +89,3 @@
     }
 
 }
-
-<script>
-    (function () {
-        const container = document.getElementById('switch-container-@_elementId');
-        const switchToggle = document.getElementById('static-switch-@_elementId');
-        const emptySwitch = document.getElementById('empty-switch-@_elementId');
-        const switchTrack = document.getElementById('switch-track-@_elementId');
-
-        switchToggle.addEventListener('change', () => {
-            switchToggle.ariaChecked = switchToggle.checked ? "true" : "false";
-
-            const force = switchToggle.checked;
-
-            container.classList.toggle("mud-checked", force)
-            container.classList.toggle("@CheckedTextColor", force)
-            container.classList.toggle("@CheckedHoverColor", force)
-            container.classList.toggle("@UncheckedTextColor", !force)
-            container.classList.toggle("@UncheckedHoverColor", !force)
-
-            switchTrack.classList.toggle("@CheckedColor", force);
-            switchTrack.classList.toggle("@UnCheckedColor", !force)
-
-            if (switchToggle.checked) {
-                emptySwitch.removeAttribute("name");
-                switchToggle.setAttribute("name", "@_name");
-                switchToggle.setAttribute("checked", true);
-            }
-            else {
-                switchToggle.removeAttribute("name");
-                switchToggle.removeAttribute("checked");
-                emptySwitch.setAttribute("name", "@_name");
-            }
-        });
-    })();
-</script>
