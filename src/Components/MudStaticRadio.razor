@@ -1,16 +1,15 @@
-﻿@namespace MudBlazor.StaticInput
+@namespace MudBlazor.StaticInput
 
 @typeparam T
 @inherits MudRadio<T>
 
 <MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
     <InputContent>
-        <label class="@LabelClassname" style="@Style" id="@($"static-radio-container-{_elementId}")" @onclick:stopPropagation="@StopClickPropagation">
+        <label class="@LabelClassname" style="@Style" @onclick:stopPropagation="@StopClickPropagation">
             <span tabindex="0" class="@IconClassname">
                 <input id="@($"static-radio-{_elementId}")" tabindex="-1" @attributes="UserAttributes" type="radio" role="radio"
                        class="mud-radio-input static-radio-input" checked="@_isChecked" disabled="@GetDisabledState()" name="@(_isChecked ? ParentGroup?.GroupName : "")" value="@Value"
-                       aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()"
-                       data-value="@Value" data-group-name="@ParentGroup?.GroupName" />
+                       aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@(ParentGroup?.CheckedIcon ?? CheckedIcon)" Color="HasErrors? Color.Error: ParentGroup?.Color ?? this.Color" Size="@Size" Disabled="@Disabled"
                          id="@($"radio-checked-icon-{_elementId}")" style="@($"display: {_checkedStyle}")" />
                 <MudIcon Icon="@(ParentGroup?.UncheckedIcon ?? UncheckedIcon)" Color="HasErrors ? Color.Error: ParentGroup?.UncheckedColor ?? this.UncheckedColor ?? Color.Inherit"
@@ -55,52 +54,10 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-static-component"] = true;
+        UserAttributes["data-mud-static-type"] = "radio";
+        UserAttributes["data-value"] = Value?.ToString();
+        UserAttributes["data-group-name"] = ParentGroup?.GroupName;
 
         base.OnParametersSet();
     }
 }
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.static-radio-input').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                const parentContainer = radio.closest("[role='radiogroup']");
-                if (!parentContainer) return;
-
-                const hiddenInput = parentContainer.querySelector("input[type='hidden']");
-                const selectedValue = radio.getAttribute('data-value');
-                const groupName = radio.getAttribute('data-group-name');
-
-                parentContainer.querySelectorAll('.static-radio-input').forEach(function (r) {
-                    if (r !== radio) {
-                        r.checked = false;
-                        r.removeAttribute("name");
-                        r.setAttribute("checked", false);
-                        r.setAttribute("aria-checked", false);
-                    }
-
-                    const radioId = r.id.split('-')[2];
-                    const checkedIcon = document.getElementById(`radio-checked-icon-${radioId}`);
-                    const uncheckedIcon = document.getElementById(`radio-unchecked-icon-${radioId}`);
-
-                    if (r.checked) {
-                        checkedIcon.style.display = 'block';
-                        uncheckedIcon.style.display = 'none';
-                        r.setAttribute("checked", true);
-                        r.setAttribute("aria-checked", true);
-                        r.setAttribute("name", groupName);
-                        // Update the hidden input value
-                        if (hiddenInput) {
-                            hiddenInput.value = selectedValue;
-                            hiddenInput.setAttribute("value", selectedValue);
-                        }
-                    } else {
-                        checkedIcon.style.display = 'none';
-                        uncheckedIcon.style.display = 'block';
-                    }
-                });
-            });
-        });
-    });
-</script>

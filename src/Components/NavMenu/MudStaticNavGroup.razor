@@ -1,4 +1,4 @@
-﻿@namespace MudBlazor.StaticInput
+@namespace MudBlazor.StaticInput
 
 @inherits MudNavGroup
 
@@ -7,57 +7,10 @@
 }
 
 @code {
-    private string _elementId = string.Empty;
-
     protected override void OnParametersSet()
     {
-        UserAttributes["data-static-id"] = _elementId;
+        UserAttributes["data-mud-static-type"] = "nav-group";
 
         base.OnParametersSet();
     }
-
-    protected override void OnInitialized()
-    {
-        _elementId = Guid.NewGuid().ToString()[..8];
-
-        base.OnInitialized();
-    }
-}
-
-@if (IsStatic()) {
-    <script>
-        (function () {
-            document.addEventListener('DOMContentLoaded', () => {
-                const button = document.querySelector('[data-static-id="@_elementId"] button');
-
-                if (button) {
-                    button.addEventListener('click', (event) => {
-                        const navElement = event.target.closest('nav');
-                        const collapseContainer = navElement.querySelector('.mud-collapse-container');
-                        const expandIcon = navElement.querySelector('.mud-nav-link-expand-icon');
-
-                        if (!collapseContainer || !expandIcon) {
-                            console.warn("Missing required elements for toggling");
-                            return;
-                        }
-
-                        // Check current state
-                        const isExpanded = button.getAttribute('aria-expanded') === "true";
-
-                        // Toggle classes for collapse container
-                        collapseContainer.classList.toggle('mud-collapse-entered', !isExpanded);
-                        collapseContainer.classList.toggle('mud-navgroup-collapse', true);
-                        collapseContainer.classList.remove('mud-collapse-entering');
-                        collapseContainer.setAttribute('aria-hidden', isExpanded);
-
-                        // Toggle classes for expand icon
-                        expandIcon.classList.toggle('mud-transform', !isExpanded);
-
-                        // Update aria-expanded on the button
-                        button.setAttribute('aria-expanded', !isExpanded);
-                    });
-                }
-            });
-        })();
-    </script> 
 }

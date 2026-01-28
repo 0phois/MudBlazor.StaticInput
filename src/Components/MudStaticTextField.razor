@@ -1,4 +1,4 @@
-﻿@namespace MudBlazor.StaticInput
+@namespace MudBlazor.StaticInput
 @typeparam T
 
 @inherits MudTextField<T>
@@ -56,7 +56,6 @@
     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
 
     private string _name = string.Empty;
-    private string _elementId = string.Empty;
     private bool HasDefaultContent => ShrinkLabel || 
                                       HasNativeHtmlPlaceholder() ||
                                       Adornment == Adornment.Start || 
@@ -64,8 +63,12 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-static-component"] = true;
-        UserAttributes["data-static-id"] = _elementId;
+        UserAttributes["data-mud-static-type"] = "text-field";
+        UserAttributes["data-mud-static-shrink"] = HasDefaultContent.ToString().ToLower();
+        UserAttributes["data-mud-static-helper-focus"] = HelperTextOnFocus.ToString().ToLower();
+        UserAttributes["data-mud-static-adornment-click"] = AdornmentClickFunction;
+        UserAttributes["data-mud-static-icon"] = AdornmentIcon;
+        UserAttributes["data-mud-static-toggle-icon"] = AdornmentToggledIcon;
         UserAttributes["name"] = _name;
 
         if (AdornmentClickFunction is not null)
@@ -78,8 +81,6 @@
 
     protected override void OnInitialized()
     {
-        _elementId = Guid.NewGuid().ToString()[..8];
-
         var expression = ValueExpression?.ToString();
 
         if (!string.IsNullOrEmpty(expression))
@@ -105,64 +106,3 @@
                InputType.Time;
     }
 }
-
-<script>
-    (function () {
-        const inputElement = document.querySelector('[data-static-id="@_elementId"]');
-        const shrinkLabel = @HasDefaultContent.ToString().ToLower();
-        const showOnFocus = @HelperTextOnFocus.ToString().ToLower();
-        const onAdornmentClick = '@AdornmentClickFunction';
-
-        if (inputElement && (!shrinkLabel || showOnFocus)) {
-            const parentElement = inputElement.closest(".mud-input-control");
-            const helperElement = parentElement ? parentElement.querySelector(".me-auto") : null;
-
-            if (showOnFocus && helperElement) {
-                helperElement.style.visibility = "hidden";
-
-                inputElement.addEventListener('focus', function () {
-                    helperElement.style.visibility = "visible";
-                });
-            }
-
-            inputElement.addEventListener('blur', function (event) {
-                if (!shrinkLabel) {
-                    const emptyValue = event.target.value.length === 0;
-                    const targetParent = event.target.parentElement;
-
-                    targetParent.classList.toggle("mud-shrink", !emptyValue);
-                }
-
-                if (showOnFocus && helperElement) {
-                    helperElement.style.visibility = "hidden";
-                }
-            });
-        }
-
-        if (onAdornmentClick && onAdornmentClick.trim().length > 0) 
-        {
-            const inputControl = inputElement.closest(".mud-input-control");
-            const buttonElement = inputControl.querySelector('button');
-            const svgElement = buttonElement.querySelector("svg");
-            const icon = '@AdornmentIcon';
-            const toggleIcon = '@AdornmentToggledIcon';
-
-            let isToggled = false;
-
-            if (buttonElement) {
-                buttonElement.addEventListener('click', function (event) {
-                    
-                    if (svgElement && toggleIcon) 
-                    {
-                        isToggled = !isToggled;
-                        svgElement.innerHTML = isToggled ? toggleIcon : icon;
-                    }
-
-                    if (typeof window[onAdornmentClick] === 'function') {
-                        window[onAdornmentClick](inputElement, event.target);
-                    }
-                });
-            }
-        }
-    })();
-</script>

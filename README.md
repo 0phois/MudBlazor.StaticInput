@@ -162,9 +162,5 @@ To start using MudBlazor.StaticInput in your projects, simply install the packag
 ```bash
 dotnet add package Extensions.MudBlazor.StaticInput
 ```
-Then add the following to the `body` of your `App.razor` file  
-```
- <script src="_content/Extensions.MudBlazor.StaticInput/NavigationObserver.js"></script>
- ```  
 > [!NOTE]  
 > Note: MudBlazor should already be setup for your application

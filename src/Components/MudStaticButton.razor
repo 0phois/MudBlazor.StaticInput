@@ -1,4 +1,4 @@
-﻿@namespace MudBlazor.StaticInput
+@namespace MudBlazor.StaticInput
 
 @inherits MudButton
 
@@ -36,7 +36,7 @@ else
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-static-component"] = true;
+        UserAttributes["data-mud-static-type"] = "button";
 
         base.OnParametersSet();
     }
