@@ -1,4 +1,4 @@
-﻿@page "/Account/Login"
+@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -136,20 +136,3 @@
         public bool RememberMe { get; set; }
     }
 }
-
-<script>
-    let timeoutId;
-
-    function showPassword(inputElement, button) {
-        if (inputElement.type === 'password') {
-            inputElement.type = 'text';
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(function () {
-                inputElement.type = 'password';
-            }, 5000);
-        } else {
-            inputElement.type = 'password';
-            clearTimeout(timeoutId);
-        }
-    }
-</script>
