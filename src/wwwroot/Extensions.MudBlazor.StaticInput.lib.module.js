@@ -190,8 +190,8 @@ function initRadios() {
                     if (uncheckedIcon) uncheckedIcon.style.display = 'none';
                     r.setAttribute("checked", "");
                     r.setAttribute("aria-checked", "true");
-                    r.setAttribute("name", groupName);
-                    if (hiddenInput) {
+                    if (groupName) r.setAttribute("name", groupName);
+                    if (hiddenInput && selectedValue !== null) {
                         hiddenInput.value = selectedValue;
                         hiddenInput.setAttribute("value", selectedValue);
                     }
@@ -208,6 +208,8 @@ function initDrawers() {
     const drawerToggleElements = document.querySelectorAll('[data-mud-static-drawer-toggle]');
 
     drawerToggleElements.forEach(element => {
+        if (element.dataset.mudStaticInitialized === "true") return;
+        element.dataset.mudStaticInitialized = "true";
         element.addEventListener('click', (event) => {
             const targetDrawerId = event.currentTarget.getAttribute('data-mud-static-drawer-toggle');
             toggleDrawer(targetDrawerId);
@@ -233,7 +235,7 @@ function toggleDrawer(drawerId) {
         mudDrawer.classList.toggle('mud-drawer--closed');
         mudDrawer.classList.remove('mud-drawer--initial');
 
-        const header = document.querySelector('.mud-drawer-header');
+        const header = mudDrawer.querySelector('.mud-drawer-header');
         if (header) {
             if (mudDrawer.classList.contains('mud-drawer--closed')) {
                 header.classList.add('mud-typography-nowrap');
@@ -257,7 +259,14 @@ function toggleDrawer(drawerId) {
 }
 
 function monitorResize(responsiveDrawer) {
-    const classSections = Array.from(responsiveDrawer.parentElement.classList).find(className => className.includes('responsive')).split('-');
+    if (responsiveDrawer.dataset.mudStaticResizeMonitored) {
+        return;
+    }
+    responsiveDrawer.dataset.mudStaticResizeMonitored = 'true';
+
+    const responsiveClass = Array.from(responsiveDrawer.parentElement.classList).find(className => className.includes('responsive'));
+    if (!responsiveClass) return;
+    const classSections = responsiveClass.split('-');
     const breakpoint = classSections[classSections.length - 2];
     const position = classSections[classSections.length - 1];
     const breakpointValue = getBreakpointValue(breakpoint);
@@ -305,6 +314,8 @@ function initNavGroups() {
     navGroups.forEach(navGroup => {
         const button = navGroup.querySelector('button');
         if (button) {
+            if (button.dataset.mudStaticInitialized === "true") return;
+            button.dataset.mudStaticInitialized = "true";
             button.addEventListener('click', (event) => {
                 const navElement = event.currentTarget.closest('.mud-nav-group');
                 const collapseContainer = navElement.querySelector('.mud-collapse-container');
