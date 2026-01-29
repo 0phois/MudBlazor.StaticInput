@@ -1,0 +1,14 @@
+@page "/select-multi-test"
+@using MudBlazor.StaticInput
+
+<MudStaticSelect T="string" Label="Multi Select" MultiSelection="true" @bind-SelectedValues="_values">
+    <MudStaticSelectItem Value="@("1")">One</MudStaticSelectItem>
+    <MudStaticSelectItem Value="@("2")">Two</MudStaticSelectItem>
+    <MudStaticSelectItem Value="@("3")">Three</MudStaticSelectItem>
+</MudStaticSelect>
+
+<p id="selected-values">@(string.Join(", ", _values))</p>
+
+@code {
+    private IEnumerable<string> _values = new[] { "1", "3" };
+}

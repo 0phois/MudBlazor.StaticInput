@@ -17,8 +17,7 @@ namespace StaticInput.UnitTests.Components
         {
             Context = new();
             ContextFixture = contextFixture;
-            Context.Services.AddMudBlazorKeyInterceptor();
-            Context.Services.AddMudLocalization();
+            Context.Services.AddMudServices();
             Context.JSInterop.Mode = JSRuntimeMode.Loose;
             Context.Renderer.SetRendererInfo(new RendererInfo("Static", false));
         }

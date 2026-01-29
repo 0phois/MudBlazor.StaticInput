@@ -157,6 +157,26 @@ The set of components and features may extend over time. Currently, StaticInput 
 ```
 </details>
 
+### MudStaticSelect
+<details>
+  <summary>
+    Select (dropdown) UI in SSR pages. Supports binding and form submission without requiring client-side interactivity.
+  </summary>
+
+```html
+<MudStaticSelect T="string" @bind-Value="@SelectedValue" Label="Choose One">
+    <MudStaticSelectItem Value="@("One")">Item One</MudStaticSelectItem>
+    <MudStaticSelectItem Value="@("Two")">Item Two</MudStaticSelectItem>
+    <MudStaticSelectItem Value="@("Three")">Item Three</MudStaticSelectItem>
+</MudStaticSelect>
+```
+```cs
+@code {
+    private string SelectedValue { get; set; } = "Two";
+}
+```
+</details>
+
 ## :rocket: Getting Started :rocket:
 To start using MudBlazor.StaticInput in your projects, simply install the package via NuGet Package Manager:
 ```bash

@@ -1,0 +1,27 @@
+@page "/select-required-test"
+@using MudBlazor.StaticInput
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@_model" OnValidSubmit="OnValidSubmit" FormName="RequiredForm">
+    <DataAnnotationsValidator />
+    <MudStaticSelect T="string" Label="Required Select" @bind-Value="_model.Value" For="@(() => _model.Value)" Required="true">
+        <MudStaticSelectItem Value="@((string)null!)">Select an item</MudStaticSelectItem>
+        <MudStaticSelectItem Value="@("1")">One</MudStaticSelectItem>
+    </MudStaticSelect>
+    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton>
+</EditForm>
+
+@code {
+    private Model _model = new();
+
+    private void OnValidSubmit()
+    {
+        // ...
+    }
+
+    public class Model
+    {
+        [Required(ErrorMessage = "Selection required!")]
+        public string Value { get; set; }
+    }
+}

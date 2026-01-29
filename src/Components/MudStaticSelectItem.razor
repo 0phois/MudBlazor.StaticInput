@@ -1,0 +1,40 @@
+@namespace MudBlazor.StaticInput
+@typeparam T
+@inherits MudSelectItem<T>
+
+<option value="@(_valueString ?? string.Empty)" selected="@_isSelected" disabled="@Disabled">
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Value?.ToString()
+    }
+</option>
+
+@code {
+    [CascadingParameter]
+    private MudStaticSelect<T>? Parent { get; set; }
+
+    private bool _isSelected;
+    private string? _valueString;
+
+    protected override void OnInitialized()
+    {
+        if (Parent == null)
+        {
+            // If not inside MudStaticSelect, it might be inside a regular MudSelect
+            // but for static SSR we expect MudStaticSelect.
+        }
+
+        _valueString = Value?.ToString();
+
+        if (Parent != null)
+        {
+            _isSelected = Parent.IsValueSelected(Value);
+        }
+
+        base.OnInitialized();
+    }
+}
