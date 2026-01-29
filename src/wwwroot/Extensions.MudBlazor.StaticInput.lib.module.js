@@ -208,8 +208,8 @@ function initRadios() {
                     if (uncheckedIcon) uncheckedIcon.style.display = 'none';
                     r.setAttribute("checked", "");
                     r.setAttribute("aria-checked", "true");
-                    r.setAttribute("name", groupName);
-                    if (hiddenInput) {
+                    if (groupName) r.setAttribute("name", groupName);
+                    if (hiddenInput && selectedValue !== null) {
                         hiddenInput.value = selectedValue;
                         hiddenInput.setAttribute("value", selectedValue);
                     }
@@ -223,20 +223,25 @@ function initRadios() {
 }
 
 function initDrawers() {
-    const drawerToggleElements = document.querySelectorAll('[data-mud-static-drawer-toggle]:not([data-mud-static-initialized="true"])');
-
+    const drawerToggleElements = document.querySelectorAll('[data-mud-static-type="drawer-toggle"]:not([data-mud-static-initialized="true"])');
+    if (drawerToggleElements.length === 0) return;
     drawerToggleElements.forEach(element => {
         element.setAttribute('data-mud-static-initialized', 'true');
-        element.addEventListener('click', (event) => {
-            const targetDrawerId = event.currentTarget.getAttribute('data-mud-static-drawer-toggle');
-            toggleDrawer(targetDrawerId);
-        });
+        element.removeEventListener('click', onDrawerToggleClick);
+        element.addEventListener('click', onDrawerToggleClick);
     });
 
     const responsiveDrawer = document.querySelector('.mud-drawer-responsive');
     if (responsiveDrawer) {
         monitorResize(responsiveDrawer);
     }
+}
+
+function onDrawerToggleClick(event) {
+    const targetDrawerId =
+        event.currentTarget.getAttribute('data-mud-static-drawer-toggle');
+
+    toggleDrawer(targetDrawerId);
 }
 
 function toggleDrawer(drawerId) {
@@ -252,7 +257,7 @@ function toggleDrawer(drawerId) {
         mudDrawer.classList.toggle('mud-drawer--closed');
         mudDrawer.classList.remove('mud-drawer--initial');
 
-        const header = document.querySelector('.mud-drawer-header');
+        const header = mudDrawer.querySelector('.mud-drawer-header');
         if (header) {
             if (mudDrawer.classList.contains('mud-drawer--closed')) {
                 header.classList.add('mud-typography-nowrap');
