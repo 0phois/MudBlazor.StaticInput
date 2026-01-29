@@ -16,18 +16,21 @@
     <script src="_framework/blazor.web.js"></script>
 	<script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script>
-        let timeoutId;
-
-        function showPassword(inputElement, button) {
+        const passwordTimeouts = new Map();
+        function showPassword(inputElement) {
+            if (!inputElement) return;
+            const existingTimeout = passwordTimeouts.get(inputElement);
+            if (existingTimeout) clearTimeout(existingTimeout);
             if (inputElement.type === 'password') {
                 inputElement.type = 'text';
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(function () {
+                const timeoutId = setTimeout(function () {
                     inputElement.type = 'password';
+                    passwordTimeouts.delete(inputElement);
                 }, 5000);
+                passwordTimeouts.set(inputElement, timeoutId);
             } else {
                 inputElement.type = 'password';
-                clearTimeout(timeoutId);
+                passwordTimeouts.delete(inputElement);
             }
         }
     </script>
