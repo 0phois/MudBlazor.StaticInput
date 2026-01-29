@@ -125,7 +125,7 @@ namespace StaticInput.UnitTests.Components
             await Expect(radioB).ToBeDisabledAsync();
 
             await radioA.CheckAsync();
-            
+
             await Expect(radioA).ToBeCheckedAsync();
             await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
 

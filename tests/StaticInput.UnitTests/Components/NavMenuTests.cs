@@ -31,7 +31,7 @@ namespace StaticInput.UnitTests.Components
             menuClasses = await menuGroup.GetAttributeAsync("class");
             menuClasses.Should().NotContain("mud-collapse-entered").And.NotContain("mud-collapse-entering");
 
-            ariaValue = await menuGroup.GetAttributeAsync("aria-hidden"); 
+            ariaValue = await menuGroup.GetAttributeAsync("aria-hidden");
             ariaValue.Should().Be("true");
 
             await button.ClickAsync();
@@ -55,7 +55,7 @@ namespace StaticInput.UnitTests.Components
             var miniDawer = Page.Locator("#static-mini");
             var persistentDawer = Page.Locator("#static-persistent");
 
-            var miniClasses = await miniDawer.GetAttributeAsync("class");            
+            var miniClasses = await miniDawer.GetAttributeAsync("class");
             miniClasses.Should().NotBeNullOrEmpty();
             miniClasses.Should().Contain("mud-drawer--closed");
 

@@ -75,7 +75,7 @@ public class UserRegistrationCleanupService(IServiceProvider ServiceProvider, IL
         {
             _cts.Cancel();
         }
-        finally 
+        finally
         {
             await Task.WhenAny(_executingTask, Task.Delay(Timeout.Infinite, cancellationToken));
         }

@@ -75,7 +75,7 @@
 
             if (AdornmentClickFunction is not null)
             {
-                base.OnAdornmentClick = EventCallback.Factory.Create<MouseEventArgs>(this, () => null!);
+                base.OnAdornmentClick = EventCallback.Factory.Create<MouseEventArgs>(this, _ => { });
             }
         }
         else
