@@ -16,7 +16,7 @@
     <script src="_framework/blazor.web.js"></script>
 	<script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script>
-        const passwordTimeouts = new Map();
+        const passwordTimeouts = new WeakMap();
         function showPassword(inputElement) {
             if (!inputElement) return;
             const existingTimeout = passwordTimeouts.get(inputElement);
