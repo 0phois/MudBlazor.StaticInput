@@ -63,17 +63,30 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-mud-static-type"] = "text-field";
-        UserAttributes["data-mud-static-shrink"] = HasDefaultContent.ToString().ToLower();
-        UserAttributes["data-mud-static-helper-focus"] = HelperTextOnFocus.ToString().ToLower();
-        UserAttributes["data-mud-static-adornment-click"] = AdornmentClickFunction;
-        UserAttributes["data-mud-static-icon"] = AdornmentIcon;
-        UserAttributes["data-mud-static-toggle-icon"] = AdornmentToggledIcon;
-        UserAttributes["name"] = _name;
-
-        if (AdornmentClickFunction is not null)
+        if (IsStatic())
         {
-            base.OnAdornmentClick = EventCallback.Factory.Create<MouseEventArgs>(this, () => null!);
+            UserAttributes["data-mud-static-type"] = "text-field";
+            UserAttributes["data-mud-static-shrink"] = HasDefaultContent.ToString().ToLower();
+            UserAttributes["data-mud-static-helper-focus"] = HelperTextOnFocus.ToString().ToLower();
+            UserAttributes["data-mud-static-adornment-click"] = AdornmentClickFunction;
+            UserAttributes["data-mud-static-icon"] = AdornmentIcon;
+            UserAttributes["data-mud-static-toggle-icon"] = AdornmentToggledIcon;
+            UserAttributes["name"] = _name;
+
+            if (AdornmentClickFunction is not null)
+            {
+                base.OnAdornmentClick = EventCallback.Factory.Create<MouseEventArgs>(this, () => null!);
+            }
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-mud-static-shrink");
+            UserAttributes.Remove("data-mud-static-helper-focus");
+            UserAttributes.Remove("data-mud-static-adornment-click");
+            UserAttributes.Remove("data-mud-static-icon");
+            UserAttributes.Remove("data-mud-static-toggle-icon");
+            UserAttributes.Remove("data-mud-static-initialized");
         }
         
         base.OnParametersSet();

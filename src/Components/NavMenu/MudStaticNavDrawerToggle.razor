@@ -1,6 +1,8 @@
+@using Microsoft.JSInterop
 @namespace MudBlazor.StaticInput
 
 @inherits MudIconButton
+@inject IJSRuntime JsRuntime
 
 @{
     base.BuildRenderTree(__builder);
@@ -18,8 +20,20 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-mud-static-type"] = "drawer-toggle";
-        UserAttributes["data-mud-static-drawer-toggle"] = DrawerId;
+        if (IsStatic())
+        {
+            UserAttributes["data-mud-static-type"] = "drawer-toggle";
+            UserAttributes["data-mud-static-drawer-toggle"] = DrawerId;
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-mud-static-drawer-toggle");
+            UserAttributes.Remove("data-mud-static-initialized");
+
+            base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () =>
+                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
+        }
 
         base.OnParametersSet();
     }

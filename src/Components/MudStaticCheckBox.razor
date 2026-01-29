@@ -40,8 +40,17 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-mud-static-type"] = "checkbox";
-        UserAttributes["data-mud-static-name"] = _name;
+        if (IsStatic())
+        {
+            UserAttributes["data-mud-static-type"] = "checkbox";
+            UserAttributes["data-mud-static-name"] = _name;
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-mud-static-name");
+            UserAttributes.Remove("data-mud-static-initialized");
+        }
 
         base.OnParametersSet();
     }

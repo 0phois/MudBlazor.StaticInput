@@ -1,12 +1,28 @@
 
-console.log("MudBlazor.StaticInput JS initializer script loaded");
-
 export function afterWebStarted(blazor) {
-    console.log("MudBlazor.StaticInput afterWebStarted called");
-    blazor.addEventListener('enhancedload', () => {
-        initialize();
-    });
+    if (blazor) {
+        blazor.addEventListener('enhancedload', () => {
+            initialize();
+        });
+    }
+
     initialize();
+
+    // Use MutationObserver to catch elements added dynamically (e.g. during WASM transition or dynamic rendering)
+    const observer = new MutationObserver((mutations) => {
+        let shouldInit = false;
+        for (const mutation of mutations) {
+            if (mutation.addedNodes.length > 0) {
+                shouldInit = true;
+                break;
+            }
+        }
+        if (shouldInit) {
+            initialize();
+        }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 }
 
 function initialize() {
@@ -19,8 +35,9 @@ function initialize() {
 }
 
 function initTextFields() {
-    const textFields = document.querySelectorAll('[data-mud-static-type="text-field"]');
+    const textFields = document.querySelectorAll('[data-mud-static-type="text-field"]:not([data-mud-static-initialized="true"])');
     textFields.forEach(inputElement => {
+        inputElement.setAttribute('data-mud-static-initialized', 'true');
         const shrinkLabel = inputElement.getAttribute('data-mud-static-shrink') === 'true';
         const showOnFocus = inputElement.getAttribute('data-mud-static-helper-focus') === 'true';
         const onAdornmentClick = inputElement.getAttribute('data-mud-static-adornment-click');
@@ -53,24 +70,23 @@ function initTextFields() {
             // Initial state for shrink
             if (!shrinkLabel) {
                 const emptyValue = inputElement.value.length === 0;
-                inputElement.parentElement.classList.toggle("mud-shrink", !emptyValue);
+                const targetParent = inputElement.parentElement;
+                if (targetParent) {
+                    targetParent.classList.toggle("mud-shrink", !emptyValue);
+                }
             }
         }
 
         if (onAdornmentClick && onAdornmentClick.trim().length > 0) {
             const inputControl = inputElement.closest(".mud-input-control");
-            const buttonElement = inputControl.querySelector('button');
+            const buttonElement = inputControl ? inputControl.querySelector('button') : null;
             const icon = inputElement.getAttribute('data-mud-static-icon');
             const toggleIcon = inputElement.getAttribute('data-mud-static-toggle-icon');
 
             let isToggled = false;
 
             if (buttonElement) {
-                // Remove existing listener if any (though enhancedload might replace the whole DOM)
-                const newButton = buttonElement.cloneNode(true);
-                buttonElement.parentNode.replaceChild(newButton, buttonElement);
-
-                newButton.addEventListener('click', function (event) {
+                buttonElement.addEventListener('click', function (event) {
                     const currentSvg = event.currentTarget.querySelector("svg");
                     if (currentSvg && toggleIcon) {
                         isToggled = !isToggled;
@@ -87,13 +103,14 @@ function initTextFields() {
 }
 
 function initCheckBoxes() {
-    const checkBoxes = document.querySelectorAll('[data-mud-static-type="checkbox"]');
+    const checkBoxes = document.querySelectorAll('[data-mud-static-type="checkbox"]:not([data-mud-static-initialized="true"])');
     checkBoxes.forEach(checkbox => {
+        checkbox.setAttribute('data-mud-static-initialized', 'true');
         const name = checkbox.getAttribute('data-mud-static-name');
         const parent = checkbox.closest('.mud-input-control');
-        const emptyCheckbox = parent.querySelector('input[type="hidden"]');
-        const checkedIcon = parent.querySelector('[id^="check-icon-"]');
-        const uncheckedIcon = parent.querySelector('[id^="unchecked-icon-"]');
+        const emptyCheckbox = parent ? parent.querySelector('input[type="hidden"]') : null;
+        const checkedIcon = parent ? parent.querySelector('[id^="check-icon-"]') : null;
+        const uncheckedIcon = parent ? parent.querySelector('[id^="unchecked-icon-"]') : null;
 
         checkbox.addEventListener('change', () => {
             checkbox.ariaChecked = checkbox.checked ? "true" : "false";
@@ -101,28 +118,28 @@ function initCheckBoxes() {
             if (uncheckedIcon) uncheckedIcon.style.display = checkbox.checked ? 'none' : 'block';
 
             if (checkbox.checked) {
-                emptyCheckbox.removeAttribute("name");
+                if (emptyCheckbox) emptyCheckbox.removeAttribute("name");
                 checkbox.setAttribute("name", name);
-                checkbox.setAttribute("checked", "true");
+                checkbox.setAttribute("checked", "");
             }
             else {
                 checkbox.removeAttribute("name");
                 checkbox.removeAttribute("checked");
-                emptyCheckbox.setAttribute("name", name);
+                if (emptyCheckbox) emptyCheckbox.setAttribute("name", name);
             }
         });
     });
 }
 
 function initSwitches() {
-    const switches = document.querySelectorAll('[data-mud-static-type="switch"]');
+    const switches = document.querySelectorAll('[data-mud-static-type="switch"]:not([data-mud-static-initialized="true"])');
     switches.forEach(switchToggle => {
+        switchToggle.setAttribute('data-mud-static-initialized', 'true');
         const name = switchToggle.getAttribute('data-mud-static-name');
-        const parent = switchToggle.closest('.mud-input-control');
         const label = switchToggle.closest('label');
-        const switchContainer = label.querySelector('[id^="switch-container-"]');
-        const emptySwitch = label.querySelector('input[type="hidden"]');
-        const switchTrack = label.querySelector('[id^="switch-track-"]');
+        const switchContainer = label ? label.querySelector('[id^="switch-container-"]') : null;
+        const emptySwitch = label ? label.querySelector('input[type="hidden"]') : null;
+        const switchTrack = label ? label.querySelector('[id^="switch-track-"]') : null;
 
         const checkedTextColor = switchToggle.getAttribute('data-mud-static-checked-text-color');
         const checkedHoverColor = switchToggle.getAttribute('data-mud-static-checked-hover-color');
@@ -149,22 +166,23 @@ function initSwitches() {
             }
 
             if (switchToggle.checked) {
-                emptySwitch.removeAttribute("name");
+                if (emptySwitch) emptySwitch.removeAttribute("name");
                 switchToggle.setAttribute("name", name);
-                switchToggle.setAttribute("checked", "true");
+                switchToggle.setAttribute("checked", "");
             }
             else {
                 switchToggle.removeAttribute("name");
                 switchToggle.removeAttribute("checked");
-                emptySwitch.setAttribute("name", name);
+                if (emptySwitch) emptySwitch.setAttribute("name", name);
             }
         });
     });
 }
 
 function initRadios() {
-    const radios = document.querySelectorAll('[data-mud-static-type="radio"]');
+    const radios = document.querySelectorAll('[data-mud-static-type="radio"]:not([data-mud-static-initialized="true"])');
     radios.forEach(radio => {
+        radio.setAttribute('data-mud-static-initialized', 'true');
         radio.addEventListener('change', function () {
             const parentGroup = radio.closest('[data-mud-static-type="radio-group"]');
             if (!parentGroup) return;
@@ -182,16 +200,16 @@ function initRadios() {
                 }
 
                 const radioSpan = r.closest('span');
-                const checkedIcon = radioSpan.querySelector('[id^="radio-checked-icon-"]');
-                const uncheckedIcon = radioSpan.querySelector('[id^="radio-unchecked-icon-"]');
+                const checkedIcon = radioSpan ? radioSpan.querySelector('[id^="radio-checked-icon-"]') : null;
+                const uncheckedIcon = radioSpan ? radioSpan.querySelector('[id^="radio-unchecked-icon-"]') : null;
 
                 if (r.checked) {
                     if (checkedIcon) checkedIcon.style.display = 'block';
                     if (uncheckedIcon) uncheckedIcon.style.display = 'none';
                     r.setAttribute("checked", "");
                     r.setAttribute("aria-checked", "true");
-                    if (groupName) r.setAttribute("name", groupName);
-                    if (hiddenInput && selectedValue !== null) {
+                    r.setAttribute("name", groupName);
+                    if (hiddenInput) {
                         hiddenInput.value = selectedValue;
                         hiddenInput.setAttribute("value", selectedValue);
                     }
@@ -205,11 +223,10 @@ function initRadios() {
 }
 
 function initDrawers() {
-    const drawerToggleElements = document.querySelectorAll('[data-mud-static-drawer-toggle]');
+    const drawerToggleElements = document.querySelectorAll('[data-mud-static-drawer-toggle]:not([data-mud-static-initialized="true"])');
 
     drawerToggleElements.forEach(element => {
-        if (element.dataset.mudStaticInitialized === "true") return;
-        element.dataset.mudStaticInitialized = "true";
+        element.setAttribute('data-mud-static-initialized', 'true');
         element.addEventListener('click', (event) => {
             const targetDrawerId = event.currentTarget.getAttribute('data-mud-static-drawer-toggle');
             toggleDrawer(targetDrawerId);
@@ -235,7 +252,7 @@ function toggleDrawer(drawerId) {
         mudDrawer.classList.toggle('mud-drawer--closed');
         mudDrawer.classList.remove('mud-drawer--initial');
 
-        const header = mudDrawer.querySelector('.mud-drawer-header');
+        const header = document.querySelector('.mud-drawer-header');
         if (header) {
             if (mudDrawer.classList.contains('mud-drawer--closed')) {
                 header.classList.add('mud-typography-nowrap');
@@ -245,7 +262,7 @@ function toggleDrawer(drawerId) {
         }
 
         const layout = mudDrawer.parentElement;
-        if (layout && layout.classList.contains('mud-layout')) {
+        if (layout) {
             if (layout.className.includes('mud-drawer-open')) {
                 layout.className = layout.className.replace(/\bmud-drawer-open\b/g, 'mud-drawer-close');
             } else {
@@ -258,15 +275,20 @@ function toggleDrawer(drawerId) {
     }
 }
 
-function monitorResize(responsiveDrawer) {
-    if (responsiveDrawer.dataset.mudStaticResizeMonitored) {
-        return;
-    }
-    responsiveDrawer.dataset.mudStaticResizeMonitored = 'true';
+window.MudDrawerInterop = {
+    toggleDrawer: toggleDrawer
+};
 
-    const responsiveClass = Array.from(responsiveDrawer.parentElement.classList).find(className => className.includes('responsive'));
-    if (!responsiveClass) return;
-    const classSections = responsiveClass.split('-');
+function monitorResize(responsiveDrawer) {
+    if (responsiveDrawer.hasAttribute('data-mud-static-monitored')) return;
+    responsiveDrawer.setAttribute('data-mud-static-monitored', 'true');
+
+    const parentElement = responsiveDrawer.parentElement;
+    if (!parentElement) return;
+
+    const classSections = Array.from(parentElement.classList).find(className => className.includes('responsive'))?.split('-');
+    if (!classSections) return;
+
     const breakpoint = classSections[classSections.length - 2];
     const position = classSections[classSections.length - 1];
     const breakpointValue = getBreakpointValue(breakpoint);
@@ -298,26 +320,30 @@ function getBreakpointValue(breakpoint) {
 function autoCollapse(responsiveDrawer, breakpoint, position) {
     responsiveDrawer.classList.add('mud-drawer--closed');
     responsiveDrawer.classList.remove('mud-drawer--open');
-    responsiveDrawer.parentElement.classList.add(`mud-drawer-close-responsive-${breakpoint}-${position}`);
-    responsiveDrawer.parentElement.classList.remove(`mud-drawer-open-responsive-${breakpoint}-${position}`);
+    if (responsiveDrawer.parentElement) {
+        responsiveDrawer.parentElement.classList.add(`mud-drawer-close-responsive-${breakpoint}-${position}`);
+        responsiveDrawer.parentElement.classList.remove(`mud-drawer-open-responsive-${breakpoint}-${position}`);
+    }
 }
 
 function autoExpand(responsiveDrawer, breakpoint, position) {
     responsiveDrawer.classList.add('mud-drawer--open');
     responsiveDrawer.classList.remove('mud-drawer--closed');
-    responsiveDrawer.parentElement.classList.add(`mud-drawer-open-responsive-${breakpoint}-${position}`);
-    responsiveDrawer.parentElement.classList.remove(`mud-drawer-close-responsive-${breakpoint}-${position}`);
+    if (responsiveDrawer.parentElement) {
+        responsiveDrawer.parentElement.classList.add(`mud-drawer-open-responsive-${breakpoint}-${position}`);
+        responsiveDrawer.parentElement.classList.remove(`mud-drawer-close-responsive-${breakpoint}-${position}`);
+    }
 }
 
 function initNavGroups() {
-    const navGroups = document.querySelectorAll('[data-mud-static-type="nav-group"]');
+    const navGroups = document.querySelectorAll('[data-mud-static-type="nav-group"]:not([data-mud-static-initialized="true"])');
     navGroups.forEach(navGroup => {
+        navGroup.setAttribute('data-mud-static-initialized', 'true');
         const button = navGroup.querySelector('button');
         if (button) {
-            if (button.dataset.mudStaticInitialized === "true") return;
-            button.dataset.mudStaticInitialized = "true";
             button.addEventListener('click', (event) => {
                 const navElement = event.currentTarget.closest('.mud-nav-group');
+                if (!navElement) return;
                 const collapseContainer = navElement.querySelector('.mud-collapse-container');
                 const expandIcon = navElement.querySelector('.mud-nav-link-expand-icon');
 

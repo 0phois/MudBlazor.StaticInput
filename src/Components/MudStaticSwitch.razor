@@ -50,14 +50,29 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-mud-static-type"] = "switch";
-        UserAttributes["data-mud-static-name"] = _name;
-        UserAttributes["data-mud-static-checked-text-color"] = CheckedTextColor;
-        UserAttributes["data-mud-static-checked-hover-color"] = CheckedHoverColor;
-        UserAttributes["data-mud-static-unchecked-text-color"] = UncheckedTextColor;
-        UserAttributes["data-mud-static-unchecked-hover-color"] = UncheckedHoverColor;
-        UserAttributes["data-mud-static-checked-color"] = CheckedColor;
-        UserAttributes["data-mud-static-unchecked-color"] = UnCheckedColor;
+        if (IsStatic())
+        {
+            UserAttributes["data-mud-static-type"] = "switch";
+            UserAttributes["data-mud-static-name"] = _name;
+            UserAttributes["data-mud-static-checked-text-color"] = CheckedTextColor;
+            UserAttributes["data-mud-static-checked-hover-color"] = CheckedHoverColor;
+            UserAttributes["data-mud-static-unchecked-text-color"] = UncheckedTextColor;
+            UserAttributes["data-mud-static-unchecked-hover-color"] = UncheckedHoverColor;
+            UserAttributes["data-mud-static-checked-color"] = CheckedColor;
+            UserAttributes["data-mud-static-unchecked-color"] = UnCheckedColor;
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-mud-static-name");
+            UserAttributes.Remove("data-mud-static-checked-text-color");
+            UserAttributes.Remove("data-mud-static-checked-hover-color");
+            UserAttributes.Remove("data-mud-static-unchecked-text-color");
+            UserAttributes.Remove("data-mud-static-unchecked-hover-color");
+            UserAttributes.Remove("data-mud-static-checked-color");
+            UserAttributes.Remove("data-mud-static-unchecked-color");
+            UserAttributes.Remove("data-mud-static-initialized");
+        }
 
         base.OnParametersSet();
     }

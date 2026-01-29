@@ -54,9 +54,19 @@
 
     protected override void OnParametersSet()
     {
-        UserAttributes["data-mud-static-type"] = "radio";
-        UserAttributes["data-value"] = Value?.ToString();
-        UserAttributes["data-group-name"] = ParentGroup?.GroupName;
+        if (ParentGroup is not null && ParentGroup.IsStatic())
+        {
+            UserAttributes["data-mud-static-type"] = "radio";
+            UserAttributes["data-value"] = Value?.ToString();
+            UserAttributes["data-group-name"] = ParentGroup?.GroupName;
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-value");
+            UserAttributes.Remove("data-group-name");
+            UserAttributes.Remove("data-mud-static-initialized");
+        }
 
         base.OnParametersSet();
     }
