@@ -1,5 +1,4 @@
-﻿@using Microsoft.JSInterop
-
+@using Microsoft.JSInterop
 @namespace MudBlazor.StaticInput
 
 @inherits MudIconButton
@@ -19,22 +18,23 @@
     [Parameter]
     public string? DrawerId { get; set; } = "_no_id_provided_";
 
-    private string _elementId = string.Empty;
-
     protected override void OnParametersSet()
     {
-        UserAttributes["data-mud-drawer-toggle"] = DrawerId;
-        UserAttributes["data-static-id"] = _elementId;
+        if (IsStatic())
+        {
+            UserAttributes["data-mud-static-type"] = "drawer-toggle";
+            UserAttributes["data-mud-static-drawer-toggle"] = DrawerId;
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-mud-static-drawer-toggle");
+            UserAttributes.Remove("data-mud-static-initialized");
 
-        base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () => await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
+            base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () =>
+                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
+        }
 
         base.OnParametersSet();
-    }
-
-    protected override void OnInitialized()
-    {
-        _elementId = Guid.NewGuid().ToString()[..8];
-
-        base.OnInitialized();
     }
 }

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace MudBlazor.StaticInput;
 
@@ -19,6 +20,18 @@ namespace MudBlazor.StaticInput;
 public partial class MudStaticNavDrawerToggle : MudIconButton
 
 {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private bool IsStatic()
+    {
+#if NET9_0_OR_GREATER
+        return !RendererInfo.IsInteractive;
+#else
+        return HttpContext != null;
+#endif
+    }
+
     protected new EventCallback<MouseEventArgs> OnClick { get; set; }
     protected new ButtonType ButtonType { get; set; }
     protected new string HtmlTag { get; set; } = "button";
