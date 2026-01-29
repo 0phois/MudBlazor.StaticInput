@@ -32,6 +32,7 @@ function initialize() {
     initDrawers();
     initNavGroups();
     initRadios();
+    initSelects();
 }
 
 function initTextFields() {
@@ -99,6 +100,31 @@ function initTextFields() {
                 });
             }
         }
+    });
+}
+
+function initSelects() {
+    const selects = document.querySelectorAll('select[data-mud-static-type="select"]:not([data-mud-static-initialized="true"])');
+    selects.forEach(selectElement => {
+        selectElement.setAttribute('data-mud-static-initialized', 'true');
+        const container = selectElement.closest('.mud-input-control');
+        const presentationElement = container ? container.querySelector('.mud-input-slot:not(select)') : null;
+        const inputContainer = container ? container.querySelector('.mud-input') : null;
+        const shrinkLabel = selectElement.getAttribute('data-mud-static-shrink') === 'true';
+
+        const update = () => {
+            if (presentationElement) {
+                const selectedOptions = Array.from(selectElement.selectedOptions);
+                presentationElement.textContent = selectedOptions.map(o => o.text).join(', ');
+            }
+            if (!shrinkLabel && inputContainer) {
+                const hasValue = selectElement.value !== "" || (selectElement.multiple && selectElement.selectedOptions.length > 0);
+                inputContainer.classList.toggle("mud-shrink", hasValue);
+            }
+        };
+
+        selectElement.addEventListener('change', update);
+        update(); // Initial sync
     });
 }
 

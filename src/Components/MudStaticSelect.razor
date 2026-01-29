@@ -1,0 +1,150 @@
+@namespace MudBlazor.StaticInput
+@using MudBlazor.Utilities
+@typeparam T
+@inherits MudSelect<T>
+
+<MudInputControl Label="@Label" InputId="@_elementId" Variant="@Variant" HelperText="@HelperText"
+                 Margin="@Margin" FullWidth="@FullWidth" Error="@HasErrors"
+                 ErrorText="@GetErrorText()" Required="@Required"
+                 Disabled="@GetDisabledState()" ReadOnly="@GetReadOnlyState()"
+                 Adornment="@Adornment" AdornmentIcon="@AdornmentIcon"
+                 AdornmentColor="@AdornmentColor" AdornmentText="@AdornmentText"
+                 AdornmentAriaLabel="@AdornmentAriaLabel"
+                 OnAdornmentClick="@OnAdornmentClick"
+                 Class="@Classname" Style="@Style">
+    <InputContent>
+        <div class="@InputClassname">
+            <select @attributes="UserAttributes"
+                    id="@(string.IsNullOrEmpty(UserAttributes.GetValueOrDefault("id")?.ToString()) ? _elementId : UserAttributes["id"])"
+                    name="@_name"
+                    multiple="@MultiSelection"
+                    disabled="@GetDisabledState()"
+                    class="mud-select-input mud-input-slot"
+                    style="opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2;"
+                    @onchange="HandleOnChange">
+                @if (!Required && !MultiSelection)
+                {
+                    <option value=""></option>
+                }
+                <CascadingValue Value="this" IsFixed="true">
+                    @ChildContent
+                </CascadingValue>
+            </select>
+            <div class="mud-input-slot" style="pointer-events: none;">
+                @_presentationText
+            </div>
+            @if (Adornment == Adornment.None)
+            {
+                <div class="mud-input-adornment mud-input-adornment-end">
+                    <MudIcon Icon="@(AdornmentIcon ?? Icons.Material.Filled.ArrowDropDown)" Color="@AdornmentColor" Size="Size.Medium" />
+                </div>
+            }
+        </div>
+    </InputContent>
+</MudInputControl>
+
+@code {
+    [Parameter] public Expression<Func<T>>? ValueExpression { get; set; }
+    [Parameter] public Expression<Func<IEnumerable<T>>>? SelectedValuesExpression { get; set; }
+
+    private string _name = string.Empty;
+    private string? _presentationText;
+    private bool _isShrink;
+    private readonly string _elementId = Guid.NewGuid().ToString()[..8];
+
+    protected override void OnInitialized()
+    {
+        if (MultiSelection)
+        {
+            var expression = SelectedValuesExpression?.ToString();
+            if (!string.IsNullOrEmpty(expression))
+            {
+                var index = expression.LastIndexOf(").", StringComparison.Ordinal);
+                if (index > 0)
+                {
+                    _name = expression[(index + 2)..];
+                }
+            }
+
+            if (SelectedValuesExpression != null)
+            {
+                var compiled = SelectedValuesExpression.Compile();
+                SelectedValues = compiled();
+            }
+        }
+        else
+        {
+            var expression = ValueExpression?.ToString();
+            if (!string.IsNullOrEmpty(expression))
+            {
+                var index = expression.LastIndexOf(").", StringComparison.Ordinal);
+                if (index > 0)
+                {
+                    _name = expression[(index + 2)..];
+                }
+            }
+
+            if (ValueExpression != null)
+            {
+                var compiled = ValueExpression.Compile();
+                Value = compiled();
+            }
+        }
+
+        UpdatePresentationText();
+
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (IsStatic())
+        {
+            UserAttributes["data-mud-static-type"] = "select";
+            UserAttributes["data-mud-static-shrink"] = _isShrink.ToString().ToLower();
+        }
+        else
+        {
+            UserAttributes.Remove("data-mud-static-type");
+            UserAttributes.Remove("data-mud-static-shrink");
+            UserAttributes.Remove("data-mud-static-initialized");
+        }
+
+        base.OnParametersSet();
+    }
+
+    public bool IsValueSelected(T? value)
+    {
+        if (MultiSelection)
+        {
+            return SelectedValues?.Contains(value) ?? false;
+        }
+        return Equals(Value, value);
+    }
+
+    private void UpdatePresentationText()
+    {
+        // This is tricky because we don't have access to the items yet if they are in ChildContent
+        // and rendered in the same pass.
+        // In Static SSR, we might need a better way.
+        // For now, let's assume we'll use JS to update the presentation text if it changes,
+        // but for initial render, we might need to wait or use a different approach.
+
+        if (MultiSelection)
+        {
+            _presentationText = SelectedValues != null ? string.Join(", ", SelectedValues) : string.Empty;
+        }
+        else
+        {
+            _presentationText = Value?.ToString();
+        }
+
+        _isShrink = !string.IsNullOrEmpty(_presentationText) || ShrinkLabel;
+    }
+
+    private void HandleOnChange(ChangeEventArgs e)
+    {
+        // This won't be called in Static SSR unless it becomes interactive.
+    }
+
+}

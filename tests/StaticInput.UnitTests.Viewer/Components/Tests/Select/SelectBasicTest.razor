@@ -1,0 +1,14 @@
+@page "/select-basic-test"
+@using MudBlazor.StaticInput
+
+<MudStaticSelect T="string" Label="Basic Select" @bind-Value="_value">
+    <MudStaticSelectItem Value="@("1")">One</MudStaticSelectItem>
+    <MudStaticSelectItem Value="@("2")">Two</MudStaticSelectItem>
+    <MudStaticSelectItem Value="@("3")">Three</MudStaticSelectItem>
+</MudStaticSelect>
+
+<p id="selected-value">@_value</p>
+
+@code {
+    private string _value = "2";
+}
