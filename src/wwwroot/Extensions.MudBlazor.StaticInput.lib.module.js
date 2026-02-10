@@ -224,17 +224,16 @@ function initRadios() {
 
 function initDrawers() {
     const drawerToggleElements = document.querySelectorAll('[data-mud-static-type="drawer-toggle"]:not([data-mud-static-initialized="true"])');
-    if (drawerToggleElements.length === 0) return;
     drawerToggleElements.forEach(element => {
         element.setAttribute('data-mud-static-initialized', 'true');
         element.removeEventListener('click', onDrawerToggleClick);
         element.addEventListener('click', onDrawerToggleClick);
     });
 
-    const responsiveDrawer = document.querySelector('.mud-drawer-responsive');
-    if (responsiveDrawer) {
-        monitorResize(responsiveDrawer);
-    }
+    const drawers = document.querySelectorAll('.mud-drawer-responsive, .mud-drawer-mini');
+    drawers.forEach(drawer => {
+        monitorResize(drawer);
+    });
 }
 
 function onDrawerToggleClick(event) {
@@ -253,28 +252,48 @@ function toggleDrawer(drawerId) {
     }
 
     if (mudDrawer) {
-        mudDrawer.classList.toggle('mud-drawer--open');
-        mudDrawer.classList.toggle('mud-drawer--closed');
-        mudDrawer.classList.remove('mud-drawer--initial');
+        const wasOpen = mudDrawer.classList.contains('mud-drawer--open');
+        const isNowOpen = !wasOpen;
 
-        const header = mudDrawer.querySelector('.mud-drawer-header');
-        if (header) {
-            if (mudDrawer.classList.contains('mud-drawer--closed')) {
-                header.classList.add('mud-typography-nowrap');
-            } else {
-                header.classList.remove('mud-typography-nowrap');
-            }
+        applyDrawerState(mudDrawer, isNowOpen);
+
+        // Store user preference - Use the drawer's actual ID if available, otherwise fallback to default
+        const actualId = mudDrawer.id;
+        const storageKey = actualId && actualId !== ''
+            ? `mud-static-drawer-open-${actualId}`
+            : 'mud-static-drawer-open-default';
+        localStorage.setItem(storageKey, isNowOpen);
+    }
+}
+
+function applyDrawerState(mudDrawer, isOpen) {
+    if (isOpen) {
+        mudDrawer.classList.add('mud-drawer--open');
+        mudDrawer.classList.remove('mud-drawer--closed');
+    } else {
+        mudDrawer.classList.add('mud-drawer--closed');
+        mudDrawer.classList.remove('mud-drawer--open');
+    }
+
+    mudDrawer.classList.remove('mud-drawer--initial');
+
+    const header = mudDrawer.querySelector('.mud-drawer-header');
+    if (header) {
+        if (!isOpen) {
+            header.classList.add('mud-typography-nowrap');
+        } else {
+            header.classList.remove('mud-typography-nowrap');
         }
+    }
 
-        const layout = mudDrawer.parentElement;
-        if (layout) {
-            if (layout.className.includes('mud-drawer-open')) {
-                layout.className = layout.className.replace(/\bmud-drawer-open\b/g, 'mud-drawer-close');
-            } else {
-                layout.className = layout.className.replace(/\bmud-drawer-close\b/g, 'mud-drawer-open');
-                if (mudDrawer.classList.contains('mud-static-responsive')) {
-                    mudDrawer.classList.add('mud-drawer-clipped-always');
-                }
+    const layout = mudDrawer.parentElement;
+    if (layout) {
+        if (!isOpen) {
+            layout.className = layout.className.replace(/\bmud-drawer-open\b/g, 'mud-drawer-close');
+        } else {
+            layout.className = layout.className.replace(/\bmud-drawer-close\b/g, 'mud-drawer-open');
+            if (mudDrawer.classList.contains('mud-static-responsive')) {
+                mudDrawer.classList.add('mud-drawer-clipped-always');
             }
         }
     }
@@ -284,59 +303,83 @@ window.MudDrawerInterop = {
     toggleDrawer: toggleDrawer
 };
 
-function monitorResize(responsiveDrawer) {
-    if (responsiveDrawer.hasAttribute('data-mud-static-monitored')) return;
-    responsiveDrawer.setAttribute('data-mud-static-monitored', 'true');
+function monitorResize(mudDrawer) {
+    if (mudDrawer.hasAttribute('data-mud-static-monitored')) return;
+    mudDrawer.setAttribute('data-mud-static-monitored', 'true');
 
-    const parentElement = responsiveDrawer.parentElement;
+    const parentElement = mudDrawer.parentElement;
     if (!parentElement) return;
 
-    const classSections = Array.from(parentElement.classList).find(className => className.includes('responsive'))?.split('-');
-    if (!classSections) return;
+    // Try to find breakpoint and position from layout classes
+    // Expected formats: mud-drawer-[open/close]-[responsive/mini]-[breakpoint]-[position]
+    const layoutClass = Array.from(parentElement.classList).find(className => className.startsWith('mud-drawer-') && (className.includes('-responsive-') || className.includes('-mini-')));
 
-    const breakpoint = classSections[classSections.length - 2];
-    const position = classSections[classSections.length - 1];
+    if (!layoutClass) return;
+
+    const classSections = layoutClass.split('-');
+    // mud, drawer, state, variant, breakpoint, position
+    // 0    1       2      3        4           5
+    const variant = classSections[3];
+    const breakpoint = classSections[4];
+    const position = classSections[5];
+
     const breakpointValue = getBreakpointValue(breakpoint);
     const resizeQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`);
 
     const updateDrawer = (matches) => {
-        if (matches) {
-            autoExpand(responsiveDrawer, breakpoint, position);
+        const drawerId = mudDrawer.id;
+        const storageKey = drawerId && drawerId !== ''
+            ? `mud-static-drawer-open-${drawerId}`
+            : 'mud-static-drawer-open-default';
+        const storedState = localStorage.getItem(storageKey);
+
+        if (storedState !== null) {
+            applyDrawerState(mudDrawer, storedState === 'true');
         } else {
-            autoCollapse(responsiveDrawer, breakpoint, position);
+            // No stored state, follow breakpoint
+            if (matches) {
+                autoExpand(mudDrawer, variant, breakpoint, position);
+            } else {
+                autoCollapse(mudDrawer, variant, breakpoint, position);
+            }
         }
     };
 
     updateDrawer(resizeQuery.matches);
-    resizeQuery.addEventListener('change', ev => updateDrawer(ev.matches));
+    resizeQuery.addEventListener('change', ev => {
+        // When screen size changes, we might want to override the stored state if it was a responsive toggle?
+        // Actually, MudBlazor's behavior is complex here.
+        // For now, let's just re-evaluate. If we want resize to ALWAYS override, we should clear localStorage on resize.
+        // But usually we want to stay open/closed if the user clicked it.
+        updateDrawer(ev.matches);
+    });
 }
 
 function getBreakpointValue(breakpoint) {
     switch (breakpoint) {
-        case 'xs': return 380;
+        case 'xs': return 0;
         case 'sm': return 600;
         case 'md': return 960;
         case 'lg': return 1280;
         case 'xl': return 1920;
+        case 'xxl': return 2560;
         default: return 0;
     }
 }
 
-function autoCollapse(responsiveDrawer, breakpoint, position) {
-    responsiveDrawer.classList.add('mud-drawer--closed');
-    responsiveDrawer.classList.remove('mud-drawer--open');
-    if (responsiveDrawer.parentElement) {
-        responsiveDrawer.parentElement.classList.add(`mud-drawer-close-responsive-${breakpoint}-${position}`);
-        responsiveDrawer.parentElement.classList.remove(`mud-drawer-open-responsive-${breakpoint}-${position}`);
+function autoCollapse(mudDrawer, variant, breakpoint, position) {
+    applyDrawerState(mudDrawer, false);
+    if (mudDrawer.parentElement) {
+        mudDrawer.parentElement.classList.add(`mud-drawer-close-${variant}-${breakpoint}-${position}`);
+        mudDrawer.parentElement.classList.remove(`mud-drawer-open-${variant}-${breakpoint}-${position}`);
     }
 }
 
-function autoExpand(responsiveDrawer, breakpoint, position) {
-    responsiveDrawer.classList.add('mud-drawer--open');
-    responsiveDrawer.classList.remove('mud-drawer--closed');
-    if (responsiveDrawer.parentElement) {
-        responsiveDrawer.parentElement.classList.add(`mud-drawer-open-responsive-${breakpoint}-${position}`);
-        responsiveDrawer.parentElement.classList.remove(`mud-drawer-close-responsive-${breakpoint}-${position}`);
+function autoExpand(mudDrawer, variant, breakpoint, position) {
+    applyDrawerState(mudDrawer, true);
+    if (mudDrawer.parentElement) {
+        mudDrawer.parentElement.classList.add(`mud-drawer-open-${variant}-${breakpoint}-${position}`);
+        mudDrawer.parentElement.classList.remove(`mud-drawer-close-${variant}-${breakpoint}-${position}`);
     }
 }
 
