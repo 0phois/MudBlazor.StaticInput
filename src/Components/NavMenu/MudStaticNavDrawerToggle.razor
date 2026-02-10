@@ -2,7 +2,6 @@
 @namespace MudBlazor.StaticInput
 
 @inherits MudIconButton
-@inject IJSRuntime JsRuntime
 
 @{
     base.BuildRenderTree(__builder);
@@ -32,7 +31,11 @@
             UserAttributes.Remove("data-mud-static-initialized");
 
             base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () =>
-                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
+            {
+                Open = !Open;
+                await OpenChanged.InvokeAsync(Open);
+                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.setDrawerState", DrawerId, Open);
+            });
         }
 
         base.OnParametersSet();
