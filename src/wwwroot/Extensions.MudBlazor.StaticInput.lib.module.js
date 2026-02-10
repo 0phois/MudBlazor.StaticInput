@@ -230,7 +230,7 @@ function initDrawers() {
         element.addEventListener('click', onDrawerToggleClick);
     });
 
-    const drawers = document.querySelectorAll('.mud-drawer-responsive, .mud-drawer-mini');
+    const drawers = document.querySelectorAll('.mud-drawer-responsive, .mud-drawer-mini, .mud-drawer-persistent');
     drawers.forEach(drawer => {
         monitorResize(drawer);
     });
@@ -345,17 +345,26 @@ function monitorResize(mudDrawer) {
     if (!parentElement) return;
 
     // Try to find breakpoint and position from layout classes
-    // Expected formats: mud-drawer-[open/close]-[responsive/mini]-[breakpoint]-[position]
-    const layoutClass = Array.from(parentElement.classList).find(className => className.startsWith('mud-drawer-') && (className.includes('-responsive-') || className.includes('-mini-')));
+    // Expected formats: mud-drawer-[open/close]-[responsive/mini/persistent]-[breakpoint]-[position]
+    const layoutClass = Array.from(parentElement.classList).find(className => className.startsWith('mud-drawer-') && (className.includes('-responsive-') || className.includes('-mini-') || className.includes('-persistent-')));
 
     if (!layoutClass) return;
 
     const classSections = layoutClass.split('-');
-    // mud, drawer, state, variant, breakpoint, position
-    // 0    1       2      3        4           5
-    const variant = classSections[3];
-    const breakpoint = classSections[4];
-    const position = classSections[5];
+    let variant, breakpoint, position;
+
+    // mud, drawer, state, variant, [breakpoint], position
+    if (classSections.length === 6) {
+        variant = classSections[3];
+        breakpoint = classSections[4];
+        position = classSections[5];
+    } else if (classSections.length === 5) {
+        variant = classSections[3];
+        breakpoint = 'none';
+        position = classSections[4];
+    } else {
+        return;
+    }
 
     if (breakpoint === 'none') {
         // Not a responsive drawer, just apply stored state if it exists
