@@ -243,6 +243,36 @@ function onDrawerToggleClick(event) {
     toggleDrawer(targetDrawerId);
 }
 
+function getStorageKey(mudDrawer, drawerId) {
+    if (!drawerId || drawerId === '_no_id_provided_') {
+        return 'mud-static-drawer-open-default';
+    }
+    const actualId = mudDrawer ? mudDrawer.id : drawerId;
+    return (actualId && actualId !== '')
+        ? `mud-static-drawer-open-${actualId}`
+        : 'mud-static-drawer-open-default';
+}
+
+function updateStorage(key, value) {
+    localStorage.setItem(key, value);
+    // Set a cookie that expires in 1 year
+    document.cookie = `${key}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+}
+
+function getStoredState(key) {
+    const ls = localStorage.getItem(key);
+    if (ls !== null) return ls === 'true';
+
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith(key + '='))
+        ?.split('=')[1];
+
+    if (cookieValue !== undefined) return cookieValue === 'true';
+
+    return null;
+}
+
 function toggleDrawer(drawerId) {
     let mudDrawer;
     if (!drawerId || drawerId === '_no_id_provided_') {
@@ -257,12 +287,8 @@ function toggleDrawer(drawerId) {
 
         applyDrawerState(mudDrawer, isNowOpen);
 
-        // Store user preference - Use the drawer's actual ID if available, otherwise fallback to default
-        const actualId = mudDrawer.id;
-        const storageKey = actualId && actualId !== ''
-            ? `mud-static-drawer-open-${actualId}`
-            : 'mud-static-drawer-open-default';
-        localStorage.setItem(storageKey, isNowOpen);
+        const storageKey = getStorageKey(mudDrawer, drawerId);
+        updateStorage(storageKey, isNowOpen);
     }
 }
 
@@ -324,16 +350,20 @@ function setDrawerState(drawerId, isOpen) {
         mudDrawer = document.getElementById(drawerId);
     }
 
-    const actualId = mudDrawer ? mudDrawer.id : null;
-    const storageKey = actualId && actualId !== ''
-        ? `mud-static-drawer-open-${actualId}`
-        : 'mud-static-drawer-open-default';
-    localStorage.setItem(storageKey, isOpen);
+    const storageKey = getStorageKey(mudDrawer, drawerId);
+    updateStorage(storageKey, isOpen);
+
+    if (mudDrawer) {
+        applyDrawerState(mudDrawer, isOpen);
+    }
 }
 
 window.MudDrawerInterop = {
     toggleDrawer: toggleDrawer,
-    setDrawerState: setDrawerState
+    setDrawerState: setDrawerState,
+    getDrawerState: function(drawerId) {
+        return getStoredState(getStorageKey(null, drawerId));
+    }
 };
 
 function monitorResize(mudDrawer) {
@@ -368,10 +398,7 @@ function monitorResize(mudDrawer) {
 
     if (breakpoint === 'none') {
         // Not a responsive drawer, just apply stored state if it exists
-        const drawerId = mudDrawer.id;
-        const storageKey = drawerId && drawerId !== ''
-            ? `mud-static-drawer-open-${drawerId}`
-            : 'mud-static-drawer-open-default';
+        const storageKey = getStorageKey(mudDrawer);
         const storedState = localStorage.getItem(storageKey);
         if (storedState !== null) {
             applyDrawerState(mudDrawer, storedState === 'true');
@@ -383,14 +410,11 @@ function monitorResize(mudDrawer) {
     const resizeQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`);
 
     const updateDrawer = (matches) => {
-        const drawerId = mudDrawer.id;
-        const storageKey = drawerId && drawerId !== ''
-            ? `mud-static-drawer-open-${drawerId}`
-            : 'mud-static-drawer-open-default';
-        const storedState = localStorage.getItem(storageKey);
+        const storageKey = getStorageKey(mudDrawer);
+        const storedState = getStoredState(storageKey);
 
         if (storedState !== null) {
-            applyDrawerState(mudDrawer, storedState === 'true');
+            applyDrawerState(mudDrawer, storedState);
         } else {
             // No stored state, follow breakpoint
             if (matches) {

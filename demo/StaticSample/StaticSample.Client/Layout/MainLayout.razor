@@ -14,7 +14,7 @@
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/0phois/MudBlazor.StaticInput" Target="_blank" />
     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Variant="@DrawerVariant.Mini" Breakpoint="@Breakpoint.None" ClipMode="DrawerClipMode.Always">
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Variant="@DrawerVariant.Responsive" Breakpoint="@Breakpoint.Md" ClipMode="DrawerClipMode.Always">
         <NavMenu />
     </MudDrawer>
     
@@ -26,5 +26,5 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = false;
+    bool _drawerOpen = true;
 }

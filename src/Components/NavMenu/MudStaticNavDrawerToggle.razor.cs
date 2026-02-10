@@ -55,13 +55,73 @@ public partial class MudStaticNavDrawerToggle : MudIconButton
     protected new string? Target { get; set; }
     protected new bool ClickPropagation { get; set; }
 
+    protected override void OnInitialized()
+    {
+        if (IsStatic())
+        {
+            var storageKey = !string.IsNullOrEmpty(DrawerId) && DrawerId != "_no_id_provided_"
+                ? $"mud-static-drawer-open-{DrawerId}"
+                : "mud-static-drawer-open-default";
+
+            if (HttpContext?.Request.Cookies.TryGetValue(storageKey, out var value) == true)
+            {
+                bool storedOpen = value == "true";
+                if (storedOpen != Open)
+                {
+                    Open = storedOpen;
+                    _ = OpenChanged.InvokeAsync(Open);
+                }
+            }
+        }
+        else if (JsRuntime is IJSInProcessRuntime inProcess)
+        {
+            try
+            {
+                var stored = inProcess.Invoke<bool?>("MudDrawerInterop.getDrawerState", DrawerId);
+                if (stored.HasValue && stored.Value != Open)
+                {
+                    Open = stored.Value;
+                    _ = OpenChanged.InvokeAsync(Open);
+                }
+            }
+            catch
+            {
+                // Ignore sync JS failures
+            }
+        }
+
+        base.OnInitialized();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!IsStatic())
+        {
+            try
+            {
+                // In WASM, JS Interop is available in OnInitializedAsync if not pre-rendering.
+                // This helps avoid the flicker by setting the state before the first render.
+                var stored = await JsRuntime.InvokeAsync<bool?>("MudDrawerInterop.getDrawerState", DrawerId);
+                if (stored.HasValue && stored.Value != Open)
+                {
+                    Open = stored.Value;
+                    await OpenChanged.InvokeAsync(Open);
+                }
+            }
+            catch
+            {
+                // Ignore JS interop failures during pre-rendering or if not yet available
+            }
+        }
+
+        await base.OnInitializedAsync();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !IsStatic())
         {
-            // Wait for MudBlazor's initial render to settle
-            await Task.Yield();
-
+            // Fallback sync in case OnInitializedAsync was pre-rendering
             var storageKey = !string.IsNullOrEmpty(DrawerId) && DrawerId != "_no_id_provided_"
                 ? $"mud-static-drawer-open-{DrawerId}"
                 : "mud-static-drawer-open-default";
