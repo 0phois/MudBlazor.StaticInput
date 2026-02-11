@@ -378,7 +378,11 @@ function setDrawerState(drawerId, isOpen) {
 window.MudDrawerInterop = {
     toggleDrawer: toggleDrawer,
     setDrawerState: setDrawerState,
-    getDrawerState: function(drawerId) {
+    syncDrawerState: function (drawerId, isOpen) {
+        const storageKey = getStorageKey(null, drawerId);
+        updateStorage(storageKey, isOpen);
+    },
+    getDrawerState: function (drawerId) {
         return getStoredState(getStorageKey(null, drawerId));
     }
 };
