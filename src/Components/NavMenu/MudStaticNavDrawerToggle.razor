@@ -2,7 +2,6 @@
 @namespace MudBlazor.StaticInput
 
 @inherits MudIconButton
-@inject IJSRuntime JsRuntime
 
 @{
     base.BuildRenderTree(__builder);
@@ -20,6 +19,22 @@
 
     protected override void OnParametersSet()
     {
+        if (_lastOpen.HasValue && _lastOpen.Value != Open)
+        {
+            _open = Open;
+            _lastOpen = Open;
+
+            if (!IsStatic())
+            {
+                _ = JsRuntime.InvokeVoidAsync("MudDrawerInterop.syncDrawerState", DrawerId, _open);
+            }
+        }
+        else if (!_lastOpen.HasValue)
+        {
+            _open = Open;
+            _lastOpen = Open;
+        }
+
         if (IsStatic())
         {
             UserAttributes["data-mud-static-type"] = "drawer-toggle";
@@ -32,7 +47,12 @@
             UserAttributes.Remove("data-mud-static-initialized");
 
             base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () =>
-                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.toggleDrawer", DrawerId));
+            {
+                _open = !_open;
+                _lastOpen = _open;
+                await OpenChanged.InvokeAsync(_open);
+                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.setDrawerState", DrawerId, _open);
+            });
         }
 
         base.OnParametersSet();

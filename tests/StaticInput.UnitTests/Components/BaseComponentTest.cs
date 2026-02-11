@@ -26,6 +26,9 @@ namespace StaticInput.UnitTests.Components
         public async Task InitializeAsync()
         {
             Page = await ContextFixture.NewPageAsync().ConfigureAwait(false);
+            // Go to base URL so we have access to localStorage for that domain
+            await Page.GotoAsync("/").ConfigureAwait(false);
+            await Page.EvaluateAsync("localStorage.clear()").ConfigureAwait(false);
         }
 
         public async Task DisposeAsync()

@@ -79,5 +79,86 @@ namespace StaticInput.UnitTests.Components
             miniClasses = await miniDawer.GetAttributeAsync("class");
             miniClasses.Should().Contain("mud-drawer--closed");
         }
+
+        [Fact]
+        public async Task Toggle_MudDrawer_Persists_On_Reload()
+        {
+            var url = typeof(NavMenuDrawerToggleTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var leftToggle = Page.Locator("#static-left-toggle");
+            var miniDawer = Page.Locator("#static-mini");
+
+            // Initial state: closed
+            var miniClasses = await miniDawer.GetAttributeAsync("class");
+            miniClasses.Should().Contain("mud-drawer--closed");
+
+            // Toggle to open
+            await leftToggle.ClickAsync();
+            miniClasses = await miniDawer.GetAttributeAsync("class");
+            miniClasses.Should().Contain("mud-drawer--open");
+
+            // Reload page
+            await Page.ReloadAsync();
+
+            // Should still be open
+            miniDawer = Page.Locator("#static-mini");
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--open')", "static-mini");
+            miniClasses = await miniDawer.GetAttributeAsync("class");
+            miniClasses.Should().Contain("mud-drawer--open");
+
+            // Toggle back to closed
+            leftToggle = Page.Locator("#static-left-toggle");
+            await leftToggle.ClickAsync();
+            miniClasses = await miniDawer.GetAttributeAsync("class");
+            miniClasses.Should().Contain("mud-drawer--closed");
+
+            // Reload again
+            await Page.ReloadAsync();
+            miniDawer = Page.Locator("#static-mini");
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--closed')", "static-mini");
+            miniClasses = await miniDawer.GetAttributeAsync("class");
+            miniClasses.Should().Contain("mud-drawer--closed");
+        }
+
+        [Fact]
+        public async Task Multiple_Drawers_Persist_Independently()
+        {
+            var url = typeof(NavMenuDrawerToggleTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var leftToggle = Page.Locator("#static-left-toggle");
+            var rightToggle = Page.Locator("#static-right-toggle");
+            var miniDawer = Page.Locator("#static-mini");
+            var persistentDawer = Page.Locator("#static-persistent");
+
+            // Open both
+            await leftToggle.ClickAsync();
+            await rightToggle.ClickAsync();
+
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--open')", "static-mini");
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--open')", "static-persistent");
+
+            // Reload
+            await Page.ReloadAsync();
+
+            // Both should be open
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--open')", "static-mini");
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--open')", "static-persistent");
+
+            // Close one
+            leftToggle = Page.Locator("#static-left-toggle");
+            await leftToggle.ClickAsync();
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--closed')", "static-mini");
+
+            // Reload
+            await Page.ReloadAsync();
+
+            // One closed, one open
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--closed')", "static-mini");
+            await Page.WaitForFunctionAsync("id => document.getElementById(id).classList.contains('mud-drawer--open')", "static-persistent");
+        }
     }
 }
