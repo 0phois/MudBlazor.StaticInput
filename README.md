@@ -25,7 +25,7 @@ Tailored specifically for [Static Server-Side Rendered](https://learn.microsoft.
 > Default pword: `MudStatic123!`
 
 ## :thinking: Why MudBlazor.StaticInput? :thinking:
-- **Rapid SSSR Integration:** Effortlessly add MudBlazor components to your static SSR pages, saving development time.
+- **Rapid Static SSR Integration:** Effortlessly add MudBlazor components to your static SSR pages, saving development time.
 - **Focus on Forms:** Streamline development of forms and edit forms, for use cases such as Microsoft Identity Login forms.
 - **Preserved Look & Feel:** Maintains the consistent design and user experience of MudBlazor. Ensuring uniformity across all pages.
 - **Maintains Flexibility:** By inheriting core MudBlazor components, StaticInput maintains the same flexibility as the original components.
@@ -88,7 +88,8 @@ The set of components and features may extend over time. Currently, StaticInput 
 <MudStaticTextField @bind-Value="@Password" 
                     InputType="InputType.Password" 
                     Adornment="Adornment.End" 
-                    AdornmentIcon="@Icons.Material.Outlined.VisibilityOff" 
+                    AdornmentIcon="@Icons.Material.Outlined.Visibility"
+                    AdornmentToggledIcon="@Icons.Material.Outlined.VisibilityOff"
                     AdornmentClickFunction="showPassword" />
 ```
 ```cs
@@ -98,23 +99,47 @@ The set of components and features may extend over time. Currently, StaticInput 
 ```
 ```js
 <script>
-   let timeoutId;
+    const passwordTimeouts = new WeakMap();
+    function showPassword(inputElement) {
+        if (!inputElement) return;
 
-   function showPassword(inputElement, button) {
-       if (inputElement.type === 'password') {
-           inputElement.type = 'text';
-           clearTimeout(timeoutId);
-           timeoutId = setTimeout(function () {
-               inputElement.type = 'password';
-           }, 5000);
-       } else {
-           inputElement.type = 'password';
-           clearTimeout(timeoutId);
-       }
-   }
+        const existingTimeout = passwordTimeouts.get(inputElement);
+        if (existingTimeout) clearTimeout(existingTimeout);
+
+        if (inputElement.type === 'password') {
+            inputElement.type = 'text';
+            const timeoutId = setTimeout(function () {
+                inputElement.type = 'password';
+                passwordTimeouts.delete(inputElement);
+            }, 5000);
+            passwordTimeouts.set(inputElement, timeoutId);
+        } else {
+            inputElement.type = 'password';
+            passwordTimeouts.delete(inputElement);
+        }
+    }
 </script>
 ```
 </details>  
+
+### MudStaticRadioGroup
+<details>
+  <summary>
+    Radio buttons allow the user to select one option from a set.
+  </summary>
+
+```html
+<MudStaticRadioGroup @bind-Value="@SelectedOption" Color="Color.Primary">
+    <MudStaticRadio Value="@("Option 1")" Color="Color.Secondary">Option 1</MudStaticRadio>
+    <MudStaticRadio Value="@("Option 2")">Option 2</MudStaticRadio>
+</MudStaticRadioGroup>
+```
+```cs
+@code {
+    public string SelectedOption { get; set; } = "Option 1";
+}
+```
+</details>
 
 ### MudStaticNavDrawerToggle 
 <details>
@@ -138,7 +163,7 @@ The set of components and features may extend over time. Currently, StaticInput 
 ### MudStaticNavGroup 
 <details>
   <summary>
-    Collapse/Expand a MudStaticNavGroup by clicking on it's title. Can you nested in a standard MudNavMenu
+    Collapse/Expand a MudStaticNavGroup by clicking on its title. Can be nested in a standard MudNavMenu
   </summary>
 
 ```html
@@ -158,9 +183,24 @@ The set of components and features may extend over time. Currently, StaticInput 
 </details>
 
 ## :rocket: Getting Started :rocket:
-To start using MudBlazor.StaticInput in your projects, simply install the package via NuGet Package Manager:
+To start using **MudBlazor.StaticInput** in your projects, simply install the package via NuGet Package Manager:
 ```bash
 dotnet add package Extensions.MudBlazor.StaticInput
 ```
 > [!NOTE]  
-> Note: MudBlazor should already be setup for your application
+> **MudBlazor** should already be setup for your application.
+
+### 1. Register Services
+Ensure MudBlazor services are registered in your `Program.cs`:
+```cs
+builder.Services.AddMudServices();
+```
+
+### 2. Automatic Initialization
+The library utilizes a [Blazor JS initializer](https://learn.microsoft.com/en-us/aspnet/core/blazor/javascript-interoperability/static-assets?view=aspnetcore-8.0#javascript-initializers) to automatically load the necessary client-side logic. No manual script tags are required for the core functionality in Blazor Web Apps.
+
+### 3. Usage
+You can now start using the components in your Static SSR pages. For example, in an Identity login page:
+```html
+<MudStaticTextField @bind-Value="@Input.Email" Label="Email" For="() => Input.Email" />
+```
