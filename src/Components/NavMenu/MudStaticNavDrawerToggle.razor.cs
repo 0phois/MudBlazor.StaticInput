@@ -37,11 +37,11 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
     public EventCallback<bool> OpenChanged { get; set; }
 
     /// <summary>
-    /// The render mode to persist the state for. Defaults to <see cref="RenderMode.InteractiveWebAssembly"/>.
-    /// Set to <c>null</c> to register for all render modes.
+    /// The render mode to persist the state for./>.
+    /// Defaults to <c>null</c> to register all render modes.
     /// </summary>
     [Parameter]
-    public IComponentRenderMode? PersistMode { get; set; } = RenderMode.InteractiveWebAssembly;
+    public IComponentRenderMode? PersistMode { get; set; } = RenderMode.InteractiveAuto;
 
     private bool _open;
     private bool? _lastOpen;
@@ -95,7 +95,7 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
                 {
                     PersistentState.PersistAsJson(storageKey, _open);
                     return Task.CompletedTask;
-                });
+                }, RenderMode.InteractiveAuto);
             }
 
             if (HttpContext?.Request.Cookies.TryGetValue(storageKey, out var value) == true)

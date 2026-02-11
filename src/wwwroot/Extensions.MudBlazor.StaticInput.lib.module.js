@@ -378,7 +378,11 @@ function setDrawerState(drawerId, isOpen) {
 window.MudDrawerInterop = {
     toggleDrawer: toggleDrawer,
     setDrawerState: setDrawerState,
-    getDrawerState: function(drawerId) {
+    syncDrawerState: function (drawerId, isOpen) {
+        const storageKey = getStorageKey(null, drawerId);
+        updateStorage(storageKey, isOpen);
+    },
+    getDrawerState: function (drawerId) {
         return getStoredState(getStorageKey(null, drawerId));
     }
 };
@@ -469,7 +473,7 @@ function monitorResize(mudDrawer) {
 
 function getBreakpointValue(breakpoint) {
     switch (breakpoint) {
-        case 'xs': return 0;
+        case 'xs': return 380;
         case 'sm': return 600;
         case 'md': return 960;
         case 'lg': return 1280;

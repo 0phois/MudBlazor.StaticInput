@@ -19,7 +19,17 @@
 
     protected override void OnParametersSet()
     {
-        if (_lastOpen != Open)
+        if (_lastOpen.HasValue && _lastOpen.Value != Open)
+        {
+            _open = Open;
+            _lastOpen = Open;
+
+            if (!IsStatic())
+            {
+                _ = JsRuntime.InvokeVoidAsync("MudDrawerInterop.syncDrawerState", DrawerId, _open);
+            }
+        }
+        else if (!_lastOpen.HasValue)
         {
             _open = Open;
             _lastOpen = Open;
