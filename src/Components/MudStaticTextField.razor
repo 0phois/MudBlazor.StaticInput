@@ -33,18 +33,23 @@
     /// -------------------------------------------------
     /// </code>
     /// <code>
-    ///    let timeoutId;
+    ///    const passwordTimeouts = new WeakMap();
+    ///    function showPassword(inputElement) {
+    ///        if (!inputElement) return;
     ///
-    ///    function showPassword(inputElement, button) {
+    ///        const existingTimeout = passwordTimeouts.get(inputElement);
+    ///        if (existingTimeout) clearTimeout(existingTimeout);
+    ///
     ///        if (inputElement.type === 'password') {
     ///            inputElement.type = 'text';
-    ///            clearTimeout(timeoutId);
-    ///            timeoutId = setTimeout(function () {
+    ///            const timeoutId = setTimeout(function () {
     ///                inputElement.type = 'password';
+    ///                passwordTimeouts.delete(inputElement);
     ///            }, 5000);
+    ///            passwordTimeouts.set(inputElement, timeoutId);
     ///        } else {
     ///            inputElement.type = 'password';
-    ///            clearTimeout(timeoutId);
+    ///            passwordTimeouts.delete(inputElement);
     ///        }
     ///    }
     /// </code>
