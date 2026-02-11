@@ -19,6 +19,12 @@
 
     protected override void OnParametersSet()
     {
+        if (_lastOpen != Open)
+        {
+            _open = Open;
+            _lastOpen = Open;
+        }
+
         if (IsStatic())
         {
             UserAttributes["data-mud-static-type"] = "drawer-toggle";
@@ -32,9 +38,10 @@
 
             base.OnClick = EventCallback.Factory.Create<MouseEventArgs>(this, async () =>
             {
-                Open = !Open;
-                await OpenChanged.InvokeAsync(Open);
-                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.setDrawerState", DrawerId, Open);
+                _open = !_open;
+                _lastOpen = _open;
+                await OpenChanged.InvokeAsync(_open);
+                await JsRuntime.InvokeVoidAsync("MudDrawerInterop.setDrawerState", DrawerId, _open);
             });
         }
 

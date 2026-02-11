@@ -36,6 +36,16 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
     [Parameter]
     public EventCallback<bool> OpenChanged { get; set; }
 
+    /// <summary>
+    /// The render mode to persist the state for. Defaults to <see cref="RenderMode.InteractiveWebAssembly"/>.
+    /// Set to <c>null</c> to register for all render modes.
+    /// </summary>
+    [Parameter]
+    public IComponentRenderMode? PersistMode { get; set; } = RenderMode.InteractiveWebAssembly;
+
+    private bool _open;
+    private bool? _lastOpen;
+
     [Inject]
     private IJSRuntime JsRuntime { get; set; } = default!;
 
@@ -62,25 +72,40 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
 
     protected override void OnInitialized()
     {
+        _open = Open;
+        _lastOpen = Open;
+
         var storageKey = !string.IsNullOrEmpty(DrawerId) && DrawerId != "_no_id_provided_"
             ? $"mud-static-drawer-open-{DrawerId}"
             : "mud-static-drawer-open-default";
 
         if (IsStatic())
         {
-            _subscription = PersistentState.RegisterOnPersisting(() =>
+            if (PersistMode != null)
             {
-                PersistentState.PersistAsJson(storageKey, Open);
-                return Task.CompletedTask;
-            }, RenderMode.InteractiveWebAssembly);
+                _subscription = PersistentState.RegisterOnPersisting(() =>
+                {
+                    PersistentState.PersistAsJson(storageKey, _open);
+                    return Task.CompletedTask;
+                }, PersistMode);
+            }
+            else
+            {
+                _subscription = PersistentState.RegisterOnPersisting(() =>
+                {
+                    PersistentState.PersistAsJson(storageKey, _open);
+                    return Task.CompletedTask;
+                });
+            }
 
             if (HttpContext?.Request.Cookies.TryGetValue(storageKey, out var value) == true)
             {
                 bool storedOpen = value == "true";
-                if (storedOpen != Open)
+                if (storedOpen != _open)
                 {
-                    Open = storedOpen;
-                    _ = OpenChanged.InvokeAsync(Open);
+                    _open = storedOpen;
+                    _lastOpen = _open;
+                    _ = OpenChanged.InvokeAsync(_open);
                 }
             }
         }
@@ -88,10 +113,11 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
         {
             if (PersistentState.TryTakeFromJson<bool>(storageKey, out var restored))
             {
-                if (restored != Open)
+                if (restored != _open)
                 {
-                    Open = restored;
-                    _ = OpenChanged.InvokeAsync(Open);
+                    _open = restored;
+                    _lastOpen = _open;
+                    _ = OpenChanged.InvokeAsync(_open);
                 }
             }
             else if (JsRuntime is IJSInProcessRuntime inProcess)
@@ -99,10 +125,11 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
                 try
                 {
                     var stored = inProcess.Invoke<bool?>("MudDrawerInterop.getDrawerState", DrawerId);
-                    if (stored.HasValue && stored.Value != Open)
+                    if (stored.HasValue && stored.Value != _open)
                     {
-                        Open = stored.Value;
-                        _ = OpenChanged.InvokeAsync(Open);
+                        _open = stored.Value;
+                        _lastOpen = _open;
+                        _ = OpenChanged.InvokeAsync(_open);
                     }
                 }
                 catch
@@ -124,10 +151,11 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
                 // In WASM, JS Interop is available in OnInitializedAsync if not pre-rendering.
                 // This helps avoid the flicker by setting the state before the first render.
                 var stored = await JsRuntime.InvokeAsync<bool?>("MudDrawerInterop.getDrawerState", DrawerId);
-                if (stored.HasValue && stored.Value != Open)
+                if (stored.HasValue && stored.Value != _open)
                 {
-                    Open = stored.Value;
-                    await OpenChanged.InvokeAsync(Open);
+                    _open = stored.Value;
+                    _lastOpen = _open;
+                    await OpenChanged.InvokeAsync(_open);
                 }
             }
             catch
@@ -159,10 +187,11 @@ public partial class MudStaticNavDrawerToggle : MudIconButton, IDisposable
                 if (stored != null)
                 {
                     bool storedOpen = stored == "true";
-                    if (storedOpen != Open)
+                    if (storedOpen != _open)
                     {
-                        Open = storedOpen;
-                        await OpenChanged.InvokeAsync(storedOpen);
+                        _open = storedOpen;
+                        _lastOpen = _open;
+                        await OpenChanged.InvokeAsync(_open);
                         StateHasChanged();
                     }
                 }

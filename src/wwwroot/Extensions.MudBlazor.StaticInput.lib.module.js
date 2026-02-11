@@ -261,8 +261,8 @@ function getStorageKey(mudDrawer, drawerId) {
 
 function updateStorage(key, value) {
     localStorage.setItem(key, value);
-    // Set a cookie that expires in 1 year
-    const cookieString = `${key}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+    // Set a session cookie
+    const cookieString = `${key}=${value}; path=/; SameSite=Lax`;
     document.cookie = cookieString;
 }
 
