@@ -244,31 +244,38 @@ function onDrawerToggleClick(event) {
 }
 
 function getStorageKey(mudDrawer, drawerId) {
-    if (!drawerId || drawerId === '_no_id_provided_') {
-        return 'mud-static-drawer-open-default';
+    // If a specific drawerId was provided by the toggle, use it.
+    if (drawerId && drawerId !== '_no_id_provided_') {
+        return `mud-static-drawer-open-${drawerId}`;
     }
-    const actualId = mudDrawer ? mudDrawer.id : drawerId;
-    return (actualId && actualId !== '')
-        ? `mud-static-drawer-open-${actualId}`
-        : 'mud-static-drawer-open-default';
+
+    // If we have a drawer element and it has an ID, check if it was specifically set.
+    // MudBlazor generates IDs like '_mud_drawer_...' if not provided.
+    if (mudDrawer && mudDrawer.id && mudDrawer.id.length > 0 && !mudDrawer.id.startsWith('_mud_')) {
+        return `mud-static-drawer-open-${mudDrawer.id}`;
+    }
+
+    // Fallback to default
+    return 'mud-static-drawer-open-default';
 }
 
 function updateStorage(key, value) {
     localStorage.setItem(key, value);
     // Set a cookie that expires in 1 year
-    document.cookie = `${key}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+    const cookieString = `${key}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = cookieString;
 }
 
 function getStoredState(key) {
     const ls = localStorage.getItem(key);
-    if (ls !== null) return ls === 'true';
+    if (ls !== null) {
+        return ls === 'true';
+    }
 
-    const cookieValue = document.cookie
-        .split('; ')
-        .find(row => row.startsWith(key + '='))
-        ?.split('=')[1];
-
-    if (cookieValue !== undefined) return cookieValue === 'true';
+    const match = document.cookie.match(new RegExp('(^| )' + key + '=([^;]+)'));
+    if (match) {
+        return match[2] === 'true';
+    }
 
     return null;
 }
@@ -314,9 +321,15 @@ function applyDrawerState(mudDrawer, isOpen) {
 
     const layout = mudDrawer.parentElement;
     if (layout) {
-        // Try to replace the specific responsive/mini layout class
+        // Identify the anchor (left or right) of the drawer to avoid affecting other drawers
+        const anchor = mudDrawer.classList.contains('mud-drawer-pos-right') ? 'right' : 'left';
+
+        // Try to replace the specific responsive/mini layout class that matches this drawer's anchor
         const classList = Array.from(layout.classList);
-        const layoutClass = classList.find(c => c.startsWith('mud-drawer-open-') || c.startsWith('mud-drawer-close-'));
+        const layoutClass = classList.find(c =>
+            (c.startsWith('mud-drawer-open-') || c.startsWith('mud-drawer-close-')) &&
+            c.endsWith(`-${anchor}`)
+        );
 
         if (layoutClass) {
             const newClass = isOpen
@@ -328,11 +341,15 @@ function applyDrawerState(mudDrawer, isOpen) {
                 layout.classList.add(newClass);
             }
         } else {
-            // Fallback for non-responsive drawers if they use simple classes
+            // Fallback for non-responsive drawers if they use simple classes.
+            // Note: MudBlazor usually uses anchor-specific classes even for simple ones,
+            // but we keep this as a generic fallback.
             if (!isOpen) {
-                layout.className = layout.className.replace(/\bmud-drawer-open\b/g, 'mud-drawer-close');
+                layout.classList.remove('mud-drawer-open');
+                layout.classList.add('mud-drawer-close');
             } else {
-                layout.className = layout.className.replace(/\bmud-drawer-close\b/g, 'mud-drawer-open');
+                layout.classList.remove('mud-drawer-close');
+                layout.classList.add('mud-drawer-open');
             }
         }
 
@@ -374,11 +391,26 @@ function monitorResize(mudDrawer) {
     const parentElement = mudDrawer.parentElement;
     if (!parentElement) return;
 
-    // Try to find breakpoint and position from layout classes
-    // Expected formats: mud-drawer-[open/close]-[responsive/mini/persistent]-[breakpoint]-[position]
-    const layoutClass = Array.from(parentElement.classList).find(className => className.startsWith('mud-drawer-') && (className.includes('-responsive-') || className.includes('-mini-') || className.includes('-persistent-')));
+    // Identify the anchor (left or right) of the drawer
+    const anchor = mudDrawer.classList.contains('mud-drawer-pos-right') ? 'right' : 'left';
 
-    if (!layoutClass) return;
+    // Try to find breakpoint and position from layout classes matching this drawer's anchor
+    // Expected formats: mud-drawer-[open/close]-[responsive/mini/persistent]-[breakpoint]-[position]
+    const layoutClass = Array.from(parentElement.classList).find(className =>
+        className.startsWith('mud-drawer-') &&
+        (className.includes('-responsive-') || className.includes('-mini-') || className.includes('-persistent-')) &&
+        className.endsWith(`-${anchor}`)
+    );
+
+    if (!layoutClass) {
+        // If we can't find the layout class on the parent, we can still apply the stored state
+        const storageKey = getStorageKey(mudDrawer);
+        const storedState = getStoredState(storageKey);
+        if (storedState !== null) {
+            applyDrawerState(mudDrawer, storedState);
+        }
+        return;
+    }
 
     const classSections = layoutClass.split('-');
     let variant, breakpoint, position;
