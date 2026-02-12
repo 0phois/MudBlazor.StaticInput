@@ -1,5 +1,6 @@
 @namespace MudBlazor.StaticInput
 
+
 @inherits MudButton
 
 @if (FormAction == FormAction.Post)
@@ -51,9 +52,9 @@ else
 
     private string GetButtonType() => FormAction switch
     {
-        FormAction.Submit => ButtonType.Submit.ToDescriptionString(),
-        FormAction.Reset => ButtonType.Reset.ToDescriptionString(),
-        _ => ButtonType.Submit.ToDescriptionString()
+        FormAction.Submit => ButtonType.Submit.ToEnumDescriptionString(),
+        FormAction.Reset => ButtonType.Reset.ToEnumDescriptionString(),
+        _ => ButtonType.Submit.ToEnumDescriptionString()
     };
 
     private RenderFragment RenderButton() 
