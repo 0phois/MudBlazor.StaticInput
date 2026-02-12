@@ -26,13 +26,13 @@
             </span>
             @if (!string.IsNullOrEmpty(Label))
             {
-                <MudText Class="@(Typo is null ? LabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")" Color="HasErrors ? Color.Error : Color.Inherit">
+                <MudText Class="@(Typo is null ? LabelClassname : $"mud-typography-{Typo.Value.ToEnumDescriptionString()}")" Color="HasErrors? Color.Error: Color.Inherit">
                     @Label
                 </MudText>
             }
             @if (ChildContent != null)
             {
-                <MudText Class="@(Typo is null ? LabelClassname : $"mud-typography-{Typo.Value.ToDescriptionString()}")"  Color="HasErrors ? Color.Error : Color.Inherit">
+                <MudText Class="@(Typo is null ? LabelClassname : $"mud-typography-{Typo.Value.ToEnumDescriptionString()}")" Color="HasErrors? Color.Error: Color.Inherit">
                     @ChildContent
                 </MudText>
             }
