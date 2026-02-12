@@ -1,5 +1,6 @@
 ﻿using Bunit;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 using MudBlazor.Services;
 using StaticInput.UnitTests.Fixtures;
@@ -17,6 +18,7 @@ namespace StaticInput.UnitTests.Components
         {
             Context = new();
             ContextFixture = contextFixture;
+            Context.Services.AddSingleton(TimeProvider.System);
             Context.Services.AddMudBlazorKeyInterceptor();
             Context.Services.AddMudLocalization();
             Context.JSInterop.Mode = JSRuntimeMode.Loose;
