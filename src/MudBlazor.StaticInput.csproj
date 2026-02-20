@@ -31,13 +31,13 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-	    <PackageReference Include="MudBlazor" Version="9.0.0-rc.1" />
+        <PackageReference Include="MudBlazor" Version="9.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.*" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
-	    <PackageReference Include="MudBlazor" Version="9.0.0-rc.1" />
+        <PackageReference Include="MudBlazor" Version="9.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.*" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.*" />
     </ItemGroup>
