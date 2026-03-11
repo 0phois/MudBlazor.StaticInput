@@ -537,22 +537,17 @@ function initNavGroups() {
                 const isCurrentlyExpanded = button.getAttribute('aria-expanded') === "true";
                 const willExpand = !isCurrentlyExpanded;
 
-                // Clear any existing timeouts
                 if (collapseContainer._mudStaticNavGroupTimeout) {
                     clearTimeout(collapseContainer._mudStaticNavGroupTimeout);
                 }
 
-                // Reset transient classes and ensure consistent state
                 collapseContainer.classList.remove('mud-collapse-entering', 'mud-collapse-exiting', 'mud-collapse-entered', 'invisible');
                 collapseContainer.style.transition = 'height 250ms cubic-bezier(0.4, 0, 0.2, 1)';
 
                 if (willExpand) {
-                    // We DO NOT add mud-nav-group-expanded here to avoid the persistent background highlight.
-                    // Instead, we only rotate the icon and handle the collapse state.
                     collapseContainer.style.display = 'block';
                     collapseContainer.style.height = '0px';
 
-                    // Force reflow
                     collapseContainer.offsetHeight;
 
                     collapseContainer.setAttribute('aria-hidden', 'false');
@@ -571,7 +566,6 @@ function initNavGroups() {
                     const height = wrapper.scrollHeight;
                     collapseContainer.style.height = height + 'px';
 
-                    // Force reflow
                     collapseContainer.offsetHeight;
 
                     collapseContainer.classList.add('mud-collapse-exiting');
@@ -588,9 +582,6 @@ function initNavGroups() {
 
                 expandIcon.classList.toggle('mud-transform', willExpand);
                 button.setAttribute('aria-expanded', willExpand);
-
-                // Remove focus to fix the persistent "hover" highlight issue
-                button.blur();
             });
         }
     });

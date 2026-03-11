@@ -23,7 +23,6 @@ namespace StaticInput.UnitTests.Components
             var ariaValue = await menuGroup.GetAttributeAsync("aria-hidden");
 
             menuClasses.Should().NotBeNullOrEmpty();
-            // In static mode with Expanded="true", it starts with mud-collapse-entering (from MudBlazor)
             menuClasses.Should().Contain("mud-collapse-entering");
             ariaValue.Should().Be("false");
 
