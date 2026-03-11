@@ -510,18 +510,49 @@ function initNavGroups() {
                 if (!navElement) return;
                 const collapseContainer = navElement.querySelector('.mud-collapse-container');
                 const expandIcon = navElement.querySelector('.mud-nav-link-expand-icon');
+                const wrapper = collapseContainer ? collapseContainer.querySelector('.mud-collapse-wrapper') : null;
 
-                if (!collapseContainer || !expandIcon) return;
+                if (!collapseContainer || !expandIcon || !wrapper) return;
 
-                const isExpanded = button.getAttribute('aria-expanded') === "true";
+                const isCurrentlyExpanded = button.getAttribute('aria-expanded') === "true";
+                const willExpand = !isCurrentlyExpanded;
 
-                collapseContainer.classList.toggle('mud-collapse-entered', !isExpanded);
-                collapseContainer.classList.toggle('mud-navgroup-collapse', true);
-                collapseContainer.classList.remove('mud-collapse-entering');
-                collapseContainer.setAttribute('aria-hidden', isExpanded);
+                // Clear any existing timeouts or styles that might interfere
+                collapseContainer.style.transition = 'height 250ms cubic-bezier(0.4, 0, 0.2, 1)';
 
-                expandIcon.classList.toggle('mud-transform', !isExpanded);
-                button.setAttribute('aria-expanded', !isExpanded);
+                if (willExpand) {
+                    collapseContainer.classList.remove('invisible');
+                    collapseContainer.setAttribute('aria-hidden', 'false');
+                    collapseContainer.classList.add('mud-collapse-entering');
+
+                    const height = wrapper.scrollHeight;
+                    collapseContainer.style.height = height + 'px';
+
+                    setTimeout(() => {
+                        collapseContainer.classList.remove('mud-collapse-entering');
+                        collapseContainer.classList.add('mud-collapse-entered');
+                        collapseContainer.style.height = 'auto';
+                    }, 250);
+                } else {
+                    const height = wrapper.scrollHeight;
+                    collapseContainer.style.height = height + 'px';
+
+                    // Force reflow
+                    collapseContainer.offsetHeight;
+
+                    collapseContainer.classList.remove('mud-collapse-entered');
+                    collapseContainer.classList.add('mud-collapse-exiting');
+                    collapseContainer.style.height = '0px';
+
+                    setTimeout(() => {
+                        collapseContainer.classList.remove('mud-collapse-exiting');
+                        collapseContainer.classList.add('invisible');
+                        collapseContainer.setAttribute('aria-hidden', 'true');
+                    }, 250);
+                }
+
+                expandIcon.classList.toggle('mud-transform', willExpand);
+                button.setAttribute('aria-expanded', willExpand);
             });
         }
     });
