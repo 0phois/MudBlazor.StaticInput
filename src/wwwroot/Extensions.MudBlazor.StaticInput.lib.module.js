@@ -537,46 +537,55 @@ function initNavGroups() {
                 const isCurrentlyExpanded = button.getAttribute('aria-expanded') === "true";
                 const willExpand = !isCurrentlyExpanded;
 
-                // Clear any existing timeouts or styles that might interfere
+                // Clear any existing timeouts
+                if (collapseContainer._mudStaticNavGroupTimeout) {
+                    clearTimeout(collapseContainer._mudStaticNavGroupTimeout);
+                }
+
+                // Reset transient classes and ensure consistent state
+                collapseContainer.classList.remove('mud-collapse-entering', 'mud-collapse-exiting', 'mud-collapse-entered', 'invisible');
                 collapseContainer.style.transition = 'height 250ms cubic-bezier(0.4, 0, 0.2, 1)';
 
                 if (willExpand) {
-                    navElement.classList.add('mud-nav-group-expanded');
-                    collapseContainer.classList.remove('invisible');
-                    collapseContainer.style.display = 'block'; // Ensure it's not display: none
+                    // We DO NOT add mud-nav-group-expanded here to avoid the persistent background highlight.
+                    // Instead, we only rotate the icon and handle the collapse state.
+                    collapseContainer.style.display = 'block';
                     collapseContainer.setAttribute('aria-hidden', 'false');
                     collapseContainer.classList.add('mud-collapse-entering');
 
                     const height = wrapper.scrollHeight;
                     collapseContainer.style.height = height + 'px';
 
-                    setTimeout(() => {
+                    collapseContainer._mudStaticNavGroupTimeout = setTimeout(() => {
                         collapseContainer.classList.remove('mud-collapse-entering');
                         collapseContainer.classList.add('mud-collapse-entered');
                         collapseContainer.style.height = 'auto';
+                        delete collapseContainer._mudStaticNavGroupTimeout;
                     }, 250);
                 } else {
-                    navElement.classList.remove('mud-nav-group-expanded');
                     const height = wrapper.scrollHeight;
                     collapseContainer.style.height = height + 'px';
 
                     // Force reflow
                     collapseContainer.offsetHeight;
 
-                    collapseContainer.classList.remove('mud-collapse-entered');
                     collapseContainer.classList.add('mud-collapse-exiting');
                     collapseContainer.style.height = '0px';
 
-                    setTimeout(() => {
+                    collapseContainer._mudStaticNavGroupTimeout = setTimeout(() => {
                         collapseContainer.classList.remove('mud-collapse-exiting');
                         collapseContainer.classList.add('invisible');
-                        collapseContainer.style.display = ''; // Reset display
+                        collapseContainer.style.display = '';
                         collapseContainer.setAttribute('aria-hidden', 'true');
+                        delete collapseContainer._mudStaticNavGroupTimeout;
                     }, 250);
                 }
 
                 expandIcon.classList.toggle('mud-transform', willExpand);
                 button.setAttribute('aria-expanded', willExpand);
+
+                // Remove focus to fix the persistent "hover" highlight issue
+                button.blur();
             });
         }
     });

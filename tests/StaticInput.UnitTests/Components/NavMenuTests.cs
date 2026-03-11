@@ -29,7 +29,7 @@ namespace StaticInput.UnitTests.Components
 
             await button.ClickAsync();
             // Wait for JS animation
-            await Task.Delay(500);
+            await Task.Delay(600);
 
             menuClasses = await menuGroup.GetAttributeAsync("class");
             menuClasses.Should().NotContain("mud-collapse-entered");
@@ -40,7 +40,7 @@ namespace StaticInput.UnitTests.Components
 
             await button.ClickAsync();
             // Wait for JS animation
-            await Task.Delay(500);
+            await Task.Delay(600);
 
             menuClasses = await menuGroup.GetAttributeAsync("class");
             menuClasses.Should().Contain("mud-collapse-entered");
