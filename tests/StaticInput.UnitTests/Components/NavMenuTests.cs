@@ -27,17 +27,23 @@ namespace StaticInput.UnitTests.Components
             ariaValue.Should().Be("false");
 
             await button.ClickAsync();
+            // Wait for JS animation
+            await Task.Delay(600);
 
             menuClasses = await menuGroup.GetAttributeAsync("class");
-            menuClasses.Should().NotContain("mud-collapse-entered").And.NotContain("mud-collapse-entering");
+            menuClasses.Should().NotContain("mud-collapse-entered");
+            menuClasses.Should().Contain("invisible");
 
             ariaValue = await menuGroup.GetAttributeAsync("aria-hidden");
             ariaValue.Should().Be("true");
 
             await button.ClickAsync();
+            // Wait for JS animation
+            await Task.Delay(600);
 
             menuClasses = await menuGroup.GetAttributeAsync("class");
             menuClasses.Should().Contain("mud-collapse-entered");
+            menuClasses.Should().NotContain("invisible");
 
             ariaValue = await menuGroup.GetAttributeAsync("aria-hidden");
             ariaValue.Should().Be("false");
