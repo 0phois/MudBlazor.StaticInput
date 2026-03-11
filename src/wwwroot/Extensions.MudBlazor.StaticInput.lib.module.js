@@ -550,6 +550,11 @@ function initNavGroups() {
                     // We DO NOT add mud-nav-group-expanded here to avoid the persistent background highlight.
                     // Instead, we only rotate the icon and handle the collapse state.
                     collapseContainer.style.display = 'block';
+                    collapseContainer.style.height = '0px';
+
+                    // Force reflow
+                    collapseContainer.offsetHeight;
+
                     collapseContainer.setAttribute('aria-hidden', 'false');
                     collapseContainer.classList.add('mud-collapse-entering');
 
