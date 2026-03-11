@@ -1,4 +1,6 @@
 
+const initializedElements = new WeakSet();
+
 export function afterWebStarted(blazor) {
     if (blazor) {
         blazor.addEventListener('enhancedload', () => {
@@ -35,8 +37,11 @@ function initialize() {
 }
 
 function initTextFields() {
-    const textFields = document.querySelectorAll('[data-mud-static-type="text-field"]:not([data-mud-static-initialized="true"])');
+    const textFields = document.querySelectorAll('[data-mud-static-type="text-field"]');
     textFields.forEach(inputElement => {
+        if (initializedElements.has(inputElement)) return;
+        initializedElements.add(inputElement);
+
         inputElement.setAttribute('data-mud-static-initialized', 'true');
         const shrinkLabel = inputElement.getAttribute('data-mud-static-shrink') === 'true';
         const showOnFocus = inputElement.getAttribute('data-mud-static-helper-focus') === 'true';
@@ -103,8 +108,11 @@ function initTextFields() {
 }
 
 function initCheckBoxes() {
-    const checkBoxes = document.querySelectorAll('[data-mud-static-type="checkbox"]:not([data-mud-static-initialized="true"])');
+    const checkBoxes = document.querySelectorAll('[data-mud-static-type="checkbox"]');
     checkBoxes.forEach(checkbox => {
+        if (initializedElements.has(checkbox)) return;
+        initializedElements.add(checkbox);
+
         checkbox.setAttribute('data-mud-static-initialized', 'true');
         const name = checkbox.getAttribute('data-mud-static-name');
         const parent = checkbox.closest('.mud-input-control');
@@ -132,8 +140,11 @@ function initCheckBoxes() {
 }
 
 function initSwitches() {
-    const switches = document.querySelectorAll('[data-mud-static-type="switch"]:not([data-mud-static-initialized="true"])');
+    const switches = document.querySelectorAll('[data-mud-static-type="switch"]');
     switches.forEach(switchToggle => {
+        if (initializedElements.has(switchToggle)) return;
+        initializedElements.add(switchToggle);
+
         switchToggle.setAttribute('data-mud-static-initialized', 'true');
         const name = switchToggle.getAttribute('data-mud-static-name');
         const label = switchToggle.closest('label');
@@ -180,8 +191,11 @@ function initSwitches() {
 }
 
 function initRadios() {
-    const radios = document.querySelectorAll('[data-mud-static-type="radio"]:not([data-mud-static-initialized="true"])');
+    const radios = document.querySelectorAll('[data-mud-static-type="radio"]');
     radios.forEach(radio => {
+        if (initializedElements.has(radio)) return;
+        initializedElements.add(radio);
+
         radio.setAttribute('data-mud-static-initialized', 'true');
         radio.addEventListener('change', function () {
             const parentGroup = radio.closest('[data-mud-static-type="radio-group"]');
@@ -223,8 +237,11 @@ function initRadios() {
 }
 
 function initDrawers() {
-    const drawerToggleElements = document.querySelectorAll('[data-mud-static-type="drawer-toggle"]:not([data-mud-static-initialized="true"])');
+    const drawerToggleElements = document.querySelectorAll('[data-mud-static-type="drawer-toggle"]');
     drawerToggleElements.forEach(element => {
+        if (initializedElements.has(element)) return;
+        initializedElements.add(element);
+
         element.setAttribute('data-mud-static-initialized', 'true');
         element.removeEventListener('click', onDrawerToggleClick);
         element.addEventListener('click', onDrawerToggleClick);
@@ -500,8 +517,11 @@ function autoExpand(mudDrawer, variant, breakpoint, position) {
 }
 
 function initNavGroups() {
-    const navGroups = document.querySelectorAll('[data-mud-static-type="nav-group"]:not([data-mud-static-initialized="true"])');
+    const navGroups = document.querySelectorAll('[data-mud-static-type="nav-group"]');
     navGroups.forEach(navGroup => {
+        if (initializedElements.has(navGroup)) return;
+        initializedElements.add(navGroup);
+
         navGroup.setAttribute('data-mud-static-initialized', 'true');
         const button = navGroup.querySelector('button');
         if (button) {
@@ -521,7 +541,9 @@ function initNavGroups() {
                 collapseContainer.style.transition = 'height 250ms cubic-bezier(0.4, 0, 0.2, 1)';
 
                 if (willExpand) {
+                    navElement.classList.add('mud-nav-group-expanded');
                     collapseContainer.classList.remove('invisible');
+                    collapseContainer.style.display = 'block'; // Ensure it's not display: none
                     collapseContainer.setAttribute('aria-hidden', 'false');
                     collapseContainer.classList.add('mud-collapse-entering');
 
@@ -534,6 +556,7 @@ function initNavGroups() {
                         collapseContainer.style.height = 'auto';
                     }, 250);
                 } else {
+                    navElement.classList.remove('mud-nav-group-expanded');
                     const height = wrapper.scrollHeight;
                     collapseContainer.style.height = height + 'px';
 
@@ -547,6 +570,7 @@ function initNavGroups() {
                     setTimeout(() => {
                         collapseContainer.classList.remove('mud-collapse-exiting');
                         collapseContainer.classList.add('invisible');
+                        collapseContainer.style.display = ''; // Reset display
                         collapseContainer.setAttribute('aria-hidden', 'true');
                     }, 250);
                 }
