@@ -134,6 +134,94 @@ namespace StaticInput.UnitTests.Components
             await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
         }
 
+        [Fact]
+        public async Task Switch_Space_Toggles_When_Focused_With_Tab()
+        {
+            var url = typeof(SwitchKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var container = Page.GetByTestId(MyRegex());
+            var toggle = Page.Locator("input[type='checkbox']");
+
+            await Page.Locator("#before-switch").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(toggle).ToBeCheckedAsync();
+            await Expect(toggle).ToHaveAttributeAsync("aria-checked", "true");
+            await Expect(container).ToHaveClassAsync(new Regex("mud-checked"));
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(toggle).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(toggle).ToHaveAttributeAsync("aria-checked", "false");
+            await Expect(container).Not.ToHaveClassAsync(new Regex("mud-checked"));
+        }
+
+        [Fact]
+        public async Task Switch_Focused_With_Tab_Is_Accessible_Checkbox()
+        {
+            var url = typeof(SwitchKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-switch").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Accept" })).ToBeFocusedAsync();
+        }
+
+        [Fact]
+        public async Task Switch_Checked_With_Space_Should_Submit_True()
+        {
+            var url = typeof(SwitchKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-switch").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+            await Expect(Page.Locator("#submitted-value")).ToHaveTextAsync("Submitted: True");
+        }
+
+        [Fact]
+        public async Task Switch_Unchecked_With_Space_Should_Submit_False()
+        {
+            var url = typeof(SwitchKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-switch").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+            await Expect(Page.Locator("#submitted-value")).ToHaveTextAsync("Submitted: False");
+        }
+
+        [Fact]
+        public async Task Switch_Disabled_Is_Skipped_By_Tab_And_Not_Toggled()
+        {
+            var url = typeof(SwitchKeyboardDisabledTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var toggle = Page.Locator("input[type='checkbox']");
+
+            await Page.Locator("#before-switch").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(Page.Locator("#after-switch")).ToBeFocusedAsync();
+            await Expect(toggle).ToBeCheckedAsync(new() { Checked = false });
+        }
+
         [GeneratedRegex("switch-container-*")]
         private static partial Regex MyRegex();
     }
