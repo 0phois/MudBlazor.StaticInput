@@ -217,10 +217,17 @@ namespace StaticInput.UnitTests.Components
 
             await Page.GotoAsync(url);
 
+            var checkbox = Page.Locator("input[type='checkbox']");
+
             await Page.Locator("#before-checkbox").FocusAsync();
             await Page.Keyboard.PressAsync("Tab");
             await Page.Keyboard.PressAsync("Space");
+
+            await Expect(checkbox).ToBeCheckedAsync();
+
             await Page.Keyboard.PressAsync("Space");
+
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
 
             await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
 

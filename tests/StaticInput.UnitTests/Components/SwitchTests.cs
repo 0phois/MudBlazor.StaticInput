@@ -196,10 +196,17 @@ namespace StaticInput.UnitTests.Components
 
             await Page.GotoAsync(url);
 
+            var toggle = Page.Locator("input[type='checkbox']");
+
             await Page.Locator("#before-switch").FocusAsync();
             await Page.Keyboard.PressAsync("Tab");
             await Page.Keyboard.PressAsync("Space");
+
+            await Expect(toggle).ToBeCheckedAsync();
+
             await Page.Keyboard.PressAsync("Space");
+
+            await Expect(toggle).ToBeCheckedAsync(new() { Checked = false });
 
             await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
 
