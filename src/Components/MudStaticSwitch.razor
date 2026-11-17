@@ -60,6 +60,11 @@
             UserAttributes["data-mud-static-unchecked-hover-color"] = UncheckedHoverColor;
             UserAttributes["data-mud-static-checked-color"] = CheckedColor;
             UserAttributes["data-mud-static-unchecked-color"] = UnCheckedColor;
+
+            if (GetReadOnlyState())
+                UserAttributes["data-mud-static-readonly"] = "true";
+            else
+                UserAttributes.Remove("data-mud-static-readonly");
         }
         else
         {
@@ -71,6 +76,7 @@
             UserAttributes.Remove("data-mud-static-unchecked-hover-color");
             UserAttributes.Remove("data-mud-static-checked-color");
             UserAttributes.Remove("data-mud-static-unchecked-color");
+            UserAttributes.Remove("data-mud-static-readonly");
             UserAttributes.Remove("data-mud-static-initialized");
         }
 

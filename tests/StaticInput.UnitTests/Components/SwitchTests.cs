@@ -222,6 +222,41 @@ namespace StaticInput.UnitTests.Components
             await Expect(toggle).ToBeCheckedAsync(new() { Checked = false });
         }
 
+        [Fact]
+        public async Task Switch_ReadOnly_Cannot_Be_Changed_By_Click()
+        {
+            var url = typeof(SwitchReadOnlyTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var toggle = Page.Locator("input[type='checkbox']");
+
+            await toggle.ClickAsync();
+
+            await Expect(toggle).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(toggle).ToHaveAttributeAsync("aria-checked", "false");
+        }
+
+        [Fact]
+        public async Task Switch_ReadOnly_Is_Focusable_But_Not_Toggled_By_Space()
+        {
+            var url = typeof(SwitchReadOnlyTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var toggle = Page.GetByRole(AriaRole.Checkbox, new() { Name = "Accept" });
+
+            await Page.Locator("#before-switch").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(toggle).ToBeFocusedAsync();
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(toggle).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(toggle).ToHaveAttributeAsync("aria-checked", "false");
+        }
+
         [GeneratedRegex("switch-container-*")]
         private static partial Regex MyRegex();
     }

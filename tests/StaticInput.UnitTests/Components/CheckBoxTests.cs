@@ -243,6 +243,41 @@ namespace StaticInput.UnitTests.Components
             await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
         }
 
+        [Fact]
+        public async Task CheckBox_ReadOnly_Cannot_Be_Changed_By_Click()
+        {
+            var url = typeof(CheckBoxReadOnlyTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var checkbox = Page.Locator("input[type='checkbox']");
+
+            await checkbox.ClickAsync();
+
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(checkbox).ToHaveAttributeAsync("aria-checked", "false");
+        }
+
+        [Fact]
+        public async Task CheckBox_ReadOnly_Is_Focusable_But_Not_Toggled_By_Space()
+        {
+            var url = typeof(CheckBoxReadOnlyTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var checkbox = Page.GetByRole(AriaRole.Checkbox, new() { Name = "Accept" });
+
+            await Page.Locator("#before-checkbox").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(checkbox).ToBeFocusedAsync();
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(checkbox).ToHaveAttributeAsync("aria-checked", "false");
+        }
+
         [GeneratedRegex("check-icon-*")]
         private static partial Regex CheckedIcon();
 

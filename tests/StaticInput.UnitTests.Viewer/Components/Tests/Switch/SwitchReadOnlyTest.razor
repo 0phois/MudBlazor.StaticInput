@@ -1,0 +1,14 @@
+﻿<EditForm Model="Input" method="post" FormName="readonly">
+    <button type="button" id="before-switch">Before</button>
+    <MudStaticSwitch @bind-Value="Input.Accept" Color="Color.Primary" Label="Accept" For="() => Input.Accept" ReadOnly="true" />
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private sealed class InputModel
+    {
+        public bool Accept { get; set; }
+    }
+}

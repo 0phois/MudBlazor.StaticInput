@@ -44,11 +44,17 @@
         {
             UserAttributes["data-mud-static-type"] = "checkbox";
             UserAttributes["data-mud-static-name"] = _name;
+
+            if (GetReadOnlyState())
+                UserAttributes["data-mud-static-readonly"] = "true";
+            else
+                UserAttributes.Remove("data-mud-static-readonly");
         }
         else
         {
             UserAttributes.Remove("data-mud-static-type");
             UserAttributes.Remove("data-mud-static-name");
+            UserAttributes.Remove("data-mud-static-readonly");
             UserAttributes.Remove("data-mud-static-initialized");
         }
 

@@ -59,12 +59,18 @@
             UserAttributes["data-mud-static-type"] = "radio";
             UserAttributes["data-value"] = Value?.ToString();
             UserAttributes["data-group-name"] = ParentGroup?.GroupName;
+
+            if (GetReadOnlyState() || ParentGroup!.GetReadOnlyState())
+                UserAttributes["data-mud-static-readonly"] = "true";
+            else
+                UserAttributes.Remove("data-mud-static-readonly");
         }
         else
         {
             UserAttributes.Remove("data-mud-static-type");
             UserAttributes.Remove("data-value");
             UserAttributes.Remove("data-group-name");
+            UserAttributes.Remove("data-mud-static-readonly");
             UserAttributes.Remove("data-mud-static-initialized");
         }
 
