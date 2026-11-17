@@ -1,0 +1,24 @@
+﻿<EditForm Model="Input" method="post" FormName="keyboard-disabled">
+    <button type="button" id="before-radio">Before</button>
+    <MudStaticRadioGroup @bind-Value="Input.SelectedValue" For="() => Input.SelectedValue" Color="Color.Primary">
+        <MudStaticRadio T="string" Value="@("A")" Size="Size.Medium">
+            Option A
+        </MudStaticRadio>
+        <MudStaticRadio T="string" Value="@("B")" Size="Size.Medium" Disabled>
+            Option B
+        </MudStaticRadio>
+        <MudStaticRadio T="string" Value="@("C")" Size="Size.Medium">
+            Option C
+        </MudStaticRadio>
+    </MudStaticRadioGroup>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private sealed class InputModel
+    {
+        public string? SelectedValue { get; set; }
+    }
+}
