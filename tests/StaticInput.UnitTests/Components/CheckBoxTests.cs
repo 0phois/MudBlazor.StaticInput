@@ -150,6 +150,99 @@ namespace StaticInput.UnitTests.Components
             await Expect(unselected).ToBeVisibleAsync();
         }
 
+        [Fact]
+        public async Task CheckBox_Space_Toggles_When_Focused_With_Tab()
+        {
+            var url = typeof(CheckBoxKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var selected = Page.GetByTestId(CheckedIcon());
+            var unselected = Page.GetByTestId(UncheckedIcon());
+            var checkbox = Page.Locator("input[type='checkbox']");
+
+            await Page.Locator("#before-checkbox").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(checkbox).ToBeCheckedAsync();
+            await Expect(checkbox).ToHaveAttributeAsync("aria-checked", "true");
+            await Expect(selected).ToBeVisibleAsync();
+            await Expect(unselected).ToBeVisibleAsync(new() { Visible = false });
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(checkbox).ToHaveAttributeAsync("aria-checked", "false");
+            await Expect(selected).ToBeVisibleAsync(new() { Visible = false });
+            await Expect(unselected).ToBeVisibleAsync();
+        }
+
+        [Fact]
+        public async Task CheckBox_Focused_With_Tab_Is_Accessible_Checkbox()
+        {
+            var url = typeof(CheckBoxKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-checkbox").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            // Screen readers must land on the native checkbox (role + accessible name from the label),
+            // not on an anonymous wrapper element.
+            await Expect(Page.GetByRole(AriaRole.Checkbox, new() { Name = "Accept" })).ToBeFocusedAsync();
+        }
+
+        [Fact]
+        public async Task CheckBox_Checked_With_Space_Should_Submit_True()
+        {
+            var url = typeof(CheckBoxKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-checkbox").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+            await Expect(Page.Locator("#submitted-value")).ToHaveTextAsync("Submitted: True");
+        }
+
+        [Fact]
+        public async Task CheckBox_Unchecked_With_Space_Should_Submit_False()
+        {
+            var url = typeof(CheckBoxKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-checkbox").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+            await Expect(Page.Locator("#submitted-value")).ToHaveTextAsync("Submitted: False");
+        }
+
+        [Fact]
+        public async Task CheckBox_Disabled_Is_Skipped_By_Tab_And_Not_Toggled()
+        {
+            var url = typeof(CheckBoxKeyboardDisabledTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var checkbox = Page.Locator("input[type='checkbox']");
+
+            await Page.Locator("#before-checkbox").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(Page.Locator("#after-checkbox")).ToBeFocusedAsync();
+            await Expect(checkbox).ToBeCheckedAsync(new() { Checked = false });
+        }
+
         [GeneratedRegex("check-icon-*")]
         private static partial Regex CheckedIcon();
 

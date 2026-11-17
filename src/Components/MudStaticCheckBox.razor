@@ -5,9 +5,9 @@
 <MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
     <InputContent>
         <label class="@LabelClassname" @onclick:stopPropagation="@StopClickPropagation">
-            <span tabindex="0" class="@IconClassname">
+            <span class="@IconClassname">
                 <input type="hidden" name="@(_checkboxValue ? "" : _name)" value="False" />
-                <input tabindex="-1" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" 
+                <input tabindex="@(GetDisabledState() ? -1 : 0)" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" 
                        value="True" aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
                        disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size" 
