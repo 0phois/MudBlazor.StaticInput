@@ -8,7 +8,7 @@
             <span class="@IconClassname">
                 <input type="hidden" name="@(_checkboxValue ? "" : _name)" value="False" />
                 <input tabindex="@(GetDisabledState() ? -1 : 0)" @attributes="@UserAttributes" type="checkbox" class="mud-checkbox-input" name="@(_checkboxValue ? _name : "")" 
-                       value="True" aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                       value="True" aria-checked="@_checkboxValue.ToString().ToLower()" aria-readonly="@(GetReadOnlyState().ToString().ToLower())"
                        disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@CheckedIcon" Color="HasErrors ? Color.Error : this.Color" Size="@Size" 
                          id="@($"check-icon-{_elementId}")" style="@($"display: {_checkedStyle}")"/>

@@ -257,6 +257,7 @@ namespace StaticInput.UnitTests.Components
             await Page.Keyboard.PressAsync("Tab");
 
             await Expect(toggle).ToBeFocusedAsync();
+            await Expect(toggle).ToHaveAttributeAsync("aria-readonly", "true");
 
             await Page.Keyboard.PressAsync("Space");
 

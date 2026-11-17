@@ -278,6 +278,7 @@ namespace StaticInput.UnitTests.Components
             await Page.Keyboard.PressAsync("Tab");
 
             await Expect(checkbox).ToBeFocusedAsync();
+            await Expect(checkbox).ToHaveAttributeAsync("aria-readonly", "true");
 
             await Page.Keyboard.PressAsync("Space");
 

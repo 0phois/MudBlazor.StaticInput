@@ -11,7 +11,7 @@
                     <span class="mud-switch-button">
                         <input type="hidden" id="@($"empty-switch-{_elementId}")" name="@(_switchValue ? "" : _name)" value="False" aria-required="@Required.ToString().ToLowerInvariant()" />
                         <input tabindex="@(GetDisabledState() ? -1 : 0)" @attributes="@UserAttributes" type="checkbox" class="mud-switch-input" name="@(_switchValue ? _name : "")" 
-                               value="True" aria-checked="@_switchValue.ToString().ToLower()" aria-readonly="@(GetDisabledState().ToString().ToLower())"
+                               value="True" aria-checked="@_switchValue.ToString().ToLower()" aria-readonly="@(GetReadOnlyState().ToString().ToLower())"
                                id="@($"static-switch-{_elementId}")" disabled="@GetDisabledState()" @onclick:preventDefault="@GetReadOnlyState()"
                                aria-required="@Required.ToString().ToLowerInvariant()" />
                         <span class="@ThumbClassname">
