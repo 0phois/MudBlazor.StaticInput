@@ -206,5 +206,122 @@ namespace StaticInput.UnitTests.Components
             await Expect(radioB).ToBeCheckedAsync();
             await Expect(hiddenInput).ToHaveAttributeAsync("value", "B");
         }
+
+        [Fact]
+        public async Task Radio_Space_Selects_When_Focused_With_Tab()
+        {
+            var url = typeof(RadioKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+
+            await Page.Locator("#before-radio").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioA).ToHaveAttributeAsync("aria-checked", "true");
+
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(radioA).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioA).ToHaveAttributeAsync("aria-checked", "false");
+            await Expect(radioB).ToBeCheckedAsync();
+            await Expect(radioB).ToHaveAttributeAsync("aria-checked", "true");
+        }
+
+        [Fact]
+        public async Task Radio_Focused_With_Tab_Is_Accessible_Radio()
+        {
+            var url = typeof(RadioKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-radio").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(Page.GetByRole(AriaRole.Radio, new() { Name = "Option A" })).ToBeFocusedAsync();
+        }
+
+        [Fact]
+        public async Task Radio_Selected_With_Space_Should_Submit_Value()
+        {
+            var url = typeof(RadioKeyboardTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            await Page.Locator("#before-radio").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Space");
+
+            await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+            await Expect(Page.Locator("#submitted-value")).ToHaveTextAsync("Submitted: B");
+        }
+
+        [Fact]
+        public async Task Radio_Disabled_Is_Skipped_By_Tab()
+        {
+            var url = typeof(RadioKeyboardDisabledTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+
+            await Page.Locator("#before-radio").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(Page.GetByRole(AriaRole.Radio, new() { Name = "Option A" })).ToBeFocusedAsync();
+
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(Page.GetByRole(AriaRole.Radio, new() { Name = "Option C" })).ToBeFocusedAsync();
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+        }
+
+        [Fact]
+        public async Task Radio_ReadOnly_Cannot_Be_Changed_By_Click()
+        {
+            var url = typeof(RadioReadOnlyTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.Locator("input.static-radio-input[value='B']");
+
+            await radioB.ClickAsync();
+
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioB).ToHaveAttributeAsync("aria-checked", "false");
+        }
+
+        [Fact]
+        public async Task Radio_ReadOnly_Is_Focusable_But_Not_Selected_By_Space()
+        {
+            var url = typeof(RadioReadOnlyTest).ToQueryString();
+
+            await Page.GotoAsync(url);
+
+            var radioA = Page.Locator("input.static-radio-input[value='A']");
+            var radioB = Page.GetByRole(AriaRole.Radio, new() { Name = "Option B" });
+
+            await Page.Locator("#before-radio").FocusAsync();
+            await Page.Keyboard.PressAsync("Tab");
+            await Page.Keyboard.PressAsync("Tab");
+
+            await Expect(radioB).ToBeFocusedAsync();
+
+            await Page.Keyboard.PressAsync("Space");
+
+            await Expect(radioA).ToBeCheckedAsync();
+            await Expect(radioB).ToBeCheckedAsync(new() { Checked = false });
+            await Expect(radioB).ToHaveAttributeAsync("aria-checked", "false");
+        }
     }
 }

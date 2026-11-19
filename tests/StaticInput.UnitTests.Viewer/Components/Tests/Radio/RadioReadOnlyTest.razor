@@ -1,0 +1,21 @@
+﻿<EditForm Model="Input" method="post" FormName="readonly">
+    <button type="button" id="before-radio">Before</button>
+    <MudStaticRadioGroup @bind-Value="Input.SelectedValue" For="() => Input.SelectedValue" Color="Color.Primary" ReadOnly="true">
+        <MudStaticRadio T="string" Value="@("A")" Size="Size.Medium">
+            Option A
+        </MudStaticRadio>
+        <MudStaticRadio T="string" Value="@("B")" Size="Size.Medium">
+            Option B
+        </MudStaticRadio>
+    </MudStaticRadioGroup>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new() { SelectedValue = "A" };
+
+    private sealed class InputModel
+    {
+        public string? SelectedValue { get; set; }
+    }
+}

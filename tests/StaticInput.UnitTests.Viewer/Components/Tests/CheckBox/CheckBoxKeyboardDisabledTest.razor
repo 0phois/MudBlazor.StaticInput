@@ -1,0 +1,15 @@
+﻿<EditForm Model="Input" method="post" FormName="keyboard-disabled">
+    <button type="button" id="before-checkbox">Before</button>
+    <MudStaticCheckBox @bind-Value="Input.Accept" Color="Color.Primary" Label="Accept" For="() => Input.Accept" Disabled="true" />
+    <button type="button" id="after-checkbox">After</button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private sealed class InputModel
+    {
+        public bool Accept { get; set; }
+    }
+}

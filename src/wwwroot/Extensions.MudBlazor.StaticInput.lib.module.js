@@ -120,6 +120,11 @@ function initCheckBoxes() {
         const checkedIcon = parent ? parent.querySelector('[id^="check-icon-"]') : null;
         const uncheckedIcon = parent ? parent.querySelector('[id^="unchecked-icon-"]') : null;
 
+        // Mouse clicks and the Space key both activate the input through a click event
+        checkbox.addEventListener('click', (event) => {
+            if (checkbox.hasAttribute('data-mud-static-readonly')) event.preventDefault();
+        });
+
         checkbox.addEventListener('change', () => {
             checkbox.ariaChecked = checkbox.checked ? "true" : "false";
             if (checkedIcon) checkedIcon.style.display = checkbox.checked ? 'block' : 'none';
@@ -159,6 +164,11 @@ function initSwitches() {
         const checkedColor = switchToggle.getAttribute('data-mud-static-checked-color');
         const uncheckedColor = switchToggle.getAttribute('data-mud-static-unchecked-color');
 
+        // Mouse clicks and the Space key both activate the input through a click event
+        switchToggle.addEventListener('click', (event) => {
+            if (switchToggle.hasAttribute('data-mud-static-readonly')) event.preventDefault();
+        });
+
         switchToggle.addEventListener('change', () => {
             switchToggle.ariaChecked = switchToggle.checked ? "true" : "false";
             const force = switchToggle.checked;
@@ -197,6 +207,12 @@ function initRadios() {
         initializedElements.add(radio);
 
         radio.setAttribute('data-mud-static-initialized', 'true');
+
+        // Mouse clicks and the Space key both activate the input through a click event
+        radio.addEventListener('click', (event) => {
+            if (radio.hasAttribute('data-mud-static-readonly')) event.preventDefault();
+        });
+
         radio.addEventListener('change', function () {
             const parentGroup = radio.closest('[data-mud-static-type="radio-group"]');
             if (!parentGroup) return;

@@ -6,8 +6,8 @@
 <MudInputControl Class="@Classname" Style="@Style" Error="@HasErrors" ErrorText="@GetErrorText()" Required="@Required">
     <InputContent>
         <label class="@LabelClassname" style="@Style" @onclick:stopPropagation="@StopClickPropagation">
-            <span tabindex="0" class="@IconClassname">
-                <input id="@($"static-radio-{_elementId}")" tabindex="-1" @attributes="UserAttributes" type="radio" role="radio"
+            <span class="@IconClassname">
+                <input id="@($"static-radio-{_elementId}")" tabindex="@(GetDisabledState() ? -1 : 0)" @attributes="UserAttributes" type="radio" role="radio"
                        class="mud-radio-input static-radio-input" checked="@_isChecked" disabled="@GetDisabledState()" name="@(_isChecked ? ParentGroup?.GroupName : "")" value="@Value"
                        aria-checked="@(_isChecked.ToString().ToLower())" aria-disabled="@(GetDisabledState().ToString().ToLower())" @onclick:preventDefault="@GetReadOnlyState()"/>
                 <MudIcon Icon="@(ParentGroup?.CheckedIcon ?? CheckedIcon)" Color="HasErrors? Color.Error: ParentGroup?.Color ?? this.Color" Size="@Size" Disabled="@Disabled"
@@ -59,12 +59,18 @@
             UserAttributes["data-mud-static-type"] = "radio";
             UserAttributes["data-value"] = Value?.ToString();
             UserAttributes["data-group-name"] = ParentGroup?.GroupName;
+
+            if (GetReadOnlyState() || ParentGroup!.GetReadOnlyState())
+                UserAttributes["data-mud-static-readonly"] = "true";
+            else
+                UserAttributes.Remove("data-mud-static-readonly");
         }
         else
         {
             UserAttributes.Remove("data-mud-static-type");
             UserAttributes.Remove("data-value");
             UserAttributes.Remove("data-group-name");
+            UserAttributes.Remove("data-mud-static-readonly");
             UserAttributes.Remove("data-mud-static-initialized");
         }
 
